@@ -236,6 +236,14 @@ docker-build-hermes:
 
 docker-build-all: docker-build-debug docker-build-hermes
 
+mockgen_cmd=go run github.com/golang/mock/mockgen@v1.6.0
+
+mocks-gen:
+	$(mockgen_cmd) -source=x/gov/testutil/expected_keepers.go -package testutil -destination x/gov/testutil/expected_keepers_mocks.go
+	$(mockgen_cmd) -source=x/photon/types/expected_keepers.go -package testutil -destination x/photon/testutil/expected_keepers_mocks.go
+
+.PHONY: mocks-gen
+
 ###############################################################################
 ###                                Linting                                  ###
 ###############################################################################
