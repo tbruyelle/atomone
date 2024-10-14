@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -86,74 +85,61 @@ func TestGovernor(t *testing.T) {
 }
 
 func TestValidateGovernorMinSelfDelegation(t *testing.T) {
-	var (
-		addrs = simtestutil.CreateRandomAccounts(2)
-		// TODO add multiple validator and delegations
-		valAddr   = simtestutil.ConvertAddrsToValAddrs(addrs[:1])[0]
-		validator = stakingtypes.Validator{
-			OperatorAddress: valAddr.String(),
-			Status:          stakingtypes.Bonded,
-			Tokens:          sdk.OneInt(),
-			DelegatorShares: sdk.OneDec(),
-		}
-		govAddr = convertAddrsToGovAddrs(addrs[1:])[0]
-	)
 	tests := []struct {
 		name           string
-		governor       v1.Governor
+		setup          func(*fixture) v1.Governor
 		selfDelegation bool
 		valDelegations []stakingtypes.Delegation
 		expectedPanic  bool
 		expectedValid  bool
 	}{
 		{
-			name:           "inactive governor",
-			governor:       v1.Governor{GovernorAddress: govAddr.String(), Status: v1.Inactive},
-			selfDelegation: false,
-			valDelegations: nil,
-			expectedPanic:  false,
-			expectedValid:  false,
-		},
-		{
-			name:           "active governor w/o self delegation w/o validator delegation",
-			governor:       v1.Governor{GovernorAddress: govAddr.String(), Status: v1.Active},
-			selfDelegation: false,
-			valDelegations: nil,
-			expectedPanic:  true,
-			expectedValid:  false,
-		},
-		{
-			name:           "active governor w self delegation w/o validator delegation",
-			governor:       v1.Governor{GovernorAddress: govAddr.String(), Status: v1.Active},
-			selfDelegation: true,
-			valDelegations: nil,
-			expectedPanic:  false,
-			expectedValid:  false,
-		},
-		{
-			name:           "active governor w self delegation w not enough validator delegation",
-			governor:       v1.Governor{GovernorAddress: govAddr.String(), Status: v1.Active},
-			selfDelegation: true,
-			valDelegations: []stakingtypes.Delegation{
-				{
-					DelegatorAddress: govAddr.String(),
-					ValidatorAddress: valAddr.String(),
-					Shares:           sdk.OneDec(),
-				},
+			name: "inactive governor",
+			setup: func(s *fixture) v1.Governor {
+				return s.inactiveGovernor
 			},
 			expectedPanic: false,
 			expectedValid: false,
 		},
 		{
-			name:           "active governor w self delegation w enough validator delegation",
-			governor:       v1.Governor{GovernorAddress: govAddr.String(), Status: v1.Active},
-			selfDelegation: true,
-			valDelegations: []stakingtypes.Delegation{
-				{
-					DelegatorAddress: govAddr.String(),
-					ValidatorAddress: valAddr.String(),
-					Shares:           v1.DefaultMinGovernorSelfDelegation.ToLegacyDec(),
-				},
+			name: "active governor w/o self delegation w/o validator delegation",
+			setup: func(s *fixture) v1.Governor {
+				return s.activeGovernors[0]
+			},
+			expectedPanic: true,
+			expectedValid: false,
+		},
+		{
+			name: "active governor w self delegation w/o validator delegation",
+			setup: func(s *fixture) v1.Governor {
+				govAddr := s.activeGovernors[0].GetAddress()
+				delAddr := sdk.AccAddress(govAddr)
+				s.keeper.DelegateToGovernor(s.ctx, delAddr, govAddr)
+				return s.activeGovernors[0]
+			},
+			expectedPanic: false,
+			expectedValid: false,
+		},
+		{
+			name: "active governor w self delegation w not enough validator delegation",
+			setup: func(s *fixture) v1.Governor {
+				govAddr := s.activeGovernors[0].GetAddress()
+				delAddr := sdk.AccAddress(govAddr)
+				s.keeper.DelegateToGovernor(s.ctx, delAddr, govAddr)
+				s.delegate(delAddr, s.valAddrs[0], 1)
+				return s.activeGovernors[0]
+			},
+			expectedPanic: false,
+			expectedValid: false,
+		},
+		{
+			name: "active governor w self delegation w enough validator delegation",
+			setup: func(s *fixture) v1.Governor {
+				govAddr := s.activeGovernors[0].GetAddress()
+				delAddr := sdk.AccAddress(govAddr)
+				s.keeper.DelegateToGovernor(s.ctx, delAddr, govAddr)
+				s.delegate(delAddr, s.valAddrs[0], v1.DefaultMinGovernorSelfDelegation.Int64())
+				return s.activeGovernors[0]
 			},
 			expectedPanic: false,
 			expectedValid: true,
@@ -162,27 +148,13 @@ func TestValidateGovernorMinSelfDelegation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			govKeeper, mocks, _, ctx := setupGovKeeper(t, mockAccountKeeperExpectations)
-			// setup validator delegations expectation
-			mocks.stakingKeeper.EXPECT().GetValidator(ctx, valAddr).Return(validator, true).AnyTimes()
-			delAddr := sdk.AccAddress(govAddr)
-			mocks.stakingKeeper.EXPECT().IterateDelegations(ctx, delAddr, gomock.Any()).
-				DoAndReturn(
-					func(_ sdk.Context, _ sdk.AccAddress, f func(int64, stakingtypes.DelegationI) bool) {
-						for i, d := range tt.valDelegations {
-							if f(int64(i), d) {
-								return
-							}
-						}
-					},
-				).MaxTimes(2)
-			if tt.selfDelegation {
-				govKeeper.DelegateToGovernor(ctx, delAddr, govAddr)
-			}
+			s := newFixture(t, ctx, 2, 2, 2, govKeeper, mocks)
+			governor := tt.setup(s)
 
 			if tt.expectedPanic {
-				assert.Panics(t, func() { govKeeper.ValidateGovernorMinSelfDelegation(ctx, tt.governor) })
+				assert.Panics(t, func() { govKeeper.ValidateGovernorMinSelfDelegation(ctx, governor) })
 			} else {
-				valid := govKeeper.ValidateGovernorMinSelfDelegation(ctx, tt.governor)
+				valid := govKeeper.ValidateGovernorMinSelfDelegation(ctx, governor)
 
 				assert.Equal(t, tt.expectedValid, valid, "return of ValidateGovernorMinSelfDelegation")
 			}
