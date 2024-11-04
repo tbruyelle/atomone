@@ -19,6 +19,11 @@ concurrency:
   group: ci-${{ github.ref }}-tests
   cancel-in-progress: true
 
+env:
+  # ensure go uses the version from the go directive and not from the
+  # toolchain directive.
+  GOTOOLCHAIN: local
+
 jobs:
   tests:
     runs-on: ubuntu-latest

@@ -4,6 +4,11 @@ on:
     branches:
       - "rc**"
 
+env:
+  # ensure go uses the version from the go directive and not from the
+  # toolchain directive.
+  GOTOOLCHAIN: local
+
 jobs:
   cleanup-runs:
     runs-on: ubuntu-latest

@@ -27,6 +27,10 @@ jobs:
     if: ${{ github.event.label.name == 'sim' }}
     runs-on: ubuntu-latest
     needs: newbuild
+    env:
+      # ensure go uses the version from the go directive and not from the
+      # toolchain directive.
+      GOTOOLCHAIN: local
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5

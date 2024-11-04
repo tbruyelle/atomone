@@ -12,6 +12,10 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      # ensure go uses the version from the go directive and not from the
+      # toolchain directive.
+      GOTOOLCHAIN: local
     steps:
       - name: Checkout
         uses: actions/checkout@v4
