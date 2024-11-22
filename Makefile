@@ -258,17 +258,25 @@ update-swagger-docs: proto-swagger-gen
 
 start-localnet-ci: build
 	rm -rf ~/.atomoned-liveness
-	./build/atomoned init liveness --chain-id liveness --home ~/.atomoned-liveness
+	./build/atomoned init liveness --default-denom uatone --chain-id liveness --home ~/.atomoned-liveness
+	cp contrib/genesis.json ~/.atomoned-liveness/config/
 	./build/atomoned config chain-id liveness --home ~/.atomoned-liveness
 	./build/atomoned config keyring-backend test --home ~/.atomoned-liveness
 	./build/atomoned keys add val --home ~/.atomoned-liveness
-	./build/atomoned genesis add-genesis-account val 10000000000000000000000000stake --home ~/.atomoned-liveness --keyring-backend test
-	./build/atomoned genesis gentx val 1000000000stake --home ~/.atomoned-liveness --chain-id liveness
+	./build/atomoned genesis add-genesis-account val 1000000000000uatone --home ~/.atomoned-liveness --keyring-backend test
+	./build/atomoned keys add user --home ~/.atomoned-liveness
+	./build/atomoned genesis add-genesis-account user 1000000000uatone --home ~/.atomoned-liveness --keyring-backend test
+	./build/atomoned genesis gentx val 1000000000uatone --home ~/.atomoned-liveness --chain-id liveness
 	./build/atomoned genesis collect-gentxs --home ~/.atomoned-liveness
-	sed -i.bak'' 's/minimum-gas-prices = ""/minimum-gas-prices = "0uatone"/' ~/.atomoned-liveness/config/app.toml
+	sed -i.bak'' 's/minimum-gas-prices = ""/minimum-gas-prices = "0.001uatone"/' ~/.atomoned-liveness/config/app.toml
+	sed -i -z 's/# Enable defines if the API server should be enabled.\nenable = false/enable = true/' ~/.atomoned-liveness/config/app.toml
 	./build/atomoned start --home ~/.atomoned-liveness --x-crisis-skip-assert-invariants
 
-.PHONY: start-localnet-ci
+setup-upgrade-proposal:
+	./build/atomoned tx gov submit-proposal --from user draft_proposal.json  --home ~/.atomoned-liveness/ -y --gas-prices 0.001uatone
+	./build/atomoned  --home ~/.atomoned-liveness/ tx gov vote 1 yes --from val -y --gas-prices 0.001uatone
+
+.PHONY: start-localnet-ci setup-upgrade-proposal
 
 ###############################################################################
 ###                                Docker                                   ###

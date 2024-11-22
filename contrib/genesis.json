@@ -1,0 +1,306 @@
+{
+  "genesis_time": "2024-10-18T15:00:00.000000000Z",
+  "chain_id": "liveness",
+  "initial_height": "1",
+  "consensus_params": {
+    "block": {
+      "max_bytes": "2000000",
+      "max_gas": "100000000"
+    },
+    "evidence": {
+      "max_age_num_blocks": "1000000",
+      "max_age_duration": "172800000000000",
+      "max_bytes": "50000"
+    },
+    "validator": {
+      "pub_key_types": [
+        "ed25519"
+      ]
+    },
+    "version": {
+      "app": "0"
+    }
+  },
+  "app_hash": "",
+  "app_state": {
+    "07-tendermint": null,
+    "auth": {
+      "params": {
+        "max_memo_characters": "512",
+        "tx_sig_limit": "7",
+        "tx_size_cost_per_byte": "10",
+        "sig_verify_cost_ed25519": "590",
+        "sig_verify_cost_secp256k1": "1000"
+      },
+      "accounts": []
+    },
+    "authz": {
+      "authorization": []
+    },
+    "bank": {
+      "params": {
+        "send_enabled": [],
+        "default_send_enabled": true
+      },
+      "balances": [
+        {
+          "address": "atone1qqqqqqqqqqqqqqqqqqqqqqqqqqqqp0dqtalx52",
+          "coins": [
+            {
+              "denom": "uatone",
+              "amount": "5388766663072"
+            }
+          ]
+        },
+        {
+          "address": "atone1jv65s3grqf6v6jl3dp4t6c9t9rk99cd8flcml8",
+          "coins": [
+            {
+              "denom": "uatone",
+              "amount": "5388766663072"
+            }
+          ]
+        }
+      ],
+      "supply": [
+        {
+          "denom": "uatone",
+          "amount": "10777533326144"
+        }
+      ],
+      "denom_metadata": [
+        {
+          "description": "The native staking token of AtomOne Hub",
+          "denom_units": [
+            {
+              "denom": "uatone",
+              "exponent": 0,
+              "aliases": [
+                "microatone"
+              ]
+            },
+            {
+              "denom": "matone",
+              "exponent": 3,
+              "aliases": [
+                "milliatone"
+              ]
+            },
+            {
+              "denom": "atone",
+              "exponent": 6,
+              "aliases": [
+                "atone"
+              ]
+            }
+          ],
+          "base": "uatone",
+          "display": "atone",
+          "name": "AtomOne Atone",
+          "symbol": "ATONE",
+          "uri": "",
+          "uri_hash": ""
+        }
+      ],
+      "send_enabled": []
+    },
+    "capability": {
+      "index": "1",
+      "owners": []
+    },
+    "consensus": null,
+    "crisis": {
+      "constant_fee": {
+        "denom": "uatone",
+        "amount": "1333000000"
+      }
+    },
+    "distribution": {
+      "params": {
+        "community_tax": "0.050000000000000000",
+        "base_proposer_reward": "0.010000000000000000",
+        "bonus_proposer_reward": "0.040000000000000000",
+        "withdraw_addr_enabled": true
+      },
+      "fee_pool": {
+        "community_pool": [
+          {
+            "denom": "uatone",
+            "amount": "5388766663072.000000000000000000"
+          }
+        ]
+      },
+      "delegator_withdraw_infos": [],
+      "previous_proposer": "",
+      "outstanding_rewards": [],
+      "validator_accumulated_commissions": [],
+      "validator_historical_rewards": [],
+      "validator_current_rewards": [],
+      "delegator_starting_infos": [],
+      "validator_slash_events": []
+    },
+    "evidence": {
+      "evidence": []
+    },
+    "feegrant": {
+      "allowances": []
+    },
+    "genutil": {},
+    "gov": {
+      "starting_proposal_id": "1",
+      "deposits": [],
+      "votes": [],
+      "proposals": [],
+      "deposit_params": null,
+      "voting_params": null,
+      "tally_params": null,
+      "params": {
+        "min_deposit": [
+          {
+            "denom": "uatone",
+            "amount": "512000000"
+          }
+        ],
+        "max_deposit_period": "1209600s",
+        "voting_period": "300s",
+        "quorum": "0.250000000000000000",
+        "threshold": "0.667000000000000000",
+        "min_initial_deposit_ratio": "0.100000000000000000",
+        "burn_vote_quorum": false,
+        "burn_proposal_deposit_prevote": true,
+        "min_deposit_ratio": "0.010000000000000000",
+        "constitution_amendment_quorum": "0.250000000000000000",
+        "constitution_amendment_threshold": "0.900000000000000000",
+        "law_quorum": "0.250000000000000000",
+        "law_threshold": "0.900000000000000000",
+        "quorum_timeout": "1728000s",
+        "max_voting_period_extension": "86400s",
+        "quorum_check_count": "0"
+      },
+      "constitution": "# ATOMONE CONSTITUTION\n\n## Preamble\n\nWe, the people of the Cosmos, in order to create a free world, enable voluntary\nand borderless transactions, facilitate permissionless innovation, ensure\neconomic security, resist censorship, cater to economic and technological\ndevelopment, allow for the creation of sovereign zones, and maintain order\namong sovereign zones, do ordain and establish this Constitution for the\nAtomOne Hub.\n\n### Declaration of Intent\n\nThe vision of AtomOne Hub is to be a minimal, secure, and resilient fork of the\nCosmos Hub (Gaia), providing a reliable alternative that champions sovereignty,\nsecurity, and decentralization. AtomOne aims to complement the broader Cosmos\nEcosystem while introducing innovative solutions and perspectives, fostering a\ndiverse ecosystem of specialized zones in cooperation and competition.\n\nBy providing a secure and minimal alternative to the existing Cosmos Hub,\nAtomOne addresses the diverse and evolving challenges within the Cosmos\necosystem, stemming from differences about core tokenomics, monetization\nstrategies, and the balance between profit interests and community\nresponsibilities. Proposal #848 on the Cosmos Hub, which narrowly passed,\nhighlighted the deep divide within the community regarding fundamental\ntokenomics and security design.\n\nThe AtomOne Hub is established to serve as the canonical minimal IBC/ICS token\nhub and a base for a more intelligent and unified voting bloc to safeguard the\nCosmos Ecosystem. By aligning with these ideals and fostering a diverse and\ncooperative environment, AtomOne Hub strives to set a new precedent for\nadaptive and responsive self-organization in the multichain, multitoken\nuniverse of the Cosmos.\n\n\n## Article 1: General Provisions\n\n### Section 1: Fundamental Principles\n\nThis Constitution of the AtomOne Hub, hereinafter **“Constitution”**, hereby\nestablishes the foundations of the governance model, economical model, and\noperating system of the AtomOne Hub.\n\nAll subsequent governance proposals shall align with the provisions of this\nConstitution, and proponents of each proposal, along with all active governance\nvoters, are required to ensure consistency between such proposals and this\nConstitution, and cannot violate any explicit restriction. \n\nAmendments are permitted to innovate and adapt this Constitution, but they must\nstill respect and adhere to the fundamental principles upon which this\nConstitution is founded, and are subject to specific procedures as described in\nArticle 4, Section 4.\n\n### Section 2: Sovereignty of the AtomOne Hub\n\nThe AtomOne Hub is one of many sovereign zones that compose the Cosmos\nInterchain network.\n\nThe AtomOne Hub is composed of many chains: the root hub chain, where staking\nand governance transactions are committed and executed, but also other chains\n(core shards) secured by Interchain Security (ICS) that are subservient to the\ngovernance of the root hub chain, hereinafter referred to as \"Hub Governance\".\n\nOther sovereign zones (consumer shards) that are completely or partially\nsecured by AtomOne Hub ICS, by definition, have their own governance mechanism.\nThe AtomOne Hub principally enables and follows the will of the governance of\nsuch sovereign zones regarding the pegged tokens originating from said zones,\nexcept in well-defined exceptional circumstances involving bugs, theft, or harm\nto the Cosmonauts of the Cosmos Ecosystem.\n\n### Section 3: General Mission and Objectives\n\nThe mission of the AtomOne Hub is to create a better world, enabling\npermissionless yet secure interactions between the Cosmonauts of Cosmos in the\nSolar System.\n\nThe objective of the AtomOne Hub is to provide a classical Byzantine Fault\nTolerant (BFT) proof-of-stake multi-token payment and transfer system; and to\nscale the security of the platform to many applications hosted in other zones\nvia the AtomOne Hub ICS; also to demonstrate a decentralized PoS blockchain\nfork experiment based on prior governance voting history as a means for\nsupporting divergent visions on the original chain, the Cosmos Hub Gaia. \n\n### Section 4: Cosmonauts, Citizens\n\nEvery human individual has the right to become a Cosmonaut and may freely\nengage on the AtomOne Hub. As such, every Cosmonaut has the right to own at\nleast one address on the AtomOne Hub.\n\nAny Cosmonaut may also become a Citizen of the AtomOne Hub by using their\naddress to stake ATONE tokens toward the AtomOne Hub and participate actively\nin governance. The status of citizenship is granted in an autonomous and\npermissionless manner.\n\nAny entity shall also be allowed to engage on the AtomOne Hub, however, they\ncannot be classified as a Cosmonaut. Entities shall also be granted the ability\nto stake ATONE tokens towards the AtomOne Hub and participate in governance.\n\n### Section 5: Rights, Liberties and Obligations in the AtomOne Hub\n\nThe Liberty and Property of all Cosmonauts engaging in the AtomOne Hub is\nhereby guaranteed. Any restriction to the Liberty and Property of Cosmonauts on\nthe AtomOne Hub shall be done only through the AtomOne Hub's governance and\nrequires a Constitutional Majority to pass an amendment to the constitution and\noptionally a set of laws specifying its enforcement.\n\nEvery Cosmonaut is entitled to participation rights from their engagement in\nthe AtomOne Hub, including rights derived from held or staked ATONE tokens in\nline with the provisions of this Constitution.\n\nEvery staker (including Citizens, but also Validators and non-human entities)\nallows the Governance of the AtomOne Hub to restrict their staked ATONE tokens\nproperty by partial or full slashing or freezing, according to their voting\nactivity on the hub or on any ICS shard.\n\n## Article 2: Governance\n\n### Section 1: The AtomOne Hub Chain\n\nThe root hub chain of the AtomOne Hub is uniquely identified by the chain-id\nwith the format \"atomone-V”, where V is an integer number that indicates the\nversion (e.g. atomone-1, atomone-2, etc..). This chain commits and executes\ntransactions that serve the following functions:\n\n- staking of ATONE tokens  \n- validator selection  \n- AtomOne Hub Governance  \n- intra-hub token transfers  \n- IBC token transfers  \n- ICS1 and ICS2 management  \n- ATONE to PHOTON burn transactions\n\nThe root hub chain shall not be used for experimentation. Experimentation shall\noccur in other zones or ICS shards.\n\n### Section 2: Laws and Amendments\n\nThis Constitution allows the creation and enactment of laws as means to\ncomplement and enhance its content, restrictions, provisions and established\nprocesses.\n\nLaws shall be enacted to address specific governance, economic, and operational\naspects, and must align with the principles and framework established by this\nConstitution. In cases where laws conflict with this Constitution, this\nConstitution shall always prevail. The AtomOne Hub Governance structure will\ninclude several Decentralized Autonomous Organizations (DAOs) and sub-DAOs.\nEach DAO may create its own bylaws to govern its operations, provided they do\nnot conflict with this Constitution, overarching laws or any mandates issued by\nthe AtomOne Hub Governance. Mandates issued by an ancestor of a DAO are binding\nand cannot be amended or repealed by those DAOs or their sub-DAOs and remain in\neffect unless modified or repealed. Any DAO bylaws that conflict with its\nGoverning Documents shall be deemed invalid and abrogated.\n\nLaws may be proposed by any Citizen of the AtomOne Hub through the established\ngovernance process. The approval of new laws, amendment of existing laws or\namendment of this Constitution require a Constitutional Majority vote. However,\nan endorsement from the Steering DAO shall lower the passing threshold to a\nSupermajority vote for all proposals except for Constitutional amendment\nproposals, which shall require a Constitutional Majority.\n\nOnce an amendment is approved by the required majority, it is implemented\naccording to the specified procedures. The implementation process includes\nupdating this Constitution, communicating the changes to the community, and\nensuring compliance with the new provisions.\n\nLaws must be named plaintext files or folders of plaintext files, or folders of\nfolders. \n\n### Section 3: AtomOne Hub Governance\n\nThe working language of AtomOne Hub Governance is International English.\n\nThe governance process shall be defined through law, but will strictly adhere\nto all restrictions and provisions of this Constitution.\n\nThe vote types are YES, NO, and ABSTAIN (the VETO vote of the Cosmos Hub is\ndeprecated).\n\nTo prevent spam and to ensure the quality of proposals, proposals must have a\nsufficient amount of burn deposit before voting can begin. The minimum amount\nof burn deposit needed shall self-adjust to target on average 1 proposal per 2\nweek period. \n\nThe quorum necessary for a proposal to be valid is 40%. The denominator shall\nbe the number of bonded ATONE tokens. \n\nA Simple Majority in AtomOne Hub Governance is defined to be exactly “more than\nhalf”. No proposal is considered to have passed in the AtomOne Hub with a\nSimple Majority; a Supermajority or Constitutional Majority is required. A\nSupermajority in Hub Governance is defined to be exactly \"more than two\nthirds\". This is distinct from a Supermajority in DAO council governance which\nis defined to be exactly “two thirds or more”. For clarity, 3 out of 4 votes is\nnecessary for a Supermajority in Hub Governance, but 2 out of 3 is sufficient\nfor a Supermajority in DAO council voting. The Constitutional Majority\nthreshold is defined to be exactly “more than 90%”. These definitions of\nmajority cannot change even by a Constitutional Majority.\n\nThe minimum voting period for a proposal is 3 weeks. To ensure adequate\nrepresentation and participation, the governance process must extend the voting\ndeadline to guarantee a minimum of 2 weeks of voting after the minimum quorum\nhas been met.\n\n### Section 4.a: Common DAO Spec\n\nThese common DAO specifications shall apply for all Core DAOs unless otherwise\nspecified, Special Purpose DAOs, and all sub-DAOs of these DAOs. Other DAOs\nthat are not Core DAOs or Special Purpose DAOs or Descendants of these DAOs\nneed not implement these specifications.\n\nAll sub-DAOs have parent DAOs. The parent DAO of the Core DAOs and Special\nPurpose DAOs are the governance of the AtomOne Hub itself. Therefore all Core\nDAOs and Special Purpose DAOs as well as their sub-DAOs and the Hub Governance\nitself altogether form a tree structure. The parent DAO and the parent DAO’s\nparent DAO and so on, all the way up to Hub Governance are altogether called\nthe Ancestors of a DAO. The sub-DAOs and their sub-DAOs and so on are called\nthe Descendants of a DAO.\n\nEvery DAO, upon creation, must have a Charter (which is composed of Purpose and\nDescription), an initial set of Council members (which may be empty) and may\nalso have  Bylaws and Mandates, The Purpose and Description must be plaintext\nfiles. The Bylaws and Mandates must be named plaintext files or folders of\nplaintext files, or folders of folders.\n\nA DAO’s Charter, Bylaws, and Mandates may be changed by a Simple Majority vote\nfrom any of the DAO’s ancestors, except from AtomOne Hub Governance which shall\nrequire a Supermajority vote.\n\nA DAO’s Bylaws, Mandates, and the Bylaws and Mandates of its ancestor DAOs, the\nrelevant Laws, and this Constitution, altogether are called the Governing\nDocuments of the DAO. \n\nA DAO has a Council composed of zero or more members, with no maximum number of\nmembers unless otherwise specified in its Governing Documents.\n\nThe Council of a DAO may change the Bylaws of the DAO, and otherwise make\nDecisions on behalf of the DAO by passing Proposals.\n\nA DAO may establish any number of sub-DAOs through the DAO Council’s Simple\nMajority vote, with their own defined Charters and specific bylaws and\nmandates, as necessity may arise and in accordance with the parent DAO Charter\nand bylaws. Sub-DAOs are owned by and can be controlled by the parent DAO, and\nmembers are also subject to the ancestor DAOs’ bylaws and mandates.\n\nA Simple Majority in DAO governance is defined to be exactly “more than half”.\nA Supermajority in DAO governance is defined to be exactly \"two thirds or\nmore\". This is distinct from a Supermajority in Hub Governance.\n\nBy default, unless specified otherwise in its Governing Documents, the\nfollowing rules shall apply for Council voting:\n\n- each member shall have equal voting power (no member may occupy multiple\n  seats)  \n- a Council member may resign and thereby remove themselves from the Council  \n- the tally denominator is the number of voters minus ABSTAINs (no quorum\n  requirement)  \n- proposals are open until they are decided by sufficient majority, or\n  dismissed, or expired  \n- proposals are immediately dismissed by a Simple Majority vote of NO\n\nBy default, unless specified otherwise in its Governing Documents, the\nfollowing rules shall apply for Council membership election:\n\n- the Council may elect one or more new members, and/or remove one or more\n  members, by Super Majority vote. (self mutating).   \n- the DAO’s Ancestors may modify the Council membership with a Super Majority\n  vote.\n\nEach DAO shall have an associated crypto address which can hold any number of\ntokens.  \n\nDAOs may operate with logic on core shards, or, represented as a m-of-n\nmultisig account on the AtomOne hub where the signers are each members of the\nDAO’s council, where m is more than ½ n and also m is 3 or more. In all cases\nfinancial transactions from the DAO’s treasury must follow the passage of\ngovernance proposals on the DAO.\n\n### Section 4.b: Core DAOs with Special Powers\n\nAs stated, the AtomOne Hub Governance structure will include several DAOs, to\nprovide guidance, oversight, and support for various aspects of governance and\noperations. \n\nThe Core DAO Council has the authority to make decisions for the Core DAO\nthrough a Simple Majority vote of its members, as well as update the Bylaws,\nbut cannot update its Charter or Mandates. \n\nAll Core DAOs and their sub-DAOs shall be composed of Cosmonauts, and the DAO\nCouncils be composed of Citizens. All Cosmonauts and Citizens of these DAOs\nmust have public and known real human identities.\n\nMembers are encouraged to engage in multiple DAOs within the AtomOne Hub to\nfoster collaboration, innovation, and the exchange of ideas. However, to\nmaintain the integrity of governance, members must declare their conflicts of\ninterest  and are required to comply with the conflict of interest policies\noutlined in this Constitution, the Laws, and applicable Governing Documents.\nMembers must recuse themselves by not voting or voting ABSTAIN on proposals\nthat pose a conflict of interest.\n\nThe following are Core DAOs of AtomOne:\n\n- Steering DAO and its subDAOs  \n- Oversight DAOs and their subDAOs  \n- Special Purpose DAOs and their subDAOs\n\nWhile Core DAOs are non-person entities and may hold ATONE tokens in its\ntreasury, unlike other DAOs, Core DAOs may not stake ATONE tokens.\n\nAll Core DAOs must manage the financial resources of its treasury efficiently\nand transparently at all times. \n\n#### Steering DAO\n\nThere is only ever one Steering DAO.\n\nThe Steering DAO is responsible for providing guidance and advisory annotations\non proposals and funding reports, helping to steer the overall direction and\npriorities of the AtomOne Hub.\n\nThe Steering DAO can:\n\n- publish publish periodic announcements on chain  \n- annotate all core DAO proposals with advisory notes to provide context,\n  guidance, and recommendations, offering a non-binding perspective to aid\n  decision-making.  \n- annotate funding reports to highlight key insights, concerns, and\n  recommendations.  \n- adjust AtomOne Hub Governance proposal timelines (\"bend time\") to provide\n  additional time for consideration, though this power cannot be used to\n  indefinitely prevent proposals from being addressed.  \n- reduce the threshold needed to pass new laws from a Constitutional Majority\n  to a Supermajority.\n\n\nThe mostly advisory nature of the Steering DAO's annotations ensures they guide\nbut do not dictate decisions, and specific limitations on the power to adjust\nproposal timelines must be defined to prevent abuse.\n\nUpon genesis there will be no Steering DAO. A Steering DAO may be created,\ndismissed, or replaced by a Supermajority vote on AtomOne hub governance. \n\nFor the purpose of cohesion, before the Steering DAO can be created (or\nreplaced), its initial (or new) set of Council members must have all agreed to\njoining that Council by cryptographically signing a list of all the council\nmembers, along with the DAO’s identifier.\n\n#### Oversight DAOs\n\nAn Oversight DAO is responsible for ensuring that all laws, bylaws, mandates,\nand core DAO governance proposals as well as AtomOne Hub governance proposals\nwithin the scope of its mandate) are in compliance with their respective\nGoverning Documents. \n\nThere can be one or more Oversight DAOs.\n\nAny Oversight DAO can (within the scope of its mandate):\n\n- veto any proposal or transaction of any Core DAO or AtomOne Hub with proof of\n  its violation of Governing Documents.  \n- adjust Core DAO or AtomOne Hub proposal timelines (\"bend time\") to provide\n  additional time for consideration, ensure thorough review, and ensure all\n  Core DAO and AtomOne Hub proposals comply with its Governing Documents.  \n- as exceptions to the above rules, no Oversight DAO may affect any proposals\n  to change any Oversight DAO’s Council membership, or any proposals to suspend\n  or dismiss any Oversight DAO; both of which either require the passage of new\n  law, or specific proposal types with the same criteria as passing new law.\n\nThe broad veto power of Oversight DAOs ensures that no single proposal can\noverride constitutional principles or violate the Constitution, but vetoes\nshould be used sparingly and with justification.\n\nUpon genesis there will be no Oversight DAOs. An Oversight DAO may be created,\ndismissed, or replaced by a Supermajority vote on AtomOne hub governance. \n\n### Section 5: Airdrops and forks\n\nEvery Cosmonaut allows any other Cosmonaut to create full or partial airdrops\nof new tokens to any chain using the distribution of any token on the AtomOne\nHub at any time.\n\nEvery Citizen allows any Cosmonaut to modify their pro-rata airdrop portion by\npartial or full slashing (or by proportionate rewards) based on their\ncryptographic voting activity according to well defined principles at any time.\n\nAll forks that lose consensus continuity must change their token ticker symbol\nto be distinct from ATONE. If there are competing blockchains with comparably\nsimilar continuity, then the fork that has a higher market cap (as measured\nafter both tokens have discovered fair market value with sufficient liquidity\nfor at least one month) should retain the name while other forks change their\n    token ticker symbol.\n\n### Section 6: Special Purpose DAOs\n\nThe AtomOne Hub Governance may establish and fund one or more transparent and\naccountable Special Purpose DAOs by Supermajority vote. Each Special Purpose\nDAO must have an established Charter outlining its purpose, description,\nbylaws, and mandates before it can be approved or funded.\n\nUpon genesis, the **BUIDLDAO** will be the only Special Purpose DAO, but it\nwill initially have no council members.\n\nThe BUIDLDAO will support various initiatives that promote the growth,\ndevelopment, and sustainability of the AtomOne Hub and its ecosystem.\n\n**Funding Proposals**  Funding proposals can be submitted to BUIDLDAO by any\nmember of the AtomOne community through a formal proposal process. Proposals\nmust outline the objectives, budget, timeline, and expected outcomes of the\nproject. The BUIDLDAO reviews and evaluates proposals based on their alignment\nwith the AtomOne Hub’s mission and objectives, feasibility, and potential\nimpact on the ecosystem.\n\n**Community Grants**  BUILDDAO provides community grants to support grassroots\ninitiatives and projects proposed by community members. These grants are aimed\nat fostering innovation, enhancing user experience, and driving community\nengagement. The grant proposal process involves community discussion, feedback,\nand voting to ensure broad support and alignment with the Hub’s goals.\n\n**Strategic Investments**  BUIDLDAO will not directly make strategic\ninvestments. Investments must be made by a special purpose DAO created for the\npurpose of making investments.\n\n## Article 3: Economics\n\n### Section 1: Economic Model\n\nThe one and only economic incentive model of the AtomOne Hub is the collection\nof market-based transaction fees from a large number of transactions across all\nthe chains secured by the staking of ATONE tokens on the AtomOne Hub, including\nICS-secured chains.\n\n### Section 2: The ATONE Token\n\nThe ATONE token functions as voting shares, economic incentive shares, and\nsecurity bonds for the AtomOne Hub.\n\nTo preserve the security and identity of the acting governance and validator\nset, the inflation rate of the ATONE token is made to vary over time to target\n2/3 of all ATONE tokens to be bonded. The maximum inflation rate shall be 20%\nnon-compounded per year. The minimum inflation rate shall be 7% non-compounded\nper year. The mechanism by which the inflation rate is adjusted over time shall\nbe defined through law.\n\nInflated ATONE tokens are paid to bonded ATONE holders in proportion to each\ndelegator's staking amount.\n\nThe ATONE token Unbonding Period shall be a minimum of 3 weeks, and\nredelegation shall be allowed twice per ATONE Unbonding Period.\n\nSlashing penalties for double-signing and complex-signing failures shall be\ndefined through law.\n\n### Section 3: Interchain Accounts\n\nInterchain accounts (ICA) shall be banned from staking and participating in\ngovernance voting of ATONE tokens on the root hub chain.\n\n### Section 4: Liquid Staking\n\nWe classify Liquid Staking as a protocol or application that allows users to\nreceive a tradeable derivative token in exchange for native staking tokens that\nare autonomously bonded by the protocol or by a delegated entity. These\nderivative tokens represent some claim on the underlying bonded tokens and may\naccrue rewards.\n\nLiquid staking shall not be allowed on the root hub chain, core shards, as well\nas consumer shards with the ATONE token.\n\nConsumer shards that offer liquid staking of ATONE tokens will be subject to a\njudicial process defined through laws, and when found in violation, may have\nthe offending transactions excluded from the consumer shard.\n\n### Section 5: The PHOTON Token\n\nThe PHOTON shall be the only fee token except for ATONE to PHOTON burn\ntransactions. This applies for all transactions on the root and core shards,\nand all IBC and ICS payments.\n\nATONE tokens may be burned to PHOTON tokens at a conversion rate set by law\nsuch that the total amount of PHOTONs mintable through burning ATONE tokens\nshall be capped at 1B PHOTON tokens.\n\nPHOTONs cannot be converted back into ATONE tokens.\n\n### Section 6: Third-Party Staking Tokens\n\nAtomOne through law can choose to vote on governance with any staked\nthird-party staking tokens through ICA. \n\nTo exemplify, the law may state that all ATOM tokens staked on Cosmos Hub\nthrough ICA from AtomOne or any of its consumer shards may have all voting\nrights delegated to AtomOne Hub Governance itself, or any DAO appointed by the\nAtomOne Hub.\n\n### Section 7: Inflation\n\nAny inflation of ATONE tokens to the Community Pool or a designated Treasury\nDAO beyond the default inflation rate described in the Constitution shall\nrequire a Constitutional Majority vote of a special inflation governance\nproposal type.\n\nThe maximum yearly percentage increase of ATONE tokens supply resulting from\nthese special inflation proposals shall be limited to 20%. This hard limit\ncannot be amended even with a Constitutional Majority.\n\nThe special inflation proposal can include a description of the purpose of the\ninflation, but it cannot include any other modifications to the AtomOne Hub or\nits Constitution, nor the adoption of any new Treasury DAOs.\n\n### Section 8: The Community Pool\n\nThe Community Pool tax proceeds shall apply to transaction fees and\ninflationary ATONE tokens, and shall be sent to the Community Pool.\n\nThe Community Pool Tax rate shall initially be 5%, but can be increased up to\n10% by a Two-Thirds Supermajority vote of the AtomOne Hub Governance. The\npossible increase shall be limited to 33% increase per year.\n\nThe usage of funds available in the Community Pool shall be regulated through\nlaw and subject to AtomOne Hub Governance, both in terms of destination of\nfunds as well as funding processes. A Two-Thirds Supermajority vote from the\nAtomOne Hub Governance shall be required to adopt a designated funding\nframework as law before any funds from the Community Pool can be used. \n\n### Section 9: Validators\n\nValidators' primary role shall be the securing of the network, and as a\nconsequence delegations received through staking from other delegators shall\nnot affect their AtomOne  Hub Governance voting power, which shall be solely\nequal to their self-delegations.\n\nTo ensure greater fairness in the choice of validator delegation the\nvalidators’ commission shall be a global effective rate established by law, and\nshall not be set independently by operators.\n\nValidators’ election and rewards distribution shall be designed to achieve a\nhigh Nakamoto coefficient, ensuring the sustainable growth of more or less\nequal capacity validators in the long run. In the context of ICS, validators’\nrewards for running consumer chains shall ensure sustainability of the\ninfrastructure’s cost, and shall give flexibility for more permissionless\nvalidation of consumer shards.  The mechanisms to ensure such design shall be\ndefined through law.\n\n## Article 4: Implementation\n\n### Section 1: Updates to the AtomOne Hub\n\nAll updates to the AtomOne Hub must be proposed as distinct, independent\ncomponents. Each component must be discussed and voted on separately to ensure\nthorough deliberation and transparency. Proposals shall not bundle different\nchanges into a single submission. Each proposal must address a single, clearly\ndefined update or change. The only exception is made to regular code\nmaintenance and bug fixes, and critical security updates.\n\nAdequate time must be provided between the consideration of each proposal to\nallow for comprehensive review and community input. The minimum duration for\ndiscussion and voting on each proposal shall be two weeks.\n\nThe passing of Software Update Proposals shall require the passage of law. \n\nATONE stakers are responsible and may be held accountable for voting YES only\non software update proposals that make correct changes toward the living\nonstitution and laws (any substantial changes to the software must first be\nreflected in the constitution and laws). This responsibility exists\nindependently of the Oversight DAOs’ regulatory function.\n\n### Section 2: Protocols\n\nThe AtomOne Hub shall use Tendermint and the Cosmos SDK as the foundational\nsoftware components. Specific forks/software variations shall be allowed to be\nused provided that they are derivative works of the aforementioned software\ncomponents.\n\nThe initial version of the AtomOne Hub root chain will use Tendermint v0.3X and\nthe Cosmos SDK v0.4X.\n\nThe AtomOne Hub shall not have any VM functionality, but shall be plainly\nimplemented in a single garbage-collected language as reference (namely Go);.\n\nThe only cryptographic assumptions allowed to be used by the AtomOne Hub,\nincluding its consensus protocol shall be Ed25519 and Secp256k1 elliptic\ncurves, and RIPEMD160 and SHA256 hash functions.\n\nNo experimental or novel cryptographic technologies, including but not limited\nto zero-knowledge proof systems, shall be adopted on the AtomOne Hub even if\nthey are composed of the approved primitives. Quantum-proofing technologies are\nallowed only if they are additive and do not replace existing cryptographic\nassumptions.\n\nThese cryptographic and implementation restrictions apply only to the root\nchain of the AtomOne Hub and do not extend to core or consumer shards.\n\nMixing implementations across validators is also to be avoided so as to prevent\na failure arising from a low Nakamoto coefficient among the types of\nimplementations. Instead the AtomOne Hub shall always support one standard\nimplementation.\n\n### Section 3: Compute/storage/memory limitations\n\nFor the sake of decentralization, accessibility, accountability, and security,\nall shards belonging to the AtomOne Hub and each consumer shard shall be\nrestricted so that each can run on a commodity computer.\n\n## Defined Terms\n\n- **ATONE** - the primary staking token for AtomOne. The ATONE token functions\n  as voting shares, economic incentive shares, and security bonds for the\n  AtomOne Hub.\n- **PHOTON** - the only fee token for AtomOne.\n- **Additive** - when used in the context of software, it means that it does\n  not require modifying existing primitives.\n- **Airdrop** - a distribution of tokens to some accounts based on predefined\n  criterias. May be distributed automatically at genesis or post-launch, and\n  may require one or more claim transactions from the accounts, or some other\n  predefined action.\n- **AtomOne Hub** - an opinionated fork of the Cosmos Hub Gaia. It is a minimal\n  IBC-token-pegging and ICS hosting hub.\n- **BFT** - Byzantine Fault Tolerant, property of distributed systems that\n  brings resilience over Byzantine faults.\n- **Bonding** - in delegated Proof of Stake, Bonding is the process of locking\n  one’s token to a validator node in order to help secure the network and\n  attain governance voting rights. Also known as “staking”.\n- **Bonded Share Unit** - a static representation of a delegator bonded stake\n  in relation to the total stake of the validators to whom he/she has delegated\n  to. The Bonded Share Unit quantifies the delegator's claim on the rewards and\n  risks associated with the validator's performance. The total number of Bonded\n  Share Units held by a delegator is fixed unless changes occur due to\n  redelegation, but the underlying stake can decrease due to slashing. It is\n  the internal, non-fungible unit of account used for the implementation of\n  staking.   \n- **Citizen** - Cosmonaut that has staked his ATONE tokens toward the AtomeOne\n  Hub, participating in the security of the network and in governance.  \n- **Community Pool** - a community pool is an allocation set aside by the\n  protocol that is continuously growing through the means of a fixed percentage\n  of fees on transactions executed throughout the network and inflationary\n  rewards. They can be used to fund community-driven initiatives, such as\n  development projects, marketing campaigns, or community events. It can be\n  considered as the budget of the network.\n- **Constitutional Majority** - see **Majority**.\n- **Consumer Shards** - see **Shard**.\n- **Core Shards** - see **Shard**.\n- **Cosmonaut** - a participant of the Cosmos Ecosystem, incumbent and token\n  holder of any Cosmos Ecosystem token.\n- **Cosmos** - the interchain network composed of many sovereign zones\n  connected by IBC.\n- **DAO** - Decentralized Autonomous Organization\n- **Economic incentive shares** - units of ownership or participation in an\n  organization designed to align the financial interests of individuals (such\n  as employees, managers, or stakeholders) with the long-term goals and\n  performance of the organization. These shares provide economic benefits, such\n  as dividends or profit-sharing, to incentivize behavior that promotes the\n  organization's success, productivity, and profitability. They serve as a tool\n  for motivating and retaining key individuals by linking their financial\n  rewards to the organization's performance.\n- **Fork** - in the context of blockchain, a fork is a copy of an existing\n  blockchain’s distribution and software, with potential modifications and\n  usually a different chain identifier than the original.\n- **Governor** - a type of account that can have tokens’ governance voting\n  power delegated to them.\n- **IBC** - short for Inter-Blockchain Communication, is a protocol that\n  enables communication between different blockchain networks using Byzantine\n  Fault Tolerant (BFT) light-client proofs. It allows for the transfer of\n  assets and information across independent blockchains, fostering\n  interoperability and flexibility in the blockchain ecosystem. IBC is a\n  cornerstone of the Cosmos network's architecture, enabling its vision of an\n  'Internet of Blockchains'.\n- **ICS1** - ICS1 short for Inter-Blockchain Security version one, also known\n  as Simple Replicated Security, includes all protocols where the validator set\n  is simply replicated across multiple blockchains, and slash conditions are\n  always submitted to a root chain.\n- **ICS2** - ICS2 short for Inter-Blockchain Security version two, includes all\n  protocols where slash conditions for complex failure scenarios of one\n  validator set are handled by another validator set, where slashing affects\n  tokens on the latter validator set.\n  - **ICS2 type A** - includes all protocols of ICS2 where stake is entirely\n  managed by the AtomOne Hub (in the form of ATONE tokens or other\n  derivatives).\n  - **ICS2 type B** - includes all protocols of ICS2 where stake is entirely\n  managed by the logic of the other chain.\n- **ICS-secured chain** - a chain that borrows security from the validator set\n  of the AtomOne Hub by replicating it either fully or partially.\n- **Interchain** - Internet of Blockchains\n- **Interchain Accounts (if we include it)** - a Cosmos-SDK module that allows\n  an IBC-connected chain to hold an account on another chain and perform\n  transactions on this other chain.\n- **Liberty** - “the condition of being free from oppressive restriction or\n  control by a government or other power.”\n- **Liquid Staking** - a protocol that allows users to receive a tradeable\n  derivative token in exchange for native staking tokens that are autonomously\n  bonded by the protocol or by a delegated entity. These derivative tokens\n  represent some claim on the underlying bonded tokens and may accrue rewards.\n- **Majority** - the specified percentage of affirmative votes (YES votes)\n  among bonded ATONE tokens or DAO council members required for a proposal to\n  be approved at the end of the voting period. This approval is contingent upon\n  the voting participation meeting or exceeding a predefined quorum value for\n  Hub Governance.\n  - **Hub Governance Majority**:\n    - **Constitutional majority** - the Constitutional Majority is initially\n      set at 90%. The Constitutional Majority cannot be made lower than 90%\n      even with a Constitutional Majority, but it may be set to any value\n      between 90% and 100%. This elevated threshold aims to ensure broader\n      agreement and inclusivity in critical decision-making processes. It\n      reflects a commitment to achieving near-unanimous consensus on essential\n      governance decisions, enhancing the legitimacy and stability of the\n      outcomes.\n    - **Simple majority** - a simple majority is achieved when more than 50% of\n      total votes is in favor (YES votes). This threshold definition cannot be\n      changed even with a Constitutional Majority.\n    - **Supermajority of Two-Thirds** - the Supermajority is defined to be\n      exactly \"more than two thirds\" (+2/3, or at least one iota more than two\n      thirds) and cannot change even by a Constitutional Majority.\n  - **DAO Governance Majority**:\n    - **Simple majority** - a simple majority is achieved when more than 50% of\n      total votes is in favor (YES votes). This threshold definition cannot be\n      changed even with a Constitutional Majority.\n    - **Supermajority of Two-Thirds** - the Supermajority is defined to be\n      exactly \"two thirds or more\" (\u003e=2/3) and cannot change even by a\n      Constitutional Majority.\n- **Mandates:** - Binding directives issued by the AtomOne Hub or parent DAOs\n  that cannot be amended or repealed by sub-DAOs.\n- **Person** - a person is a human being with legal capacity to have rights\n  and duties.\n- **Property** - “the exclusive right to possess, enjoy, and dispose of a\n  thing.”\n- **Proposal** - in the context of blockchain, a proposal refers to a document\n  that requires deliberation in the form of voting from a blockchain governance\n  structure. It is a formal request for funding, resources, or support to bring\n  a specific project or idea to life or to make changes or updates to the\n  existing software, parameters and foundational documents. A proposal may have\n  a voting period in which any entity with voting power can participate, and\n  after which it is considered approved or rejected depending on the tally of\n  votes and some predefined thresholds.\n- **Quantum Computing** - quantum computing is a multidisciplinary field\n  comprising aspects of computer science, physics, and mathematics that\n  utilizes quantum mechanics to solve complex problems faster than on classical\n  computers. This may have implications for blockchain technology that are\n  worth exploring.\n- **Quorum** - Percentage that represents the vote participation threshold on a\n  proposal over the total existing voting power. . Whatever the final vote\n  results are, a proposal is automatically rejected if the quorum is not\n  reached.\n- **Root Hub Chain** - see **Root Shard**.\n- **Root Shard** - see **Shard**.\n- **Security bonds** - assets that are at stake and collateralized that are\n  made non transferable for the purpose of slashing or use as collateral for\n  paying victims in the event of faulty consensus votes and qualified\n  governance faults or other provable misbehavior.\n- **Shard** - a partition of the blockchain network that allows for parallel\n  processing of transactions. In the context of Cosmos, a shard is simply a\n  blockchain.\n  - **Root Shard** - it is the chain where $ATONE staking and AtomOne Hub\n    Governance transactions are committed and executed. It is also the chain\n    acting as ICS provider.\n  - **Core Shards** - ICS-secured chains that function as an extension of\n    functionality of the AtomOne Hub, these consumer chains are completely\n    controlled by the AtomOne Hub.\n  - **Consumer Shards** - ICS-secured chains that retain full sovereignty due\n    to their own governance and they are in a client relationship with AtomOne\n    Hub.\n- **Simple Majority** - See **Majority**.\n- **Slashing** - in Proof of Stake, slashing refers to the process of\n  penalizing validators and delegators for misbehaving or engaging in malicious\n  activities.\n- **Supermajority** - See **Majority**.\n- **Unbonding** - in Proof of Stake, Unbonding is the process of withdrawing\n  one’s stake from its bonded state to receive fungible tokens. Unbonding is\n  also the action performed in order to initiate this process, which includes\n  the “unbonding period.”\n- **Unbonding Period** - the unbonding period is a time frame during which a\n  staker’s coins are locked on the blockchain after being unbonded and cannot\n  be used in any transaction or earn further staking rewards. This is the\n  estimated maximum amount of time it will take to detect misbehavior and still\n  be able to slash the author of such misbehavior. The unbonding period should\n  be longer than Governance voting periods in order to allow Governance to\n  react in time whenever required.\n- **Validator** - a validator is a crucial part of a blockchain network,\n  particularly in Proof-of-Stake (PoS) consensus mechanisms. They play a vital\n  role in verifying transactions and adding them to the blockchain. Validators\n  are responsible for confirming the authenticity and accuracy of transaction\n  records, ensuring the integrity and security of the network.\n- **VM** - a virtual machine (VM) in the context of programming is an abstract\n  computing machine that enables a computer program to be executed in a\n  consistent, platform-independent manner. This VM provides a layer of\n  abstraction between the executing program and the underlying hardware,\n  typically interpreting or compiling the program's code at runtime, thus\n  ensuring portability and compatibility across different hardware and\n  operating systems.\n- **Voting shares** - units of ownership in an organization that confer the\n  right to vote on organizational matters, such as making decisions on policies\n  and other significant issues that require stakeholder approval. These shares\n  are typically distributed among stakeholders (e.g., shareholders in a\n  corporation or members of a cooperative) and serve as a mechanism for\n  democratic participation and governance within the organization.\n- **ZK** - a zero-knowledge proof or zero-knowledge protocol is a method by\n  which one party (the prover) can prove to another party (the verifier) that a\n  given statement is true, while avoiding conveying to the verifier any\n  information beyond the mere fact of the statement's truth. The intuition\n  underlying zero-knowledge proofs is that it is trivial to prove the\n  possession of certain information by simply revealing it; the challenge is to\n  prove this possession without revealing the information, or any aspect of it\n  whatsoever.\n- **(Sovereign) Zone** - a (sovereign) zone is an independent blockchain (or an\n  application hosted on a parent chain) with a well-defined governing body or\n  bodies that dictate the governance and economic rules internal to that zone.\n  By definition, a zone is sovereign or partially sovereign.\n"
+    },
+    "ibc": {
+      "client_genesis": {
+        "clients": [],
+        "clients_consensus": [],
+        "clients_metadata": [],
+        "params": {
+          "allowed_clients": [
+            "07-tendermint"
+          ]
+        },
+        "create_localhost": false,
+        "next_client_sequence": "0"
+      },
+      "connection_genesis": {
+        "connections": [],
+        "client_connection_paths": [],
+        "next_connection_sequence": "0",
+        "params": {
+          "max_expected_time_per_block": "30000000000"
+        }
+      },
+      "channel_genesis": {
+        "channels": [],
+        "acknowledgements": [],
+        "commitments": [],
+        "receipts": [],
+        "send_sequences": [],
+        "recv_sequences": [],
+        "ack_sequences": [],
+        "next_channel_sequence": "0"
+      }
+    },
+    "interchainaccounts": {
+      "controller_genesis_state": {
+        "active_channels": [],
+        "interchain_accounts": [],
+        "ports": [],
+        "params": {
+          "controller_enabled": false
+        }
+      },
+      "host_genesis_state": {
+        "active_channels": [],
+        "interchain_accounts": [],
+        "port": "icahost",
+        "params": {
+          "host_enabled": false,
+          "allow_messages": [
+            "/atomone.gov.v1.MsgDeposit",
+            "/atomone.gov.v1.MsgSubmitProposal",
+            "/atomone.gov.v1beta1.MsgDeposit",
+            "/atomone.gov.v1beta1.MsgSubmitProposal",
+            "/cosmos.bank.v1beta1.MsgMultiSend",
+            "/cosmos.bank.v1beta1.MsgSend",
+            "/cosmos.distribution.v1beta1.MsgCommunityPoolSpend",
+            "/cosmos.distribution.v1beta1.MsgFundCommunityPool",
+            "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress",
+            "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward",
+            "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission",
+            "/cosmos.feegrant.v1beta1.MsgGrantAllowance",
+            "/cosmos.feegrant.v1beta1.MsgRevokeAllowance",
+            "/cosmos.vesting.v1beta1.MsgCreatePeriodicVestingAccount",
+            "/cosmos.vesting.v1beta1.MsgCreatePermanentLockedAccount",
+            "/cosmos.vesting.v1beta1.MsgCreateVestingAccount",
+            "/ibc.applications.transfer.v1.MsgTransfer"
+          ]
+        }
+      }
+    },
+    "mint": {
+      "minter": {
+        "inflation": "0.130000000000000000",
+        "annual_provisions": "0.000000000000000000"
+      },
+      "params": {
+        "mint_denom": "uatone",
+        "inflation_rate_change": "0.130000000000000000",
+        "inflation_max": "0.200000000000000000",
+        "inflation_min": "0.070000000000000000",
+        "goal_bonded": "0.670000000000000000",
+        "blocks_per_year": "4360000"
+      }
+    },
+    "params": null,
+    "slashing": {
+      "params": {
+        "signed_blocks_window": "10000",
+        "min_signed_per_window": "0.050000000000000000",
+        "downtime_jail_duration": "600s",
+        "slash_fraction_double_sign": "0.050000000000000000",
+        "slash_fraction_downtime": "0.000100000000000000"
+      },
+      "signing_infos": [],
+      "missed_blocks": []
+    },
+    "staking": {
+      "params": {
+        "unbonding_time": "1814400s",
+        "max_validators": 100,
+        "max_entries": 7,
+        "historical_entries": 10000,
+        "bond_denom": "uatone",
+        "min_commission_rate": "0.050000000000000000"
+      },
+      "last_total_power": "0",
+      "last_validator_powers": [],
+      "validators": [],
+      "delegations": [],
+      "unbonding_delegations": [],
+      "redelegations": [],
+      "exported": false
+    },
+    "transfer": {
+      "port_id": "transfer",
+      "denom_traces": [],
+      "params": {
+        "send_enabled": false,
+        "receive_enabled": false
+      },
+      "total_escrowed": []
+    },
+    "upgrade": {},
+    "vesting": {}
+  }
+}

@@ -18,7 +18,7 @@ const (
 
 // Default governance params
 var (
-	minVotingPeriod                       = MinVotingPeriod
+	minVotingPeriod                       = time.Duration(0) // MinVotingPeriod
 	DefaultMinDepositTokens               = sdk.NewInt(10000000)
 	DefaultQuorum                         = sdk.NewDecWithPrec(25, 2)
 	DefaultThreshold                      = sdk.NewDecWithPrec(667, 3)
