@@ -259,7 +259,8 @@ update-swagger-docs: proto-swagger-gen
 ###                                Localnet                                 ###
 ###############################################################################
 
-start-localnet-ci: build
+start-localnet-ci:
+	$(MAKE) build VOTING_PERIOD=5m
 	rm -rf ~/.atomoned-liveness
 	./build/atomoned init liveness --default-denom uatone --chain-id liveness --home ~/.atomoned-liveness
 	cp contrib/genesis.json ~/.atomoned-liveness/config/
