@@ -1,0 +1,10 @@
+syntax = "proto3";
+package atomone.multisig.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/atomone-hub/atomone/x/multisig/types";
+
+// Params defines the parameters for the module.
+message Params {
+}
