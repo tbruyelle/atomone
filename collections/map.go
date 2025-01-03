@@ -5,9 +5,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/atomone-hub/atomone/collection/deps/store"
-
 	"github.com/atomone-hub/atomone/collections/codec"
+	"github.com/atomone-hub/atomone/collections/deps/store"
 )
 
 // Map represents the basic collections object.

@@ -8,7 +8,8 @@ import (
 	"strings"
 
 	"github.com/atomone-hub/atomone/collections/deps/store"
-	"github.com/atomone-hub/atomone/core/appmodule"
+
+	"cosmossdk.io/core/appmodule"
 )
 
 // SchemaBuilder is used for building schemas. The Build method should always
