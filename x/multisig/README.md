@@ -17,7 +17,10 @@ can label or un-label a multisig, and label are uniques.
 A multisig is created with a specific message that contains the members and a
 new address is created for the purpose (see `makeAdress` in `x/accounts`)
 
-Such multisig address will never match the treasury DAO address that was previouisly created, so the multisig would not be able to move the funds from this address, unless we move the funds to that addres thanks to an upgrade.
+Such multisig address will never match the treasury DAO address that was
+previouisly created, so the multisig would not be able to move the funds from
+this address, unless that multisig address is specifically granted in code to
+move those funds.
 
 Messages can be executed thanks to the `baseapp.MsgServiceRouter`, like `x/gov`
 when a proposal has passed. Also like `x/gov` the messages' signer must match
