@@ -5,7 +5,7 @@ import (
 
 	db "github.com/cosmos/cosmos-db"
 
-	"github.com/atomone-hub/atomone/collection/deps/store"
+	"github.com/atomone-hub/atomone/collections/deps/store"
 )
 
 // TODO remove this when we add testStore to core/store.
