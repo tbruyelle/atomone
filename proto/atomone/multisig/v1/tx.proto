@@ -13,9 +13,34 @@ option go_package = "github.com/atomone-hub/atomone/x/multisig/types";
 service Msg {
   option (cosmos.msg.v1.service) = true;
 
+  // CreateMultisig defines a method to create new multisig account.
+  rpc CreateMultisig(MsgCreateMultisig) returns (MsgCreateMultisigResponse);
+
   // UpdateParams defines a governance operation for updating the x/multisig
-	// module parameters. The authority is defined in the keeper.
+  // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+}
+
+// MsgCreateMultisig is used to create a multisig account.
+message MsgCreateMultisig {
+  option (amino.name) = "atomone/multisig/v1/CreateMultisig";
+
+  // members are the members of the multisig account.
+  repeated Member members = 1;
+
+  // threshold is the minimum weight required for a proposal to pass.
+  int64 threshold = 2;
+}
+
+// MsgCreateMultisigResponse is the response returned after multisig creation.
+message MsgCreateMultisigResponse {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// Member defines the member of the multisig account.
+message Member {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 weight = 2;
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
