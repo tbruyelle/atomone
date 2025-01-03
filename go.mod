@@ -13,6 +13,7 @@ require (
 	github.com/chzyer/readline v1.5.1
 	github.com/cometbft/cometbft v0.37.13
 	github.com/cometbft/cometbft-db v0.10.0
+	github.com/cosmos/cosmos-db v0.0.0-20221226095112-f3c38ecb5e32
 	github.com/cosmos/cosmos-proto v1.0.0-beta.5
 	github.com/cosmos/cosmos-sdk v0.47.15
 	github.com/cosmos/go-bip39 v1.0.0
@@ -38,6 +39,7 @@ require (
 	google.golang.org/grpc v1.67.0
 	google.golang.org/protobuf v1.34.2
 	gotest.tools/v3 v3.5.1
+	pgregory.net/rapid v1.1.0
 	sigs.k8s.io/yaml v1.4.0
 )
 
@@ -207,7 +209,6 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.6 // indirect
-	pgregory.net/rapid v1.1.0 // indirect
 )
 
 replace (

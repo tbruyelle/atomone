@@ -8,7 +8,7 @@ import (
 	db "github.com/cosmos/cosmos-db"
 	"github.com/stretchr/testify/require"
 
-	"github.com/atomone-hub/atomone/collection/deps/store"
+	"github.com/atomone-hub/atomone/collections/deps/store"
 )
 
 type testStore struct {

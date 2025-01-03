@@ -331,6 +331,8 @@ github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSV
 github.com/coreos/pkg v0.0.0-20160727233714-3ac0863d7acf/go.mod h1:E3G3o1h8I7cfcXa63jLwjI0eiQQMgzzUDFVpN/nH/eA=
 github.com/cosmos/btcutil v1.0.5 h1:t+ZFcX77LpKtDBhjucvnOH8C2l2ioGsBNEQ3jef8xFk=
 github.com/cosmos/btcutil v1.0.5/go.mod h1:IyB7iuqZMJlthe2tkIFL33xPyzbFYP0XVdS8P5lUPis=
+github.com/cosmos/cosmos-db v0.0.0-20221226095112-f3c38ecb5e32 h1:zlCp9n3uwQieELltZWHRmwPmPaZ8+XoL2Sj+A2YJlr8=
+github.com/cosmos/cosmos-db v0.0.0-20221226095112-f3c38ecb5e32/go.mod h1:kwMlEC4wWvB48zAShGKVqboJL6w4zCLesaNQ3YLU2BQ=
 github.com/cosmos/cosmos-proto v1.0.0-beta.5 h1:eNcayDLpip+zVLRLYafhzLvQlSmyab+RC5W7ZfmxJLA=
 github.com/cosmos/cosmos-proto v1.0.0-beta.5/go.mod h1:hQGLpiIUloJBMdQMMWb/4wRApmI9hjHH05nefC0Ojec=
 github.com/cosmos/cosmos-sdk v0.47.15 h1:xuIkX4IgpnRydiwxY2fI5nWy0SkRVvWvumWtGigwJdk=

@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/atomone-hub/atomone/core/appmodule"
+	"cosmossdk.io/core/appmodule"
 )
 
 func TestDefaultGenesis(t *testing.T) {
