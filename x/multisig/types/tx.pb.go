@@ -31,6 +31,159 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// MsgCreateMultisig is used to create a multisig account.
+type MsgCreateMultisig struct {
+	// members are the members of the multisig account.
+	Members []*Member `protobuf:"bytes,1,rep,name=members,proto3" json:"members,omitempty"`
+	// threshold is the minimum weight required for a proposal to pass.
+	Threshold int64 `protobuf:"varint,2,opt,name=threshold,proto3" json:"threshold,omitempty"`
+}
+
+func (m *MsgCreateMultisig) Reset()         { *m = MsgCreateMultisig{} }
+func (m *MsgCreateMultisig) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateMultisig) ProtoMessage()    {}
+func (*MsgCreateMultisig) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1bdcd9ce4e9326ad, []int{0}
+}
+func (m *MsgCreateMultisig) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateMultisig) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateMultisig.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateMultisig) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateMultisig.Merge(m, src)
+}
+func (m *MsgCreateMultisig) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateMultisig) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateMultisig.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateMultisig proto.InternalMessageInfo
+
+func (m *MsgCreateMultisig) GetMembers() []*Member {
+	if m != nil {
+		return m.Members
+	}
+	return nil
+}
+
+func (m *MsgCreateMultisig) GetThreshold() int64 {
+	if m != nil {
+		return m.Threshold
+	}
+	return 0
+}
+
+// MsgCreateMultisigResponse is the response returned after multisig creation.
+type MsgCreateMultisigResponse struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *MsgCreateMultisigResponse) Reset()         { *m = MsgCreateMultisigResponse{} }
+func (m *MsgCreateMultisigResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateMultisigResponse) ProtoMessage()    {}
+func (*MsgCreateMultisigResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1bdcd9ce4e9326ad, []int{1}
+}
+func (m *MsgCreateMultisigResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateMultisigResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateMultisigResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateMultisigResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateMultisigResponse.Merge(m, src)
+}
+func (m *MsgCreateMultisigResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateMultisigResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateMultisigResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateMultisigResponse proto.InternalMessageInfo
+
+func (m *MsgCreateMultisigResponse) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// Member defines the member of the multisig account.
+type Member struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	Weight  uint64 `protobuf:"varint,2,opt,name=weight,proto3" json:"weight,omitempty"`
+}
+
+func (m *Member) Reset()         { *m = Member{} }
+func (m *Member) String() string { return proto.CompactTextString(m) }
+func (*Member) ProtoMessage()    {}
+func (*Member) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1bdcd9ce4e9326ad, []int{2}
+}
+func (m *Member) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Member) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Member.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Member) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Member.Merge(m, src)
+}
+func (m *Member) XXX_Size() int {
+	return m.Size()
+}
+func (m *Member) XXX_DiscardUnknown() {
+	xxx_messageInfo_Member.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Member proto.InternalMessageInfo
+
+func (m *Member) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+func (m *Member) GetWeight() uint64 {
+	if m != nil {
+		return m.Weight
+	}
+	return 0
+}
+
 // MsgUpdateParams is the Msg/UpdateParams request type.
 type MsgUpdateParams struct {
 	// authority is the address that controls the module (defaults to x/gov unless
@@ -46,7 +199,7 @@ func (m *MsgUpdateParams) Reset()         { *m = MsgUpdateParams{} }
 func (m *MsgUpdateParams) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateParams) ProtoMessage()    {}
 func (*MsgUpdateParams) Descriptor() ([]byte, []int) {
-	return fileDescriptor_1bdcd9ce4e9326ad, []int{0}
+	return fileDescriptor_1bdcd9ce4e9326ad, []int{3}
 }
 func (m *MsgUpdateParams) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -98,7 +251,7 @@ func (m *MsgUpdateParamsResponse) Reset()         { *m = MsgUpdateParamsResponse
 func (m *MsgUpdateParamsResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateParamsResponse) ProtoMessage()    {}
 func (*MsgUpdateParamsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_1bdcd9ce4e9326ad, []int{1}
+	return fileDescriptor_1bdcd9ce4e9326ad, []int{4}
 }
 func (m *MsgUpdateParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -128,6 +281,9 @@ func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterType((*MsgCreateMultisig)(nil), "atomone.multisig.v1.MsgCreateMultisig")
+	proto.RegisterType((*MsgCreateMultisigResponse)(nil), "atomone.multisig.v1.MsgCreateMultisigResponse")
+	proto.RegisterType((*Member)(nil), "atomone.multisig.v1.Member")
 	proto.RegisterType((*MsgUpdateParams)(nil), "atomone.multisig.v1.MsgUpdateParams")
 	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "atomone.multisig.v1.MsgUpdateParamsResponse")
 }
@@ -135,29 +291,37 @@ func init() {
 func init() { proto.RegisterFile("atomone/multisig/v1/tx.proto", fileDescriptor_1bdcd9ce4e9326ad) }
 
 var fileDescriptor_1bdcd9ce4e9326ad = []byte{
-	// 349 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0x49, 0x2c, 0xc9, 0xcf,
-	0xcd, 0xcf, 0x4b, 0xd5, 0xcf, 0x2d, 0xcd, 0x29, 0xc9, 0x2c, 0xce, 0x4c, 0xd7, 0x2f, 0x33, 0xd4,
-	0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x86, 0xca, 0xea, 0xc1, 0x64, 0xf5,
-	0xca, 0x0c, 0xa5, 0x44, 0xd2, 0xf3, 0xd3, 0xf3, 0xc1, 0xf2, 0xfa, 0x20, 0x16, 0x44, 0xa9, 0x94,
-	0x64, 0x72, 0x7e, 0x71, 0x6e, 0x7e, 0x71, 0x3c, 0x44, 0x02, 0xc2, 0x81, 0x4a, 0x89, 0x43, 0x78,
-	0xfa, 0xb9, 0xc5, 0x60, 0xd3, 0x73, 0x8b, 0xd3, 0xa1, 0x12, 0x82, 0x89, 0xb9, 0x99, 0x79, 0xf9,
-	0xfa, 0x60, 0x12, 0x2a, 0xa4, 0x84, 0xcd, 0x3d, 0x70, 0xdb, 0xc1, 0x6a, 0x94, 0x0e, 0x33, 0x72,
-	0xf1, 0xfb, 0x16, 0xa7, 0x87, 0x16, 0xa4, 0x24, 0x96, 0xa4, 0x06, 0x24, 0x16, 0x25, 0xe6, 0x16,
-	0x0b, 0x99, 0x71, 0x71, 0x26, 0x96, 0x96, 0x64, 0xe4, 0x17, 0x65, 0x96, 0x54, 0x4a, 0x30, 0x2a,
-	0x30, 0x6a, 0x70, 0x3a, 0x49, 0x5c, 0xda, 0xa2, 0x2b, 0x02, 0x75, 0x88, 0x63, 0x4a, 0x4a, 0x51,
-	0x6a, 0x71, 0x71, 0x70, 0x49, 0x51, 0x66, 0x5e, 0x7a, 0x10, 0x42, 0xa9, 0x90, 0x1d, 0x17, 0x5b,
-	0x01, 0xd8, 0x04, 0x09, 0x26, 0x05, 0x46, 0x0d, 0x6e, 0x23, 0x69, 0x3d, 0x2c, 0x5e, 0xd6, 0x83,
-	0x58, 0xe2, 0xc4, 0x79, 0xe2, 0x9e, 0x3c, 0xc3, 0x8a, 0xe7, 0x1b, 0xb4, 0x18, 0x83, 0xa0, 0xba,
-	0xac, 0x2c, 0x9a, 0x9e, 0x6f, 0xd0, 0x42, 0x98, 0xd7, 0xf5, 0x7c, 0x83, 0x96, 0x2a, 0xcc, 0x0b,
-	0x15, 0x28, 0x9e, 0x40, 0x73, 0xb1, 0x92, 0x24, 0x97, 0x38, 0x9a, 0x50, 0x50, 0x6a, 0x71, 0x41,
-	0x7e, 0x5e, 0x71, 0xaa, 0x51, 0x01, 0x17, 0xb3, 0x6f, 0x71, 0xba, 0x50, 0x12, 0x17, 0x0f, 0x8a,
-	0x1f, 0x55, 0xb0, 0xba, 0x0d, 0xcd, 0x10, 0x29, 0x1d, 0x62, 0x54, 0xc1, 0xac, 0x92, 0x62, 0x6d,
-	0x00, 0x79, 0xc7, 0xc9, 0xf3, 0xc4, 0x23, 0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92,
-	0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1, 0xc2, 0x63, 0x39, 0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0xf4,
-	0xd3, 0x33, 0x4b, 0x32, 0x4a, 0x93, 0xf4, 0x92, 0xf3, 0x73, 0xf5, 0xa1, 0x06, 0xeb, 0x66, 0x94,
-	0x26, 0xe9, 0x63, 0xf1, 0x64, 0x49, 0x65, 0x41, 0x6a, 0x71, 0x12, 0x1b, 0x38, 0x92, 0x8c, 0x01,
-	0x01, 0x00, 0x00, 0xff, 0xff, 0x98, 0x0e, 0xb7, 0x14, 0x5a, 0x02, 0x00, 0x00,
+	// 480 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x53, 0xbf, 0x6f, 0xd3, 0x40,
+	0x18, 0xcd, 0x11, 0x48, 0x95, 0x03, 0x81, 0x7a, 0x54, 0x34, 0x31, 0x95, 0xa9, 0x2c, 0x7e, 0x44,
+	0x11, 0xf5, 0xa9, 0x41, 0x20, 0xd4, 0x01, 0x89, 0x30, 0x31, 0x58, 0x20, 0x03, 0x0b, 0x0b, 0x3a,
+	0x37, 0xa7, 0xb3, 0xa5, 0x5e, 0xce, 0xba, 0x3b, 0x97, 0x76, 0x43, 0x8c, 0x4c, 0xf0, 0x5f, 0x30,
+	0x66, 0xe0, 0x3f, 0x60, 0xe9, 0x58, 0x31, 0x21, 0x06, 0x84, 0x92, 0x21, 0xff, 0x06, 0xf2, 0xf9,
+	0xdc, 0x10, 0xe3, 0x8a, 0x8a, 0xc5, 0xf2, 0xf7, 0xbd, 0xf7, 0x7d, 0xef, 0xf9, 0xdd, 0x19, 0x6e,
+	0x10, 0x2d, 0xb8, 0x18, 0x53, 0xcc, 0xb3, 0x3d, 0x9d, 0xa8, 0x84, 0xe1, 0xfd, 0x6d, 0xac, 0x0f,
+	0xfc, 0x54, 0x0a, 0x2d, 0xd0, 0x55, 0x8b, 0xfa, 0x25, 0xea, 0xef, 0x6f, 0x3b, 0x6b, 0x4c, 0x30,
+	0x61, 0x70, 0x9c, 0xbf, 0x15, 0x54, 0xa7, 0xbb, 0x2b, 0x14, 0x17, 0xea, 0x4d, 0x01, 0x14, 0x85,
+	0x85, 0xd6, 0x8b, 0x0a, 0x73, 0x65, 0xb6, 0x73, 0xc5, 0x2c, 0xb0, 0x4a, 0x78, 0x32, 0x16, 0xd8,
+	0x3c, 0x6d, 0xcb, 0xab, 0xf3, 0x73, 0xa2, 0x6e, 0x38, 0xde, 0x27, 0x00, 0x57, 0x03, 0xc5, 0x9e,
+	0x48, 0x4a, 0x34, 0x0d, 0x2c, 0x86, 0xee, 0xc3, 0x15, 0x4e, 0x79, 0x44, 0xa5, 0xea, 0x80, 0xcd,
+	0x66, 0xef, 0xe2, 0xe0, 0xba, 0x5f, 0xe3, 0xde, 0x0f, 0x0c, 0x27, 0x2c, 0xb9, 0x68, 0x03, 0xb6,
+	0x75, 0x2c, 0xa9, 0x8a, 0xc5, 0xde, 0xa8, 0x73, 0x6e, 0x13, 0xf4, 0x9a, 0xe1, 0xa2, 0xb1, 0x73,
+	0xe7, 0xc3, 0x7c, 0xd2, 0xaf, 0xf5, 0xb4, 0xac, 0xee, 0x3d, 0x83, 0xdd, 0xbf, 0x2c, 0x85, 0x54,
+	0xa5, 0x62, 0xac, 0x28, 0x1a, 0xc0, 0x15, 0x32, 0x1a, 0x49, 0xaa, 0x72, 0x6b, 0xa0, 0xd7, 0x1e,
+	0x76, 0xbe, 0x7d, 0xd9, 0x5a, 0xb3, 0x19, 0x3d, 0x2e, 0x90, 0x17, 0x5a, 0x26, 0x63, 0x16, 0x96,
+	0x44, 0xef, 0x25, 0x6c, 0x15, 0x56, 0xff, 0x67, 0x1a, 0x5d, 0x83, 0xad, 0xb7, 0x34, 0x61, 0xb1,
+	0x36, 0x9f, 0x74, 0x3e, 0xb4, 0x95, 0xf7, 0x15, 0xc0, 0x2b, 0x81, 0x62, 0xaf, 0xd2, 0x11, 0xd1,
+	0xf4, 0x39, 0x91, 0x84, 0x2b, 0xf4, 0x00, 0xb6, 0x49, 0xa6, 0x63, 0x21, 0x13, 0x7d, 0xf8, 0x4f,
+	0x85, 0x05, 0x15, 0x3d, 0x82, 0xad, 0xd4, 0x6c, 0x30, 0x1a, 0xa7, 0xe5, 0x5d, 0x88, 0x0c, 0xdb,
+	0x47, 0x3f, 0x6f, 0x34, 0x3e, 0xcf, 0x27, 0x7d, 0x10, 0xda, 0xa9, 0x9d, 0x87, 0xef, 0xe7, 0x93,
+	0xfe, 0x62, 0x5f, 0x9e, 0xf4, 0xad, 0x32, 0xe9, 0x83, 0xa5, 0xac, 0x2b, 0x8e, 0xbd, 0x2e, 0x5c,
+	0xaf, 0xb4, 0xca, 0xa8, 0x07, 0x3f, 0x00, 0x6c, 0x06, 0x8a, 0xa1, 0x18, 0x5e, 0xae, 0xdc, 0x8f,
+	0xdb, 0xf5, 0xd7, 0xa1, 0x7a, 0x68, 0x8e, 0x7f, 0x36, 0xde, 0xc9, 0xe1, 0x46, 0xf0, 0xd2, 0x52,
+	0x9c, 0x37, 0x4f, 0x9b, 0xff, 0x93, 0xe5, 0xdc, 0x3d, 0x0b, 0xab, 0xd4, 0x70, 0x2e, 0xbc, 0xcb,
+	0x93, 0x1b, 0x3e, 0x3d, 0x9a, 0xba, 0xe0, 0x78, 0xea, 0x82, 0x5f, 0x53, 0x17, 0x7c, 0x9c, 0xb9,
+	0x8d, 0xe3, 0x99, 0xdb, 0xf8, 0x3e, 0x73, 0x1b, 0xaf, 0x31, 0x4b, 0x74, 0x9c, 0x45, 0xfe, 0xae,
+	0xe0, 0xd8, 0x2e, 0xde, 0x8a, 0xb3, 0x08, 0xd7, 0xe4, 0xa9, 0x0f, 0x53, 0xaa, 0xa2, 0x96, 0xf9,
+	0x95, 0xee, 0xfd, 0x0e, 0x00, 0x00, 0xff, 0xff, 0x54, 0x1d, 0x7d, 0x97, 0x00, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -172,6 +336,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// CreateMultisig defines a method to create new multisig account.
+	CreateMultisig(ctx context.Context, in *MsgCreateMultisig, opts ...grpc.CallOption) (*MsgCreateMultisigResponse, error)
 	// UpdateParams defines a governance operation for updating the x/multisig
 	// module parameters. The authority is defined in the keeper.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
@@ -185,6 +351,15 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
+func (c *msgClient) CreateMultisig(ctx context.Context, in *MsgCreateMultisig, opts ...grpc.CallOption) (*MsgCreateMultisigResponse, error) {
+	out := new(MsgCreateMultisigResponse)
+	err := c.cc.Invoke(ctx, "/atomone.multisig.v1.Msg/CreateMultisig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error) {
 	out := new(MsgUpdateParamsResponse)
 	err := c.cc.Invoke(ctx, "/atomone.multisig.v1.Msg/UpdateParams", in, out, opts...)
@@ -196,6 +371,8 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// CreateMultisig defines a method to create new multisig account.
+	CreateMultisig(context.Context, *MsgCreateMultisig) (*MsgCreateMultisigResponse, error)
 	// UpdateParams defines a governance operation for updating the x/multisig
 	// module parameters. The authority is defined in the keeper.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
@@ -205,12 +382,33 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) CreateMultisig(ctx context.Context, req *MsgCreateMultisig) (*MsgCreateMultisigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMultisig not implemented")
+}
 func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_CreateMultisig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateMultisig)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateMultisig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/atomone.multisig.v1.Msg/CreateMultisig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateMultisig(ctx, req.(*MsgCreateMultisig))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -236,12 +434,123 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "CreateMultisig",
+			Handler:    _Msg_CreateMultisig_Handler,
+		},
+		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "atomone/multisig/v1/tx.proto",
+}
+
+func (m *MsgCreateMultisig) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateMultisig) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateMultisig) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Threshold != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Threshold))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Members) > 0 {
+		for iNdEx := len(m.Members) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Members[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateMultisigResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateMultisigResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateMultisigResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *Member) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Member) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Member) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Weight != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Weight))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *MsgUpdateParams) Marshal() (dAtA []byte, err error) {
@@ -318,6 +627,53 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *MsgCreateMultisig) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Members) > 0 {
+		for _, e := range m.Members {
+			l = e.Size()
+			n += 1 + l + sovTx(uint64(l))
+		}
+	}
+	if m.Threshold != 0 {
+		n += 1 + sovTx(uint64(m.Threshold))
+	}
+	return n
+}
+
+func (m *MsgCreateMultisigResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *Member) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Weight != 0 {
+		n += 1 + sovTx(uint64(m.Weight))
+	}
+	return n
+}
+
 func (m *MsgUpdateParams) Size() (n int) {
 	if m == nil {
 		return 0
@@ -347,6 +703,292 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgCreateMultisig) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateMultisig: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateMultisig: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Members", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Members = append(m.Members, &Member{})
+			if err := m.Members[len(m.Members)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Threshold", wireType)
+			}
+			m.Threshold = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Threshold |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateMultisigResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateMultisigResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateMultisigResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Member) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Member: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Member: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Weight", wireType)
+			}
+			m.Weight = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Weight |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *MsgUpdateParams) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
