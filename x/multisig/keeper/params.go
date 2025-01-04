@@ -9,7 +9,7 @@ import (
 // GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.ParamsKey)
+	bz := store.Get(types.KeyParams)
 	if bz == nil {
 		return params
 	}
@@ -24,6 +24,6 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
 	if err != nil {
 		return err
 	}
-	store.Set(types.ParamsKey, bz)
+	store.Set(types.KeyParams, bz)
 	return nil
 }
