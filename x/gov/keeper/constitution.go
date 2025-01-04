@@ -7,15 +7,18 @@ import (
 )
 
 func (keeper Keeper) GetConstitution(ctx sdk.Context) (constitution string) {
-	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.KeyConstitution)
-
-	return string(bz)
+	c, err := keeper.constitution.Get(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return c
 }
 
 func (keeper Keeper) SetConstitution(ctx sdk.Context, constitution string) {
-	store := ctx.KVStore(keeper.storeKey)
-	store.Set(types.KeyConstitution, []byte(constitution))
+	err := keeper.constitution.Set(ctx, constitution)
+	if err != nil {
+		panic(err)
+	}
 }
 
 // ApplyConstitutionAmendment applies the amendment as a patch against the current constitution
