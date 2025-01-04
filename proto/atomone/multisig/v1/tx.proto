@@ -25,11 +25,12 @@ service Msg {
 message MsgCreateMultisig {
   option (amino.name) = "atomone/multisig/v1/CreateMultisig";
 
+  // sender is the address of the sender of this message.
+  string sender = 1;
   // members are the members of the multisig account.
-  repeated Member members = 1;
-
+  repeated Member members = 2;
   // threshold is the minimum weight required for a proposal to pass.
-  int64 threshold = 2;
+  int64 threshold = 3;
 }
 
 // MsgCreateMultisigResponse is the response returned after multisig creation.

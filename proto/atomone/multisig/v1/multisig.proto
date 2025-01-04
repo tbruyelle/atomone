@@ -12,7 +12,6 @@ message Params {}
 message Multisig {
   // members are the members of the multisig account.
   repeated Member members = 1;
-
   // threshold is the minimum weight required for a proposal to pass.
   int64 threshold = 2;
 }
