@@ -10,7 +10,7 @@ import (
 
 func TestMultiIndex(t *testing.T) {
 	sk, ctx := deps()
-	schema := collections.NewSchemaBuilder(sk)
+	schema := collections.NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 
 	mi := NewMulti(schema, collections.NewPrefix(1), "multi_index", collections.StringKey, collections.Uint64Key, func(_ uint64, value company) (string, error) {
 		return value.City, nil
@@ -64,7 +64,7 @@ func TestMultiIndex(t *testing.T) {
 
 func TestMultiUnchecked(t *testing.T) {
 	sk, ctx := deps()
-	schema := collections.NewSchemaBuilder(sk)
+	schema := collections.NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 
 	uncheckedMi := NewMulti(schema, collections.NewPrefix("prefix"), "multi_index", collections.StringKey, collections.Uint64Key, func(_ uint64, value company) (string, error) {
 		return value.City, nil
