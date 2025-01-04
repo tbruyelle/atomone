@@ -26,7 +26,7 @@ func (b balanceIndex) IndexesList() []collections.Index[collections.Pair[Address
 
 func TestReversePair(t *testing.T) {
 	sk, ctx := deps()
-	sb := collections.NewSchemaBuilder(sk)
+	sb := collections.NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	// we create an indexed map that maps balances, which are saved as
 	// key: Pair[Address, Denom]
 	// value: Amount
@@ -74,7 +74,7 @@ func TestReversePair(t *testing.T) {
 
 func TestUncheckedReversePair(t *testing.T) {
 	sk, ctx := deps()
-	sb := collections.NewSchemaBuilder(sk)
+	sb := collections.NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	prefix := collections.NewPrefix("prefix")
 	keyCodec := collections.PairKeyCodec(collections.StringKey, collections.StringKey)
 

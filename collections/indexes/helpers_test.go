@@ -14,7 +14,7 @@ func TestHelpers(t *testing.T) {
 	// Key: Pair[Address=string, Denom=string] => Value: Amount=uint64
 
 	sk, ctx := deps()
-	sb := collections.NewSchemaBuilder(sk)
+	sb := collections.NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 
 	keyCodec := collections.PairKeyCodec(collections.StringKey, collections.StringKey)
 	indexedMap := collections.NewIndexedMap(

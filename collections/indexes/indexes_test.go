@@ -76,7 +76,7 @@ func (t testStore) ReverseIterator(start, end []byte) storetypes.Iterator {
 
 var _ storetypes.KVStore = testStore{}
 
-func deps() (storetypes.KVStore, context.Context) {
+func deps() (*testStore, context.Context) {
 	kv := db.NewMemDB()
 	return &testStore{kv}, context.Background()
 }
