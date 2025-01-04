@@ -1,5 +1,7 @@
 package types
 
+import "github.com/atomone-hub/atomone/collections"
+
 const (
 	// ModuleName defines the module name
 	ModuleName = "multisig"
@@ -11,4 +13,7 @@ const (
 	RouterKey = ModuleName
 )
 
-var ParamsKey = []byte{0x00}
+var (
+	KeyParams    = []byte{0x00} // TODO migrate to collections
+	KeyMultisigs = collections.NewPrefix(1)
+)
