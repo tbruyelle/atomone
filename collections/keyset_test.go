@@ -8,7 +8,7 @@ import (
 
 func TestKeySet(t *testing.T) {
 	sk, ctx := deps()
-	schema := NewSchemaBuilder(sk)
+	schema := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	ks := NewKeySet(schema, NewPrefix("keyset"), "keyset", StringKey)
 
 	// set
@@ -70,12 +70,12 @@ func Test_noValue(t *testing.T) {
 
 func TestUncheckedKeySet(t *testing.T) {
 	sk, ctx := deps()
-	schema := NewSchemaBuilder(sk)
+	schema := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	uncheckedKs := NewKeySet(schema, NewPrefix("keyset"), "keyset", StringKey, WithKeySetUncheckedValue())
 	ks := NewKeySet(schema, NewPrefix("keyset"), "keyset", StringKey)
 	// we set a NoValue unfriendly value.
-	require.NoError(t, sk.OpenKVStore(ctx).Set([]byte("keyset1"), []byte("A")))
-	require.NoError(t, sk.OpenKVStore(ctx).Set([]byte("keyset2"), []byte("B")))
+	sk.Set([]byte("keyset1"), []byte("A"))
+	sk.Set([]byte("keyset2"), []byte("B"))
 
 	// the standard KeySet errors here, because it doesn't like the fact that the value is []byte("A")
 	// and not []byte{}.
@@ -94,7 +94,6 @@ func TestUncheckedKeySet(t *testing.T) {
 	// now we set it again
 	require.NoError(t, uncheckedKs.Set(ctx, "1"))
 	// and we will see that the value which was []byte("A") has been cleared to be []byte{}
-	raw, err := sk.OpenKVStore(ctx).Get([]byte("keyset1"))
-	require.NoError(t, err)
+	raw := sk.Get([]byte("keyset1"))
 	require.Equal(t, []byte{}, raw)
 }

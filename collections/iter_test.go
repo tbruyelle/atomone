@@ -10,13 +10,11 @@ import (
 func TestIteratorBasic(t *testing.T) {
 	sk, ctx := deps()
 	// safety check to ensure that iteration does not cross prefix boundaries
-	err := sk.OpenKVStore(ctx).Set([]byte{0, 0}, []byte("before prefix"))
-	require.NoError(t, err)
-	err = sk.OpenKVStore(ctx).Set([]byte{2, 1}, []byte("after prefix"))
-	require.NoError(t, err)
-	schemaBuilder := NewSchemaBuilder(sk)
+	sk.Set([]byte{0, 0}, []byte("before prefix"))
+	sk.Set([]byte{2, 1}, []byte("after prefix"))
+	schemaBuilder := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	m := NewMap(schemaBuilder, NewPrefix(1), "m", StringKey, Uint64Value)
-	_, err = schemaBuilder.Build()
+	_, err := schemaBuilder.Build()
 	require.NoError(t, err)
 
 	for i := uint64(1); i <= 2; i++ {
@@ -63,7 +61,7 @@ func TestIteratorBasic(t *testing.T) {
 
 func TestIteratorKeyValues(t *testing.T) {
 	sk, ctx := deps()
-	schemaBuilder := NewSchemaBuilder(sk)
+	schemaBuilder := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	m := NewMap(schemaBuilder, NewPrefix("some super amazing prefix"), "m", StringKey, Uint64Value)
 	_, err := schemaBuilder.Build()
 	require.NoError(t, err)
@@ -112,7 +110,7 @@ func TestIteratorKeyValues(t *testing.T) {
 
 func TestIteratorPrefixing(t *testing.T) {
 	sk, ctx := deps()
-	schemaBuilder := NewSchemaBuilder(sk)
+	schemaBuilder := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	m := NewMap(schemaBuilder, NewPrefix("cool"), "cool", StringKey, Uint64Value)
 	_, err := schemaBuilder.Build()
 	require.NoError(t, err)
@@ -130,7 +128,7 @@ func TestIteratorPrefixing(t *testing.T) {
 
 func TestIteratorRanging(t *testing.T) {
 	sk, ctx := deps()
-	schemaBuilder := NewSchemaBuilder(sk)
+	schemaBuilder := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	m := NewMap(schemaBuilder, NewPrefix("cool"), "cool", Uint64Key, Uint64Value)
 	_, err := schemaBuilder.Build()
 	require.NoError(t, err)
@@ -167,7 +165,7 @@ func TestIteratorRanging(t *testing.T) {
 
 func TestWalk(t *testing.T) {
 	sk, ctx := deps()
-	schemaBuilder := NewSchemaBuilder(sk)
+	schemaBuilder := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	m := NewMap(schemaBuilder, NewPrefix("cool"), "cool", Uint64Key, Uint64Value)
 	_, err := schemaBuilder.Build()
 	require.NoError(t, err)

@@ -7,7 +7,8 @@ import (
 	"fmt"
 
 	"github.com/atomone-hub/atomone/collections/codec"
-	"github.com/atomone-hub/atomone/collections/deps/store"
+
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 )
 
 // ErrInvalidIterator is returned when an Iterate call resulted in an invalid iterator.
@@ -180,20 +181,14 @@ func iteratorFromRanger[K, V any](ctx context.Context, m Map[K, V], r Ranger[K])
 
 func newIterator[K, V any](ctx context.Context, start, end []byte, order Order, m Map[K, V]) (Iterator[K, V], error) {
 	kv := m.sa(ctx)
-	var (
-		iter store.Iterator
-		err  error
-	)
+	var iter storetypes.Iterator
 	switch order {
 	case OrderAscending:
-		iter, err = kv.Iterator(start, end)
+		iter = kv.Iterator(start, end)
 	case OrderDescending:
-		iter, err = kv.ReverseIterator(start, end)
+		iter = kv.ReverseIterator(start, end)
 	default:
 		return Iterator[K, V]{}, errOrder
-	}
-	if err != nil {
-		return Iterator[K, V]{}, err
 	}
 
 	return Iterator[K, V]{
@@ -212,7 +207,7 @@ type Iterator[K, V any] struct {
 	kc codec.KeyCodec[K]
 	vc codec.ValueCodec[V]
 
-	iter store.Iterator
+	iter storetypes.Iterator
 
 	prefixLength int // prefixLength refers to the bytes provided by Prefix.Bytes, not Ranger.RangeValues() prefix.
 }
