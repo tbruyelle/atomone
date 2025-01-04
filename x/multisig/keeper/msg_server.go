@@ -23,49 +23,42 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 
 var _ types.MsgServer = msgServer{}
 
-func (k msgServer) CreateMultisig(goCtx context.Context, msg *types.MsgCreateMultisig) (*types.MsgCreateMultisigResponse, error) {
-	if len(msg.Members) == 0 {
-		return nil, types.ErrMissingMembers
-	}
-	if msg.Threshold <= 0 {
-		return nil, types.ErrZeroThreshold
-	}
-
-	// set members
+func (k msgServer) CreateMultisig(ctx context.Context, msg *types.MsgCreateMultisig) (*types.MsgCreateMultisigResponse, error) {
 	totalWeight := uint64(0)
-	membersMap := map[string]struct{}{} // to check for duplicates
 	for i := range msg.Members {
-		if _, ok := membersMap[msg.Members[i].Address]; ok {
-			return nil, types.ErrDuplicateMember
-		}
-
-		membersMap[msg.Members[i].Address] = struct{}{}
-
-		if msg.Members[i].Weight == 0 {
-			return nil, types.ErrZeroMemberWeight
-		}
-		addrBz, err := sdk.AccAddressFromBech32(msg.Members[i].Address)
-		if err != nil {
-			return nil, sdkerrors.Wrapf(types.ErrWrongMemberAddress, "address: %s", msg.Members[9].Address)
-		}
-		_ = addrBz
-		// TODO check members in x/auth?
-
+		var err error
 		totalWeight, err = safeAdd(totalWeight, msg.Members[i].Weight)
 		if err != nil {
 			return nil, sdkerrors.Wrapf(types.ErrWeightsOverflow, "%v", err)
 		}
 	}
-
 	// threshold must be less than or equal to the total weight
 	if totalWeight < uint64(msg.Threshold) {
 		return nil, types.ErrTotalWeightGreaterThanThreshold
 	}
+	// get the next multisig number
+	num, err := k.multisigNumber.Next(ctx)
+	if err != nil {
+		return nil, err
+	}
+	// create address
+	creator, _ := sdk.AccAddressFromBech32(msg.Sender) // error checked in msg.ValidateBasic
+	multisigAddr, err := k.makeAddress(creator, num, nil)
+	if err != nil {
+		return nil, err
+	}
+	if err := k.multisigs.Set(ctx, multisigAddr, types.Multisig{
+		Members:   msg.Members,
+		Threshold: msg.Threshold,
+	}); err != nil {
+		return nil, err
+	}
 
-	// TODO create multsig address
-	// TODO add to store
-
-	return nil, nil
+	prefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
+	multisigAddrStr := sdk.MustBech32ifyAddressBytes(prefix, multisigAddr)
+	return &types.MsgCreateMultisigResponse{
+		Address: multisigAddrStr,
+	}, nil
 }
 
 func safeAdd(nums ...uint64) (uint64, error) {
