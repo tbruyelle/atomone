@@ -19,7 +19,7 @@ func TestTriple(t *testing.T) {
 
 func TestTripleRange(t *testing.T) {
 	sk, ctx := colltest.MockStore()
-	schema := collections.NewSchemaBuilder(sk)
+	schema := collections.NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	// this is a key composed of 3 parts: uint64, string, []byte
 	kc := collections.TripleKeyCodec(collections.Uint64Key, collections.StringKey, collections.BytesKey)
 

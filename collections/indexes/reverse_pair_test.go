@@ -84,7 +84,7 @@ func TestUncheckedReversePair(t *testing.T) {
 	rawKey, err := collections.EncodeKeyWithPrefix(prefix, uncheckedRp.KeyCodec(), collections.Join("atom", "address1"))
 	require.NoError(t, err)
 
-	require.NoError(t, sk.OpenKVStore(ctx).Set(rawKey, []byte("i should not be here")))
+	sk.Set(rawKey, []byte("i should not be here"))
 
 	// normal reverse pair fails
 	err = rp.Walk(ctx, nil, func(denom, address string) (bool, error) {
@@ -102,7 +102,6 @@ func TestUncheckedReversePair(t *testing.T) {
 	// unchecked reverse pair lazily updates
 	err = uncheckedRp.Reference(ctx, collections.Join("address1", "atom"), 0, nil)
 	require.NoError(t, err)
-	rawValue, err := sk.OpenKVStore(ctx).Get(rawKey)
-	require.NoError(t, err)
+	rawValue := sk.Get(rawKey)
 	require.Equal(t, []byte{}, rawValue)
 }

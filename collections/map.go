@@ -6,7 +6,8 @@ import (
 	"fmt"
 
 	"github.com/atomone-hub/atomone/collections/codec"
-	"github.com/atomone-hub/atomone/collections/deps/store"
+
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 )
 
 // Map represents the basic collections object.
@@ -17,7 +18,7 @@ type Map[K, V any] struct {
 	vc codec.ValueCodec[V]
 
 	// store accessor
-	sa     func(context.Context) store.KVStore
+	sa     func(context.Context) storetypes.KVStore
 	prefix []byte
 	name   string
 }
@@ -65,7 +66,8 @@ func (m Map[K, V]) Set(ctx context.Context, key K, value V) error {
 	}
 
 	kvStore := m.sa(ctx)
-	return kvStore.Set(bytesKey, valueBytes)
+	kvStore.Set(bytesKey, valueBytes)
+	return nil
 }
 
 // Get returns the value associated with the provided key,
@@ -78,10 +80,7 @@ func (m Map[K, V]) Get(ctx context.Context, key K) (v V, err error) {
 	}
 
 	kvStore := m.sa(ctx)
-	valueBytes, err := kvStore.Get(bytesKey)
-	if err != nil {
-		return v, err
-	}
+	valueBytes := kvStore.Get(bytesKey)
 	if valueBytes == nil {
 		return v, fmt.Errorf("%w: key '%s' of type %s", ErrNotFound, m.kc.Stringify(key), m.vc.ValueType())
 	}
@@ -101,7 +100,7 @@ func (m Map[K, V]) Has(ctx context.Context, key K) (bool, error) {
 		return false, err
 	}
 	kvStore := m.sa(ctx)
-	return kvStore.Has(bytesKey)
+	return kvStore.Has(bytesKey), nil
 }
 
 // Remove removes the key from the storage.
@@ -113,7 +112,8 @@ func (m Map[K, V]) Remove(ctx context.Context, key K) error {
 		return err
 	}
 	kvStore := m.sa(ctx)
-	return kvStore.Delete(bytesKey)
+	kvStore.Delete(bytesKey)
+	return nil
 }
 
 // Iterate provides an Iterator over K and V. It accepts a Ranger interface.
@@ -167,12 +167,9 @@ const clearBatchSize = 10000
 // deleteDomain deletes the domain of an iterator, the key difference
 // is that it uses batches to clear the store meaning that it will read
 // the keys within the domain close the iterator and then delete them.
-func deleteDomain(s store.KVStore, start, end []byte) error {
+func deleteDomain(s storetypes.KVStore, start, end []byte) error {
 	for {
-		iter, err := s.Iterator(start, end)
-		if err != nil {
-			return err
-		}
+		iter := s.Iterator(start, end)
 
 		keys := make([][]byte, 0, clearBatchSize)
 		for ; iter.Valid() && len(keys) < clearBatchSize; iter.Next() {
@@ -180,16 +177,13 @@ func deleteDomain(s store.KVStore, start, end []byte) error {
 		}
 
 		// we close the iterator here instead of deferring
-		err = iter.Close()
+		err := iter.Close()
 		if err != nil {
 			return err
 		}
 
 		for _, key := range keys {
-			err = s.Delete(key)
-			if err != nil {
-				return err
-			}
+			s.Delete(key)
 		}
 
 		// If we've retrieved less than the batchSize, we're done.
@@ -221,20 +215,14 @@ func (m Map[K, V]) IterateRaw(ctx context.Context, start, end []byte, order Orde
 	}
 
 	s := m.sa(ctx)
-	var (
-		storeIter store.Iterator
-		err       error
-	)
+	var storeIter storetypes.Iterator
 	switch order {
 	case OrderAscending:
-		storeIter, err = s.Iterator(prefixedStart, prefixedEnd)
+		storeIter = s.Iterator(prefixedStart, prefixedEnd)
 	case OrderDescending:
-		storeIter, err = s.ReverseIterator(prefixedStart, prefixedEnd)
+		storeIter = s.ReverseIterator(prefixedStart, prefixedEnd)
 	default:
 		return Iterator[K, V]{}, errOrder
-	}
-	if err != nil {
-		return Iterator[K, V]{}, err
 	}
 
 	return Iterator[K, V]{
