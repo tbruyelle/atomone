@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
+	"github.com/atomone-hub/atomone/collections"
 	"github.com/atomone-hub/atomone/x/gov/types"
 	v1 "github.com/atomone-hub/atomone/x/gov/types/v1"
 	"github.com/atomone-hub/atomone/x/gov/types/v1beta1"
@@ -45,6 +47,9 @@ type Keeper struct {
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
 	authority string
+
+	schema       collections.Schema
+	constitution collections.Item[string]
 }
 
 // GetAuthority returns the x/gov module's authority.
@@ -77,8 +82,11 @@ func NewKeeper(
 	if config.MaxMetadataLen == 0 {
 		config.MaxMetadataLen = types.DefaultConfig().MaxMetadataLen
 	}
+	sb := collections.NewSchemaBuilderFromAccessor(func(ctx context.Context) storetypes.KVStore {
+		return sdk.UnwrapSDKContext(ctx).KVStore(key)
+	})
 
-	return &Keeper{
+	k := &Keeper{
 		storeKey:   key,
 		authKeeper: authKeeper,
 		bankKeeper: bankKeeper,
@@ -87,7 +95,15 @@ func NewKeeper(
 		router:     router,
 		config:     config,
 		authority:  authority,
+
+		constitution: collections.NewItem(sb, types.KeyConstitution, "constitution", collections.StringValue),
 	}
+	schema, err := sb.Build()
+	if err != nil {
+		panic(err)
+	}
+	k.schema = schema
+	return k
 }
 
 // Hooks gets the hooks for governance *Keeper {
