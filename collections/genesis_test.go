@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"cosmossdk.io/core/appmodule"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 )
 
 func TestDefaultGenesis(t *testing.T) {
@@ -93,7 +94,9 @@ type testFixture struct {
 func initFixture(t *testing.T) *testFixture {
 	t.Helper()
 	sk, ctx := deps()
-	schemaBuilder := NewSchemaBuilder(sk)
+	schemaBuilder := NewSchemaBuilderFromAccessor(func(ctx context.Context) storetypes.KVStore {
+		return sk
+	})
 	m := NewMap(schemaBuilder, NewPrefix(1), "map", StringKey, Uint64Value)
 	i := NewItem(schemaBuilder, NewPrefix(2), "item", StringValue)
 	s := NewSequence(schemaBuilder, NewPrefix(3), "sequence")

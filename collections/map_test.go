@@ -10,7 +10,7 @@ import (
 
 func TestMap(t *testing.T) {
 	sk, ctx := deps()
-	schemaBuilder := NewSchemaBuilder(sk)
+	schemaBuilder := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 	m := NewMap(schemaBuilder, NewPrefix("hi"), "m", Uint64Key, Uint64Value)
 	_, err := schemaBuilder.Build()
 	require.NoError(t, err)
@@ -41,7 +41,7 @@ func TestMap(t *testing.T) {
 func TestMap_Clear(t *testing.T) {
 	makeTest := func() (context.Context, Map[uint64, uint64]) {
 		sk, ctx := deps()
-		m := NewMap(NewSchemaBuilder(sk), NewPrefix(0), "test", Uint64Key, Uint64Value)
+		m := NewMap(NewSchemaBuilderFromAccessor(sk.OpenKVStore), NewPrefix(0), "test", Uint64Key, Uint64Value)
 		for i := uint64(0); i < clearBatchSize*2; i++ {
 			require.NoError(t, m.Set(ctx, i, i))
 		}
@@ -77,10 +77,10 @@ func TestMap_Clear(t *testing.T) {
 func TestMap_IterateRaw(t *testing.T) {
 	sk, ctx := deps()
 	// safety check to ensure prefix boundaries are not crossed
-	require.NoError(t, sk.OpenKVStore(ctx).Set([]byte{0x0, 0x0}, []byte("before prefix")))
-	require.NoError(t, sk.OpenKVStore(ctx).Set([]byte{0x2, 0x0}, []byte("after prefix")))
+	sk.Set([]byte{0x0, 0x0}, []byte("before prefix"))
+	sk.Set([]byte{0x2, 0x0}, []byte("after prefix"))
 
-	sb := NewSchemaBuilder(sk)
+	sb := NewSchemaBuilderFromAccessor(sk.OpenKVStore)
 
 	m := NewMap(sb, NewPrefix(1), "m", Uint64Key, Uint64Value)
 	require.NoError(t, m.Set(ctx, 0, 0))

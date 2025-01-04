@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/atomone-hub/atomone/collections/deps/store"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
 	"cosmossdk.io/core/appmodule"
 )
@@ -21,7 +21,7 @@ type SchemaBuilder struct {
 }
 
 // NewSchemaBuilderFromAccessor creates a new schema builder from the provided store accessor function.
-func NewSchemaBuilderFromAccessor(accessorFunc func(ctx context.Context) store.KVStore) *SchemaBuilder {
+func NewSchemaBuilderFromAccessor(accessorFunc func(ctx context.Context) storetypes.KVStore) *SchemaBuilder {
 	return &SchemaBuilder{
 		schema: &Schema{
 			storeAccessor:       accessorFunc,
@@ -29,13 +29,6 @@ func NewSchemaBuilderFromAccessor(accessorFunc func(ctx context.Context) store.K
 			collectionsByPrefix: map[string]Collection{},
 		},
 	}
-}
-
-// NewSchemaBuilder creates a new schema builder from the provided store key.
-// Callers should always call the SchemaBuilder.Build method when they are
-// done adding collections to the schema.
-func NewSchemaBuilder(service store.KVStoreService) *SchemaBuilder {
-	return NewSchemaBuilderFromAccessor(service.OpenKVStore)
 }
 
 // Build should be called after all collections that are part of the schema
@@ -126,24 +119,10 @@ var nameRegex = regexp.MustCompile("^" + NameRegex + "$")
 // methods for importing/exporting genesis data and for schema reflection for
 // clients.
 type Schema struct {
-	storeAccessor       func(context.Context) store.KVStore
+	storeAccessor       func(context.Context) storetypes.KVStore
 	collectionsOrdered  []string
 	collectionsByPrefix map[string]Collection
 	collectionsByName   map[string]Collection
-}
-
-// NewSchema creates a new schema for the provided KVStoreService.
-func NewSchema(service store.KVStoreService) Schema {
-	return NewSchemaFromAccessor(func(ctx context.Context) store.KVStore {
-		return service.OpenKVStore(ctx)
-	})
-}
-
-// NewMemoryStoreSchema creates a new schema for the provided MemoryStoreService.
-func NewMemoryStoreSchema(service store.MemoryStoreService) Schema {
-	return NewSchemaFromAccessor(func(ctx context.Context) store.KVStore {
-		return service.OpenMemoryStore(ctx)
-	})
 }
 
 // NewSchemaFromAccessor creates a new schema for the provided store accessor
@@ -154,7 +133,7 @@ func NewMemoryStoreSchema(service store.MemoryStoreService) Schema {
 //	NewSchemaFromAccessor(func(ctx context.Context) store.KVStore {
 //			return sdk.UnwrapSDKContext(ctx).KVStore(kvStoreKey)
 //	}
-func NewSchemaFromAccessor(accessor func(context.Context) store.KVStore) Schema {
+func NewSchemaFromAccessor(accessor func(context.Context) storetypes.KVStore) Schema {
 	return Schema{
 		storeAccessor:       accessor,
 		collectionsByName:   map[string]Collection{},

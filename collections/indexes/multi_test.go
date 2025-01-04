@@ -81,7 +81,7 @@ func TestMultiUnchecked(t *testing.T) {
 	require.NoError(t, err)
 
 	// set value to be something different from []byte{}
-	require.NoError(t, sk.OpenKVStore(ctx).Set(rawKey, []byte("something")))
+	sk.Set(rawKey, []byte("something"))
 
 	// normal multi index will fail.
 	err = mi.Walk(ctx, nil, func(indexingKey string, indexedKey uint64) (stop bool, err error) {
@@ -106,7 +106,6 @@ func TestMultiUnchecked(t *testing.T) {
 	require.NoError(t, err)
 
 	// value reset to []byte{}
-	rawValue, err := sk.OpenKVStore(ctx).Get(rawKey)
-	require.NoError(t, err)
+	rawValue := sk.Get(rawKey)
 	require.Equal(t, []byte{}, rawValue)
 }
