@@ -36,8 +36,8 @@ const FlagThreshold = "threshold"
 // NewCreate implements creating a new multisig command.
 func NewMsgCreateMultisigCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create [addr1,weight1] [addr2,weight2]...",
-		Args:  cobra.MinimumNArgs(4),
+		Use:   "create-account [addr1,weight1] [addr2,weight2]...",
+		Args:  cobra.MinimumNArgs(1),
 		Short: "Create a new multisig account",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -48,10 +48,7 @@ func NewMsgCreateMultisigCmd() *cobra.Command {
 			from := clientCtx.GetFromAddress()
 
 			// Parse multisig members
-			var (
-				members   []*types.Member
-				threshold int64
-			)
+			var members []*types.Member
 			for _, arg := range args {
 				parts := strings.Split(arg, ",")
 				weight, err := strconv.ParseUint(parts[1], 10, 64)
@@ -62,7 +59,10 @@ func NewMsgCreateMultisigCmd() *cobra.Command {
 					Address: parts[0],
 					Weight:  weight,
 				})
-				threshold += int64(weight)
+			}
+			threshold, err := cmd.Flags().GetInt64(FlagThreshold)
+			if err != nil {
+				return err
 			}
 
 			// Build message and broadcast
@@ -72,10 +72,12 @@ func NewMsgCreateMultisigCmd() *cobra.Command {
 				Threshold: threshold,
 			}
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+			// exec atomoned q tx TX_HASH |jq -r '.events[] | select(.type == "multisig_creation") | .attributes[] | select(.key == "address")|.value'
 		},
 	}
 
-	cmd.Flags().Int64(FlagThreshold, 0, "Specify the threshold (default to sum of members weight)")
+	cmd.Flags().Int64(FlagThreshold, 0, "Specify the threshold required to pass proposal within the multisig.")
+	cmd.MarkFlagRequired(FlagThreshold)
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

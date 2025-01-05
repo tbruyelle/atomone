@@ -23,7 +23,8 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 
 var _ types.MsgServer = msgServer{}
 
-func (k msgServer) CreateMultisig(ctx context.Context, msg *types.MsgCreateMultisig) (*types.MsgCreateMultisigResponse, error) {
+func (k msgServer) CreateMultisig(goCtx context.Context, msg *types.MsgCreateMultisig) (*types.MsgCreateMultisigResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
 	totalWeight := uint64(0)
 	for i := range msg.Members {
 		var err error
@@ -37,7 +38,7 @@ func (k msgServer) CreateMultisig(ctx context.Context, msg *types.MsgCreateMulti
 		return nil, types.ErrTotalWeightGreaterThanThreshold
 	}
 	// get the next multisig number
-	num, err := k.multisigNumber.Next(ctx)
+	num, err := k.multisigNumber.Next(goCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func (k msgServer) CreateMultisig(ctx context.Context, msg *types.MsgCreateMulti
 	if err != nil {
 		return nil, err
 	}
-	if err := k.multisigs.Set(ctx, multisigAddr, types.Multisig{
+	if err := k.multisigs.Set(goCtx, multisigAddr, types.Multisig{
 		Members:   msg.Members,
 		Threshold: msg.Threshold,
 	}); err != nil {
@@ -56,6 +57,11 @@ func (k msgServer) CreateMultisig(ctx context.Context, msg *types.MsgCreateMulti
 
 	prefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
 	multisigAddrStr := sdk.MustBech32ifyAddressBytes(prefix, multisigAddr)
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(types.EventTypeMultisigCreation,
+			sdk.NewAttribute(types.AttributeKeyAddress, multisigAddrStr),
+		),
+	)
 	return &types.MsgCreateMultisigResponse{
 		Address: multisigAddrStr,
 	}, nil
