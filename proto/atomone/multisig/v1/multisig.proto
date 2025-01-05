@@ -10,10 +10,12 @@ option go_package = "github.com/atomone-hub/atomone/x/multisig/types";
 message Params {}
 
 message Multisig {
+  // creator holds the address of the creator of the multisig account.
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // members are the members of the multisig account.
-  repeated Member members = 1;
+  repeated Member members = 2;
   // threshold is the minimum weight required for a proposal to pass.
-  int64 threshold = 2;
+  int64 threshold = 3;
 }
 
 // Member defines the member of the multisig account.
@@ -21,4 +23,3 @@ message Member {
   string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   uint64 weight = 2;
 }
-
