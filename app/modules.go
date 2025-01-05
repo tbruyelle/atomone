@@ -48,6 +48,8 @@ import (
 	"github.com/atomone-hub/atomone/x/gov"
 	govclient "github.com/atomone-hub/atomone/x/gov/client"
 	govtypes "github.com/atomone-hub/atomone/x/gov/types"
+	"github.com/atomone-hub/atomone/x/multisig"
+	multisigtypes "github.com/atomone-hub/atomone/x/multisig/types"
 	"github.com/atomone-hub/atomone/x/photon"
 	photontypes "github.com/atomone-hub/atomone/x/photon/types"
 )
@@ -98,6 +100,7 @@ var ModuleBasics = module.NewBasicManager(
 	vesting.AppModuleBasic{},
 	ica.AppModuleBasic{},
 	consensus.AppModuleBasic{},
+	multisig.AppModuleBasic{},
 )
 
 func appModules(
@@ -132,6 +135,7 @@ func appModules(
 		ibc.NewAppModule(app.IBCKeeper),
 		sdkparams.NewAppModule(app.ParamsKeeper),
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
+		multisig.NewAppModule(appCodec, app.MultisigKeeper),
 		app.TransferModule,
 		app.ICAModule,
 	}
@@ -202,6 +206,7 @@ func orderBeginBlockers() []string {
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		consensusparamtypes.ModuleName,
+		multisigtypes.ModuleName,
 	}
 }
 
@@ -236,6 +241,7 @@ func orderEndBlockers() []string {
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		consensusparamtypes.ModuleName,
+		multisigtypes.ModuleName,
 	}
 }
 
@@ -270,5 +276,6 @@ func orderInitBlockers() []string {
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		consensusparamtypes.ModuleName,
+		multisigtypes.ModuleName,
 	}
 }

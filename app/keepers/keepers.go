@@ -62,6 +62,8 @@ import (
 	govtypes "github.com/atomone-hub/atomone/x/gov/types"
 	govv1 "github.com/atomone-hub/atomone/x/gov/types/v1"
 	govv1beta1 "github.com/atomone-hub/atomone/x/gov/types/v1beta1"
+	multisigkeeper "github.com/atomone-hub/atomone/x/multisig/keeper"
+	multisigtypes "github.com/atomone-hub/atomone/x/multisig/types"
 	photonkeeper "github.com/atomone-hub/atomone/x/photon/keeper"
 	photontypes "github.com/atomone-hub/atomone/x/photon/types"
 )
@@ -93,6 +95,7 @@ type AppKeepers struct {
 	AuthzKeeper           authzkeeper.Keeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	PhotonKeeper          *photonkeeper.Keeper
+	MultisigKeeper        multisigkeeper.Keeper
 
 	// Modules
 	ICAModule      ica.AppModule
@@ -147,6 +150,11 @@ func NewAppKeeper(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	bApp.SetParamStore(&appKeepers.ConsensusParamsKeeper)
+
+	appKeepers.MultisigKeeper = *multisigkeeper.NewKeeper(appCodec,
+		appKeepers.keys[multisigtypes.StoreKey],
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
 
 	// add capability keeper and ScopeToModule for ibc module
 	appKeepers.CapabilityKeeper = capabilitykeeper.NewKeeper(

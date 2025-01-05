@@ -23,6 +23,7 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
 	govtypes "github.com/atomone-hub/atomone/x/gov/types"
+	multisigtypes "github.com/atomone-hub/atomone/x/multisig/types"
 	photontypes "github.com/atomone-hub/atomone/x/photon/types"
 )
 
@@ -49,6 +50,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		authzkeeper.StoreKey,
 		consensusparamtypes.StoreKey,
 		photontypes.StoreKey,
+		multisigtypes.StoreKey,
 	)
 
 	// Define transient store keys
