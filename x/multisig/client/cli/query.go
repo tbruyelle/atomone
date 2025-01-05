@@ -2,14 +2,11 @@ package cli
 
 import (
 	"fmt"
-	// "strings"
 
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
-	// sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/atomone-hub/atomone/x/multisig/types"
 )
@@ -24,7 +21,33 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
-	cmd.AddCommand(CmdQueryParams())
+	cmd.AddCommand(
+		CmdQueryMultisig(),
+		CmdQueryParams(),
+	)
+	return cmd
+}
+
+func CmdQueryMultisig() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "multisig",
+		Short: "show multisig account",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+			res, err := queryClient.Multisig(cmd.Context(),
+				&types.QueryMultisigRequest{Address: args[0]})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
 	return cmd
 }
 

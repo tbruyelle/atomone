@@ -49,6 +49,7 @@ func (k msgServer) CreateMultisig(goCtx context.Context, msg *types.MsgCreateMul
 		return nil, err
 	}
 	if err := k.multisigs.Set(goCtx, multisigAddr, types.Multisig{
+		Creator:   msg.Sender,
 		Members:   msg.Members,
 		Threshold: msg.Threshold,
 	}); err != nil {

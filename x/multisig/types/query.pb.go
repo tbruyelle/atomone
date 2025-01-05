@@ -6,6 +6,7 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	_ "github.com/cosmos/cosmos-proto"
 	_ "github.com/cosmos/cosmos-sdk/types/query"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/cosmos/gogoproto/grpc"
@@ -113,35 +114,131 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
+type QueryMultisigRequest struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryMultisigRequest) Reset()         { *m = QueryMultisigRequest{} }
+func (m *QueryMultisigRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryMultisigRequest) ProtoMessage()    {}
+func (*QueryMultisigRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fae0fe6badcd7558, []int{2}
+}
+func (m *QueryMultisigRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMultisigRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMultisigRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMultisigRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMultisigRequest.Merge(m, src)
+}
+func (m *QueryMultisigRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMultisigRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMultisigRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMultisigRequest proto.InternalMessageInfo
+
+func (m *QueryMultisigRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryMultisigResponse struct {
+	Multisig *Multisig `protobuf:"bytes,1,opt,name=multisig,proto3" json:"multisig,omitempty"`
+}
+
+func (m *QueryMultisigResponse) Reset()         { *m = QueryMultisigResponse{} }
+func (m *QueryMultisigResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryMultisigResponse) ProtoMessage()    {}
+func (*QueryMultisigResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fae0fe6badcd7558, []int{3}
+}
+func (m *QueryMultisigResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryMultisigResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryMultisigResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryMultisigResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryMultisigResponse.Merge(m, src)
+}
+func (m *QueryMultisigResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryMultisigResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryMultisigResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryMultisigResponse proto.InternalMessageInfo
+
+func (m *QueryMultisigResponse) GetMultisig() *Multisig {
+	if m != nil {
+		return m.Multisig
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "atomone.multisig.v1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "atomone.multisig.v1.QueryParamsResponse")
+	proto.RegisterType((*QueryMultisigRequest)(nil), "atomone.multisig.v1.QueryMultisigRequest")
+	proto.RegisterType((*QueryMultisigResponse)(nil), "atomone.multisig.v1.QueryMultisigResponse")
 }
 
 func init() { proto.RegisterFile("atomone/multisig/v1/query.proto", fileDescriptor_fae0fe6badcd7558) }
 
 var fileDescriptor_fae0fe6badcd7558 = []byte{
-	// 308 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x90, 0xb1, 0x4b, 0x3b, 0x31,
-	0x14, 0xc7, 0x2f, 0x3f, 0x7e, 0x76, 0x38, 0xb7, 0xb4, 0x83, 0xb4, 0x9a, 0xca, 0x39, 0x58, 0x04,
-	0x13, 0xae, 0x4e, 0xae, 0xdd, 0xdc, 0x6a, 0x47, 0xb7, 0x5c, 0x09, 0x69, 0xa0, 0x97, 0x97, 0x36,
-	0xb9, 0x62, 0x37, 0x71, 0x74, 0x12, 0xfc, 0xa7, 0x3a, 0x16, 0x5c, 0x9c, 0x44, 0x7a, 0xfe, 0x21,
-	0xd2, 0xe4, 0x5a, 0x11, 0x0f, 0xdc, 0x8e, 0xf7, 0x3e, 0xdf, 0xef, 0x7d, 0x5e, 0xe2, 0x2e, 0x77,
-	0x90, 0x83, 0x16, 0x2c, 0x2f, 0xa6, 0x4e, 0x59, 0x25, 0xd9, 0x22, 0x65, 0xb3, 0x42, 0xcc, 0x97,
-	0xd4, 0xcc, 0xc1, 0x01, 0x6e, 0x56, 0x00, 0xdd, 0x01, 0x74, 0x91, 0xb6, 0x5b, 0x12, 0x24, 0xf8,
-	0x3d, 0xdb, 0x7e, 0x05, 0xb4, 0x7d, 0x2c, 0x01, 0xe4, 0x54, 0x30, 0x6e, 0x14, 0xe3, 0x5a, 0x83,
-	0xe3, 0x4e, 0x81, 0xb6, 0xd5, 0xf6, 0x62, 0x0c, 0x36, 0x07, 0xcb, 0x32, 0x6e, 0x45, 0xf8, 0x03,
-	0x5b, 0xa4, 0x99, 0x70, 0x3c, 0x65, 0x86, 0x4b, 0xa5, 0x3d, 0x5c, 0xb1, 0x49, 0x9d, 0xd5, 0x5e,
-	0xc0, 0x33, 0x49, 0x2b, 0xc6, 0xb7, 0xdb, 0x96, 0x21, 0x9f, 0xf3, 0xdc, 0x8e, 0xc4, 0xac, 0x10,
-	0xd6, 0x25, 0xc3, 0xb8, 0xf9, 0x63, 0x6a, 0x0d, 0x68, 0x2b, 0xf0, 0x75, 0xdc, 0x30, 0x7e, 0x72,
-	0x84, 0x4e, 0x51, 0xef, 0xb0, 0xdf, 0xa1, 0x35, 0x67, 0xd1, 0x10, 0x1a, 0xfc, 0x5f, 0xbd, 0x77,
-	0xa3, 0x51, 0x15, 0xe8, 0x3f, 0xa1, 0xf8, 0xc0, 0x57, 0xe2, 0x07, 0x14, 0x37, 0x02, 0x82, 0xcf,
-	0x6b, 0xf3, 0xbf, 0x7d, 0xda, 0xbd, 0xbf, 0xc1, 0xa0, 0x98, 0x9c, 0x3d, 0xbe, 0x7e, 0xbe, 0xfc,
-	0x3b, 0xc1, 0x1d, 0x56, 0x77, 0x7c, 0x90, 0x19, 0xdc, 0xac, 0x36, 0x04, 0xad, 0x37, 0x04, 0x7d,
-	0x6c, 0x08, 0x7a, 0x2e, 0x49, 0xb4, 0x2e, 0x49, 0xf4, 0x56, 0x92, 0xe8, 0x8e, 0x49, 0xe5, 0x26,
-	0x45, 0x46, 0xc7, 0x90, 0xef, 0x0a, 0x2e, 0x27, 0x45, 0xb6, 0x2f, 0xbb, 0xff, 0xae, 0x73, 0x4b,
-	0x23, 0x6c, 0xd6, 0xf0, 0xcf, 0x78, 0xf5, 0x15, 0x00, 0x00, 0xff, 0xff, 0x9a, 0xb1, 0xfd, 0xb2,
-	0x02, 0x02, 0x00, 0x00,
+	// 414 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x3f, 0x8f, 0xd3, 0x30,
+	0x18, 0x87, 0x93, 0x0a, 0x4a, 0x31, 0x9b, 0x1b, 0xa4, 0x92, 0xd2, 0x14, 0x05, 0x21, 0x4a, 0xa5,
+	0xc6, 0x4a, 0x99, 0x18, 0xe9, 0x06, 0x12, 0x52, 0x09, 0x1b, 0x0b, 0x72, 0x5a, 0xcb, 0x8d, 0xd4,
+	0xc4, 0x69, 0xec, 0x54, 0x74, 0x43, 0x4c, 0x8c, 0x48, 0x88, 0x6f, 0x72, 0x1f, 0xa2, 0x63, 0x75,
+	0xb7, 0xdc, 0x74, 0x3a, 0xb5, 0xf7, 0x41, 0x4e, 0xb5, 0x9d, 0x9c, 0xae, 0x97, 0xfb, 0xb3, 0xc5,
+	0x7e, 0x7f, 0xef, 0xe3, 0xc7, 0x6f, 0x0c, 0xba, 0x58, 0xb0, 0x98, 0x25, 0x04, 0xc5, 0xf9, 0x5c,
+	0x44, 0x3c, 0xa2, 0x68, 0xe9, 0xa3, 0x45, 0x4e, 0xb2, 0x95, 0x97, 0x66, 0x4c, 0x30, 0xd8, 0xd4,
+	0x01, 0xaf, 0x08, 0x78, 0x4b, 0xdf, 0xb6, 0x28, 0xa3, 0x4c, 0xd6, 0xd1, 0xfe, 0x4b, 0x45, 0xed,
+	0x97, 0x94, 0x31, 0x3a, 0x27, 0x08, 0xa7, 0x11, 0xc2, 0x49, 0xc2, 0x04, 0x16, 0x11, 0x4b, 0xb8,
+	0xae, 0xbe, 0x98, 0x30, 0x1e, 0x33, 0xfe, 0x43, 0xb5, 0xa9, 0x85, 0x2e, 0xf5, 0xd5, 0x0a, 0x85,
+	0x98, 0x13, 0x75, 0x38, 0x5a, 0xfa, 0x21, 0x11, 0xd8, 0x47, 0x29, 0xa6, 0x51, 0x22, 0x39, 0x3a,
+	0xeb, 0x56, 0x09, 0x97, 0x6e, 0x32, 0xe3, 0x5a, 0x00, 0x7e, 0xdd, 0x53, 0xc6, 0x38, 0xc3, 0x31,
+	0x0f, 0xc8, 0x22, 0x27, 0x5c, 0xb8, 0x63, 0xd0, 0xbc, 0xb6, 0xcb, 0x53, 0x96, 0x70, 0x02, 0x3f,
+	0x80, 0x7a, 0x2a, 0x77, 0x5a, 0xe6, 0x2b, 0xb3, 0xf7, 0x6c, 0xd8, 0xf6, 0x2a, 0x6e, 0xec, 0xa9,
+	0xa6, 0xd1, 0xa3, 0xf5, 0x59, 0xd7, 0x08, 0x74, 0x83, 0xfb, 0x19, 0x58, 0x92, 0xf8, 0x45, 0x07,
+	0xf5, 0x49, 0x70, 0x08, 0x9e, 0xe0, 0xe9, 0x34, 0x23, 0x5c, 0x31, 0x9f, 0x8e, 0x5a, 0xc7, 0x47,
+	0x03, 0x4b, 0x5f, 0xf9, 0xa3, 0xaa, 0x7c, 0x13, 0x59, 0x94, 0xd0, 0xa0, 0x08, 0xba, 0x01, 0x78,
+	0x7e, 0xc0, 0x2a, 0xfd, 0x1a, 0x85, 0x88, 0x36, 0xec, 0x54, 0x1a, 0x96, 0x8d, 0x65, 0x7c, 0xf8,
+	0xbf, 0x06, 0x1e, 0x4b, 0x28, 0xfc, 0x65, 0x82, 0xba, 0xba, 0x02, 0x7c, 0x5b, 0xd9, 0x7d, 0x73,
+	0x5e, 0x76, 0xef, 0xfe, 0xa0, 0x52, 0x74, 0x5f, 0xff, 0x3e, 0xb9, 0xf8, 0x57, 0xeb, 0xc0, 0x36,
+	0xaa, 0xfa, 0x39, 0x6a, 0x58, 0xf0, 0x8f, 0x09, 0x1a, 0x85, 0x23, 0x7c, 0x77, 0x3b, 0xfb, 0x60,
+	0x98, 0x76, 0xff, 0x21, 0x51, 0x2d, 0xf2, 0x46, 0x8a, 0x74, 0x61, 0x07, 0xdd, 0xf5, 0x4a, 0x46,
+	0x9f, 0xd6, 0x5b, 0xc7, 0xdc, 0x6c, 0x1d, 0xf3, 0x7c, 0xeb, 0x98, 0x7f, 0x77, 0x8e, 0xb1, 0xd9,
+	0x39, 0xc6, 0xe9, 0xce, 0x31, 0xbe, 0x23, 0x1a, 0x89, 0x59, 0x1e, 0x7a, 0x13, 0x16, 0x17, 0x88,
+	0xc1, 0x2c, 0x0f, 0x4b, 0xdc, 0xcf, 0x2b, 0xa0, 0x58, 0xa5, 0x84, 0x87, 0x75, 0xf9, 0xe2, 0xde,
+	0x5f, 0x06, 0x00, 0x00, 0xff, 0xff, 0x7f, 0x13, 0xdd, 0x60, 0x48, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -158,6 +255,7 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	Multisig(ctx context.Context, in *QueryMultisigRequest, opts ...grpc.CallOption) (*QueryMultisigResponse, error)
 }
 
 type queryClient struct {
@@ -177,10 +275,20 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 	return out, nil
 }
 
+func (c *queryClient) Multisig(ctx context.Context, in *QueryMultisigRequest, opts ...grpc.CallOption) (*QueryMultisigResponse, error) {
+	out := new(QueryMultisigResponse)
+	err := c.cc.Invoke(ctx, "/atomone.multisig.v1.Query/Multisig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
+	Multisig(context.Context, *QueryMultisigRequest) (*QueryMultisigResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -189,6 +297,9 @@ type UnimplementedQueryServer struct {
 
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
+}
+func (*UnimplementedQueryServer) Multisig(ctx context.Context, req *QueryMultisigRequest) (*QueryMultisigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Multisig not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -213,6 +324,24 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Multisig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryMultisigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Multisig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/atomone.multisig.v1.Query/Multisig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Multisig(ctx, req.(*QueryMultisigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "atomone.multisig.v1.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -220,6 +349,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Params",
 			Handler:    _Query_Params_Handler,
+		},
+		{
+			MethodName: "Multisig",
+			Handler:    _Query_Multisig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -282,6 +415,71 @@ func (m *QueryParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryMultisigRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMultisigRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMultisigRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryMultisigResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryMultisigResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryMultisigResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Multisig != nil {
+		{
+			size, err := m.Multisig.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -310,6 +508,32 @@ func (m *QueryParamsResponse) Size() (n int) {
 	_ = l
 	l = m.Params.Size()
 	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryMultisigRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryMultisigResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Multisig != nil {
+		l = m.Multisig.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
 	return n
 }
 
@@ -428,6 +652,174 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMultisigRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMultisigRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMultisigRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryMultisigResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryMultisigResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryMultisigResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Multisig", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Multisig == nil {
+				m.Multisig = &Multisig{}
+			}
+			if err := m.Multisig.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
