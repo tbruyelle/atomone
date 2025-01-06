@@ -26,17 +26,17 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 	cmd.AddCommand(
-		NewMsgCreateMultisigCmd(),
+		NewMsgCreateAccountCmd(),
 	)
 	return cmd
 }
 
 const FlagThreshold = "threshold"
 
-// NewCreate implements creating a new multisig command.
-func NewMsgCreateMultisigCmd() *cobra.Command {
+// NewCreateAccountCmd implements creating a new multisig account command.
+func NewMsgCreateAccountCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-account [addr1,weight1] [addr2,weight2]...",
+		Use:   "create-account --threshold X <addr1,weight1> [addr2,weight2]...",
 		Args:  cobra.MinimumNArgs(1),
 		Short: "Create a new multisig account",
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -66,7 +66,7 @@ func NewMsgCreateMultisigCmd() *cobra.Command {
 			}
 
 			// Build message and broadcast
-			msg := &types.MsgCreateMultisig{
+			msg := &types.MsgCreateAccount{
 				Sender:    from.String(),
 				Members:   members,
 				Threshold: threshold,
@@ -76,7 +76,7 @@ func NewMsgCreateMultisigCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().Int64(FlagThreshold, 0, "Specify the threshold required to pass proposal within the multisig.")
+	cmd.Flags().Int64(FlagThreshold, 0, "Specify the threshold required to pass proposal within the multisig account.")
 	cmd.MarkFlagRequired(FlagThreshold)
 	flags.AddTxFlagsToCmd(cmd)
 

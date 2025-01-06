@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-var _, _ sdk.Msg = &MsgUpdateParams{}, &MsgCreateMultisig{}
+var _, _ sdk.Msg = &MsgUpdateParams{}, &MsgCreateAccount{}
 
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgUpdateParams) ValidateBasic() error {
@@ -29,7 +29,7 @@ func (msg MsgUpdateParams) GetSigners() []sdk.AccAddress {
 }
 
 // ValidateBasic implements the sdk.Msg interface.
-func (msg MsgCreateMultisig) ValidateBasic() error {
+func (msg MsgCreateAccount) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid sender address: %s", err)
 	}
@@ -59,13 +59,13 @@ func (msg MsgCreateMultisig) ValidateBasic() error {
 }
 
 // GetSignBytes returns the message bytes to sign over.
-func (msg MsgCreateMultisig) GetSignBytes() []byte {
+func (msg MsgCreateAccount) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(&msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // GetSigners returns the expected signers for a MsgUpdateParams.
-func (msg MsgCreateMultisig) GetSigners() []sdk.AccAddress {
+func (msg MsgCreateAccount) GetSigners() []sdk.AccAddress {
 	authority, _ := sdk.AccAddressFromBech32(msg.Sender)
 	return []sdk.AccAddress{authority}
 }

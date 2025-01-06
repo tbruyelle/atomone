@@ -23,7 +23,7 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 
 var _ types.MsgServer = msgServer{}
 
-func (k msgServer) CreateMultisig(goCtx context.Context, msg *types.MsgCreateMultisig) (*types.MsgCreateMultisigResponse, error) {
+func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAccount) (*types.MsgCreateAccountResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	totalWeight := uint64(0)
 	for i := range msg.Members {
@@ -37,18 +37,18 @@ func (k msgServer) CreateMultisig(goCtx context.Context, msg *types.MsgCreateMul
 	if totalWeight < uint64(msg.Threshold) {
 		return nil, types.ErrTotalWeightGreaterThanThreshold
 	}
-	// get the next multisig number
-	num, err := k.multisigNumber.Next(goCtx)
+	// get the next account number
+	num, err := k.accountNumber.Next(goCtx)
 	if err != nil {
 		return nil, err
 	}
-	// create address
+	// create account address
 	creator, _ := sdk.AccAddressFromBech32(msg.Sender) // error checked in msg.ValidateBasic
-	multisigAddr, err := k.makeAddress(creator, num, nil)
+	accountAddr, err := k.makeAddress(creator, num, nil)
 	if err != nil {
 		return nil, err
 	}
-	if err := k.multisigs.Set(goCtx, multisigAddr, types.Multisig{
+	if err := k.accounts.Set(goCtx, accountAddr, types.Account{
 		Creator:   msg.Sender,
 		Members:   msg.Members,
 		Threshold: msg.Threshold,
@@ -57,14 +57,14 @@ func (k msgServer) CreateMultisig(goCtx context.Context, msg *types.MsgCreateMul
 	}
 
 	prefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
-	multisigAddrStr := sdk.MustBech32ifyAddressBytes(prefix, multisigAddr)
+	accountAddrStr := sdk.MustBech32ifyAddressBytes(prefix, accountAddr)
 	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(types.EventTypeMultisigCreation,
-			sdk.NewAttribute(types.AttributeKeyAddress, multisigAddrStr),
+		sdk.NewEvent(types.EventTypeAccountCreation,
+			sdk.NewAttribute(types.AttributeKeyAddress, accountAddrStr),
 		),
 	)
-	return &types.MsgCreateMultisigResponse{
-		Address: multisigAddrStr,
+	return &types.MsgCreateAccountResponse{
+		Address: accountAddrStr,
 	}, nil
 }
 

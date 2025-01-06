@@ -22,16 +22,16 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 	cmd.AddCommand(
-		CmdQueryMultisig(),
+		CmdQueryAccount(),
 		CmdQueryParams(),
 	)
 	return cmd
 }
 
-func CmdQueryMultisig() *cobra.Command {
+func CmdQueryAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "multisig",
-		Short: "show multisig account",
+		Use:   "account <address>",
+		Short: "shows multisig account",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -39,8 +39,8 @@ func CmdQueryMultisig() *cobra.Command {
 				return err
 			}
 			queryClient := types.NewQueryClient(clientCtx)
-			res, err := queryClient.Multisig(cmd.Context(),
-				&types.QueryMultisigRequest{Address: args[0]})
+			res, err := queryClient.Account(cmd.Context(),
+				&types.QueryAccountRequest{Address: args[0]})
 			if err != nil {
 				return err
 			}

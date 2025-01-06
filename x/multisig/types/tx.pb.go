@@ -31,8 +31,8 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgCreateMultisig is used to create a multisig account.
-type MsgCreateMultisig struct {
+// MsgCreateAccount is used to create a multisig account.
+type MsgCreateAccount struct {
 	// sender is the address of the sender of this message.
 	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
 	// members are the members of the multisig account.
@@ -41,18 +41,18 @@ type MsgCreateMultisig struct {
 	Threshold int64 `protobuf:"varint,3,opt,name=threshold,proto3" json:"threshold,omitempty"`
 }
 
-func (m *MsgCreateMultisig) Reset()         { *m = MsgCreateMultisig{} }
-func (m *MsgCreateMultisig) String() string { return proto.CompactTextString(m) }
-func (*MsgCreateMultisig) ProtoMessage()    {}
-func (*MsgCreateMultisig) Descriptor() ([]byte, []int) {
+func (m *MsgCreateAccount) Reset()         { *m = MsgCreateAccount{} }
+func (m *MsgCreateAccount) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateAccount) ProtoMessage()    {}
+func (*MsgCreateAccount) Descriptor() ([]byte, []int) {
 	return fileDescriptor_1bdcd9ce4e9326ad, []int{0}
 }
-func (m *MsgCreateMultisig) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreateAccount) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgCreateMultisig) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreateAccount) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgCreateMultisig.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreateAccount.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -62,56 +62,57 @@ func (m *MsgCreateMultisig) XXX_Marshal(b []byte, deterministic bool) ([]byte, e
 		return b[:n], nil
 	}
 }
-func (m *MsgCreateMultisig) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgCreateMultisig.Merge(m, src)
+func (m *MsgCreateAccount) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateAccount.Merge(m, src)
 }
-func (m *MsgCreateMultisig) XXX_Size() int {
+func (m *MsgCreateAccount) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgCreateMultisig) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgCreateMultisig.DiscardUnknown(m)
+func (m *MsgCreateAccount) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateAccount.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgCreateMultisig proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreateAccount proto.InternalMessageInfo
 
-func (m *MsgCreateMultisig) GetSender() string {
+func (m *MsgCreateAccount) GetSender() string {
 	if m != nil {
 		return m.Sender
 	}
 	return ""
 }
 
-func (m *MsgCreateMultisig) GetMembers() []*Member {
+func (m *MsgCreateAccount) GetMembers() []*Member {
 	if m != nil {
 		return m.Members
 	}
 	return nil
 }
 
-func (m *MsgCreateMultisig) GetThreshold() int64 {
+func (m *MsgCreateAccount) GetThreshold() int64 {
 	if m != nil {
 		return m.Threshold
 	}
 	return 0
 }
 
-// MsgCreateMultisigResponse is the response returned after multisig creation.
-type MsgCreateMultisigResponse struct {
+// MsgCreateAccountResponse is the response returned after multisig account
+// creation.
+type MsgCreateAccountResponse struct {
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 }
 
-func (m *MsgCreateMultisigResponse) Reset()         { *m = MsgCreateMultisigResponse{} }
-func (m *MsgCreateMultisigResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgCreateMultisigResponse) ProtoMessage()    {}
-func (*MsgCreateMultisigResponse) Descriptor() ([]byte, []int) {
+func (m *MsgCreateAccountResponse) Reset()         { *m = MsgCreateAccountResponse{} }
+func (m *MsgCreateAccountResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateAccountResponse) ProtoMessage()    {}
+func (*MsgCreateAccountResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_1bdcd9ce4e9326ad, []int{1}
 }
-func (m *MsgCreateMultisigResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreateAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgCreateMultisigResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreateAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgCreateMultisigResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreateAccountResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -121,19 +122,19 @@ func (m *MsgCreateMultisigResponse) XXX_Marshal(b []byte, deterministic bool) ([
 		return b[:n], nil
 	}
 }
-func (m *MsgCreateMultisigResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgCreateMultisigResponse.Merge(m, src)
+func (m *MsgCreateAccountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateAccountResponse.Merge(m, src)
 }
-func (m *MsgCreateMultisigResponse) XXX_Size() int {
+func (m *MsgCreateAccountResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgCreateMultisigResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgCreateMultisigResponse.DiscardUnknown(m)
+func (m *MsgCreateAccountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateAccountResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgCreateMultisigResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreateAccountResponse proto.InternalMessageInfo
 
-func (m *MsgCreateMultisigResponse) GetAddress() string {
+func (m *MsgCreateAccountResponse) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
@@ -237,8 +238,8 @@ func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*MsgCreateMultisig)(nil), "atomone.multisig.v1.MsgCreateMultisig")
-	proto.RegisterType((*MsgCreateMultisigResponse)(nil), "atomone.multisig.v1.MsgCreateMultisigResponse")
+	proto.RegisterType((*MsgCreateAccount)(nil), "atomone.multisig.v1.MsgCreateAccount")
+	proto.RegisterType((*MsgCreateAccountResponse)(nil), "atomone.multisig.v1.MsgCreateAccountResponse")
 	proto.RegisterType((*MsgUpdateParams)(nil), "atomone.multisig.v1.MsgUpdateParams")
 	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "atomone.multisig.v1.MsgUpdateParamsResponse")
 }
@@ -246,37 +247,37 @@ func init() {
 func init() { proto.RegisterFile("atomone/multisig/v1/tx.proto", fileDescriptor_1bdcd9ce4e9326ad) }
 
 var fileDescriptor_1bdcd9ce4e9326ad = []byte{
-	// 473 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x93, 0x3f, 0x6f, 0xd3, 0x40,
-	0x18, 0xc6, 0x73, 0x8d, 0x48, 0x95, 0x03, 0x81, 0x6a, 0x2a, 0xea, 0x98, 0xca, 0x44, 0x16, 0x7f,
-	0xa2, 0x88, 0xfa, 0xd4, 0x20, 0x10, 0xea, 0x80, 0x44, 0x98, 0x18, 0x2c, 0x90, 0x11, 0x0b, 0x0b,
-	0x3a, 0xd7, 0xa7, 0xb3, 0xa5, 0x9e, 0xcf, 0xba, 0xf7, 0x52, 0xb5, 0x1b, 0x62, 0x64, 0xe2, 0x63,
-	0xc0, 0x96, 0x81, 0x6f, 0xc0, 0xd2, 0xb1, 0x62, 0x42, 0x0c, 0x08, 0x25, 0x43, 0xbe, 0x06, 0x8a,
-	0x7d, 0x6e, 0x48, 0x70, 0xd5, 0x2e, 0x96, 0xef, 0x7d, 0x9e, 0x7b, 0xdf, 0xc7, 0xbf, 0x57, 0xc6,
-	0xdb, 0x54, 0x4b, 0x21, 0x33, 0x46, 0xc4, 0xe8, 0x40, 0xa7, 0x90, 0x72, 0x72, 0xb8, 0x4b, 0xf4,
-	0x91, 0x9f, 0x2b, 0xa9, 0xa5, 0x75, 0xd3, 0xa8, 0x7e, 0xa5, 0xfa, 0x87, 0xbb, 0xce, 0x26, 0x97,
-	0x5c, 0x16, 0x3a, 0x99, 0xbf, 0x95, 0x56, 0xa7, 0xb3, 0x2f, 0x41, 0x48, 0x78, 0x5f, 0x0a, 0xe5,
-	0xc1, 0x48, 0x5b, 0xe5, 0x89, 0x08, 0x28, 0xba, 0x0b, 0xe0, 0x46, 0xd8, 0xa0, 0x22, 0xcd, 0x24,
-	0x29, 0x9e, 0xa6, 0xe4, 0xd5, 0xe5, 0x39, 0x9b, 0x5e, 0x78, 0xbc, 0xaf, 0x08, 0x6f, 0x04, 0xc0,
-	0x5f, 0x28, 0x46, 0x35, 0x0b, 0x8c, 0x66, 0xdd, 0xc2, 0x2d, 0x60, 0x59, 0xcc, 0x94, 0x8d, 0xba,
-	0xa8, 0xd7, 0x0e, 0xcd, 0xc9, 0x7a, 0x8c, 0xd7, 0x05, 0x13, 0x11, 0x53, 0x60, 0xaf, 0x75, 0x9b,
-	0xbd, 0xab, 0x83, 0xdb, 0x7e, 0xcd, 0x57, 0xf9, 0x41, 0xe1, 0x09, 0x2b, 0xaf, 0xb5, 0x8d, 0xdb,
-	0x3a, 0x51, 0x0c, 0x12, 0x79, 0x10, 0xdb, 0xcd, 0x2e, 0xea, 0x35, 0xc3, 0x45, 0x61, 0xef, 0xc1,
-	0xa7, 0xd9, 0xb8, 0x5f, 0x9b, 0x75, 0x39, 0x95, 0xf7, 0x0a, 0x77, 0xfe, 0x8b, 0x1a, 0x32, 0xc8,
-	0x65, 0x06, 0xcc, 0x1a, 0xe0, 0x75, 0x1a, 0xc7, 0x8a, 0x01, 0x94, 0x99, 0x87, 0xf6, 0x8f, 0x6f,
-	0x3b, 0x9b, 0x86, 0xdd, 0xf3, 0x52, 0x79, 0xa3, 0x55, 0x9a, 0xf1, 0xb0, 0x32, 0x7a, 0xdf, 0x11,
-	0xbe, 0x11, 0x00, 0x7f, 0x9b, 0xc7, 0x54, 0xb3, 0xd7, 0x54, 0x51, 0x01, 0xd6, 0x13, 0xdc, 0xa6,
-	0x23, 0x9d, 0x48, 0x95, 0xea, 0xe3, 0x0b, 0x3b, 0x2d, 0xac, 0xd6, 0x33, 0xdc, 0xca, 0x8b, 0x0e,
-	0xf6, 0x5a, 0x17, 0x9d, 0x4b, 0xa6, 0x1c, 0x32, 0x6c, 0x9f, 0xfc, 0xbe, 0xd3, 0xf8, 0x32, 0x1b,
-	0xf7, 0x51, 0x68, 0x6e, 0xed, 0x3d, 0xfd, 0x38, 0x1b, 0xf7, 0x17, 0xfd, 0xe6, 0x4c, 0xee, 0x55,
-	0x4c, 0x8e, 0x96, 0xa8, 0xac, 0x24, 0xf6, 0x3a, 0x78, 0x6b, 0xa5, 0x54, 0x41, 0x19, 0xfc, 0x42,
-	0xb8, 0x19, 0x00, 0xb7, 0x12, 0x7c, 0x7d, 0x65, 0xc3, 0xf7, 0xeb, 0x17, 0xb7, 0x8a, 0xd7, 0xf1,
-	0x2f, 0xe7, 0x3b, 0x5b, 0x43, 0x84, 0xaf, 0x2d, 0xe1, 0xbc, 0x7b, 0xde, 0xfd, 0x7f, 0x5d, 0xce,
-	0xc3, 0xcb, 0xb8, 0xaa, 0x19, 0xce, 0x95, 0x0f, 0x73, 0x72, 0xc3, 0x97, 0x27, 0x13, 0x17, 0x9d,
-	0x4e, 0x5c, 0xf4, 0x67, 0xe2, 0xa2, 0xcf, 0x53, 0xb7, 0x71, 0x3a, 0x75, 0x1b, 0x3f, 0xa7, 0x6e,
-	0xe3, 0x1d, 0xe1, 0xa9, 0x4e, 0x46, 0x91, 0xbf, 0x2f, 0x05, 0x31, 0x8d, 0x77, 0x92, 0x51, 0x44,
-	0x6a, 0x78, 0xea, 0xe3, 0x9c, 0x41, 0xd4, 0x2a, 0x7e, 0x86, 0x47, 0x7f, 0x03, 0x00, 0x00, 0xff,
-	0xff, 0xc5, 0xfc, 0x79, 0xcd, 0xc2, 0x03, 0x00, 0x00,
+	// 476 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x93, 0x41, 0x6b, 0xd4, 0x40,
+	0x14, 0xc7, 0x77, 0xba, 0xb8, 0x65, 0x47, 0x45, 0x8d, 0xc5, 0xa6, 0xb1, 0xc4, 0x25, 0xb4, 0xb0,
+	0x2e, 0x6e, 0x86, 0xae, 0x28, 0xd2, 0x83, 0xd0, 0xf5, 0xe4, 0x61, 0x45, 0x22, 0x5e, 0xbc, 0x48,
+	0xb2, 0x19, 0x26, 0x81, 0x4e, 0x26, 0xcc, 0x9b, 0x94, 0xf6, 0x26, 0x1e, 0x3d, 0xf9, 0x31, 0xc4,
+	0xd3, 0x1e, 0xfc, 0x06, 0x5e, 0x7a, 0x2c, 0x5e, 0xf4, 0x24, 0xb2, 0x7b, 0xd8, 0xaf, 0x21, 0x9b,
+	0x4c, 0xba, 0x6d, 0x48, 0xe9, 0x5e, 0x42, 0xe6, 0xfd, 0xff, 0xf3, 0xde, 0x3f, 0xbf, 0x47, 0xf0,
+	0xb6, 0xaf, 0x04, 0x17, 0x09, 0x25, 0x3c, 0x3b, 0x54, 0x31, 0xc4, 0x8c, 0x1c, 0xed, 0x11, 0x75,
+	0xec, 0xa6, 0x52, 0x28, 0x61, 0xdc, 0xd7, 0xaa, 0x5b, 0xaa, 0xee, 0xd1, 0x9e, 0xb5, 0xc1, 0x04,
+	0x13, 0xb9, 0x4e, 0x16, 0x6f, 0x85, 0xd5, 0xda, 0x1a, 0x0b, 0xe0, 0x02, 0x3e, 0x16, 0x42, 0x71,
+	0xd0, 0xd2, 0x66, 0x71, 0x22, 0x1c, 0xf2, 0xee, 0x1c, 0x98, 0x16, 0xee, 0xf9, 0x3c, 0x4e, 0x04,
+	0xc9, 0x9f, 0xba, 0xe4, 0xd4, 0xe5, 0x39, 0x9f, 0x9e, 0x7b, 0x9c, 0xef, 0x08, 0xdf, 0x1d, 0x01,
+	0x7b, 0x25, 0xa9, 0xaf, 0xe8, 0xc1, 0x78, 0x2c, 0xb2, 0x44, 0x19, 0x0f, 0x70, 0x0b, 0x68, 0x12,
+	0x52, 0x69, 0xa2, 0x0e, 0xea, 0xb6, 0x3d, 0x7d, 0x32, 0x9e, 0xe1, 0x75, 0x4e, 0x79, 0x40, 0x25,
+	0x98, 0x6b, 0x9d, 0x66, 0xf7, 0xe6, 0xe0, 0xa1, 0x5b, 0xf3, 0x51, 0xee, 0x28, 0xf7, 0x78, 0xa5,
+	0xd7, 0xd8, 0xc6, 0x6d, 0x15, 0x49, 0x0a, 0x91, 0x38, 0x0c, 0xcd, 0x66, 0x07, 0x75, 0x9b, 0xde,
+	0xb2, 0xb0, 0xff, 0xf8, 0xcb, 0x7c, 0xd2, 0xdb, 0xa9, 0x8b, 0x5a, 0xcd, 0xe5, 0xbc, 0xc1, 0x66,
+	0xb5, 0xe6, 0x51, 0x48, 0x45, 0x02, 0xd4, 0x18, 0xe0, 0x75, 0x3f, 0x0c, 0x25, 0x05, 0x28, 0x42,
+	0x0f, 0xcd, 0x5f, 0x3f, 0xfa, 0x1b, 0x9a, 0xdd, 0x41, 0xa1, 0xbc, 0x53, 0x32, 0x4e, 0x98, 0x57,
+	0x1a, 0x9d, 0x9f, 0x08, 0xdf, 0x19, 0x01, 0x7b, 0x9f, 0x86, 0xbe, 0xa2, 0x6f, 0x7d, 0xe9, 0x73,
+	0x30, 0x9e, 0xe3, 0xb6, 0x9f, 0xa9, 0x48, 0xc8, 0x58, 0x9d, 0x5c, 0xdb, 0x69, 0x69, 0x35, 0x5e,
+	0xe2, 0x56, 0x9a, 0x77, 0x30, 0xd7, 0x3a, 0xe8, 0x4a, 0x34, 0xc5, 0x90, 0x61, 0xfb, 0xf4, 0xef,
+	0xa3, 0xc6, 0xb7, 0xf9, 0xa4, 0x87, 0x3c, 0x7d, 0x6b, 0xff, 0xc5, 0xe7, 0xf9, 0xa4, 0xb7, 0xec,
+	0xb7, 0x80, 0xb2, 0x5b, 0x42, 0x39, 0xae, 0x62, 0xb9, 0x98, 0xd8, 0xd9, 0xc2, 0x9b, 0x95, 0x52,
+	0x09, 0x65, 0xf0, 0x1b, 0xe1, 0xe6, 0x08, 0x98, 0x41, 0xf1, 0xed, 0xcb, 0x1b, 0xde, 0xad, 0x5f,
+	0x5c, 0x05, 0xae, 0xd5, 0x5f, 0xc9, 0x76, 0xbe, 0x83, 0x00, 0xdf, 0xba, 0xc4, 0x72, 0xe7, 0xaa,
+	0xeb, 0x17, 0x5d, 0xd6, 0x93, 0x55, 0x5c, 0xe5, 0x0c, 0xeb, 0xc6, 0xa7, 0x05, 0xb6, 0xe1, 0xeb,
+	0xd3, 0xa9, 0x8d, 0xce, 0xa6, 0x36, 0xfa, 0x37, 0xb5, 0xd1, 0xd7, 0x99, 0xdd, 0x38, 0x9b, 0xd9,
+	0x8d, 0x3f, 0x33, 0xbb, 0xf1, 0x81, 0xb0, 0x58, 0x45, 0x59, 0xe0, 0x8e, 0x05, 0x27, 0xba, 0x71,
+	0x3f, 0xca, 0x02, 0x52, 0x03, 0x53, 0x9d, 0xa4, 0x14, 0x82, 0x56, 0xfe, 0x27, 0x3c, 0xfd, 0x1f,
+	0x00, 0x00, 0xff, 0xff, 0x4e, 0xd7, 0x9d, 0x75, 0xbf, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -291,8 +292,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// CreateMultisig defines a method to create new multisig account.
-	CreateMultisig(ctx context.Context, in *MsgCreateMultisig, opts ...grpc.CallOption) (*MsgCreateMultisigResponse, error)
+	// CreateAccount defines a method to create new multisig account.
+	CreateAccount(ctx context.Context, in *MsgCreateAccount, opts ...grpc.CallOption) (*MsgCreateAccountResponse, error)
 	// UpdateParams defines a governance operation for updating the x/multisig
 	// module parameters. The authority is defined in the keeper.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
@@ -306,9 +307,9 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) CreateMultisig(ctx context.Context, in *MsgCreateMultisig, opts ...grpc.CallOption) (*MsgCreateMultisigResponse, error) {
-	out := new(MsgCreateMultisigResponse)
-	err := c.cc.Invoke(ctx, "/atomone.multisig.v1.Msg/CreateMultisig", in, out, opts...)
+func (c *msgClient) CreateAccount(ctx context.Context, in *MsgCreateAccount, opts ...grpc.CallOption) (*MsgCreateAccountResponse, error) {
+	out := new(MsgCreateAccountResponse)
+	err := c.cc.Invoke(ctx, "/atomone.multisig.v1.Msg/CreateAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -326,8 +327,8 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// CreateMultisig defines a method to create new multisig account.
-	CreateMultisig(context.Context, *MsgCreateMultisig) (*MsgCreateMultisigResponse, error)
+	// CreateAccount defines a method to create new multisig account.
+	CreateAccount(context.Context, *MsgCreateAccount) (*MsgCreateAccountResponse, error)
 	// UpdateParams defines a governance operation for updating the x/multisig
 	// module parameters. The authority is defined in the keeper.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
@@ -337,8 +338,8 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) CreateMultisig(ctx context.Context, req *MsgCreateMultisig) (*MsgCreateMultisigResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateMultisig not implemented")
+func (*UnimplementedMsgServer) CreateAccount(ctx context.Context, req *MsgCreateAccount) (*MsgCreateAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
 }
 func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
@@ -348,20 +349,20 @@ func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_CreateMultisig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgCreateMultisig)
+func _Msg_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateAccount)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).CreateMultisig(ctx, in)
+		return srv.(MsgServer).CreateAccount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/atomone.multisig.v1.Msg/CreateMultisig",
+		FullMethod: "/atomone.multisig.v1.Msg/CreateAccount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).CreateMultisig(ctx, req.(*MsgCreateMultisig))
+		return srv.(MsgServer).CreateAccount(ctx, req.(*MsgCreateAccount))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -389,8 +390,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateMultisig",
-			Handler:    _Msg_CreateMultisig_Handler,
+			MethodName: "CreateAccount",
+			Handler:    _Msg_CreateAccount_Handler,
 		},
 		{
 			MethodName: "UpdateParams",
@@ -401,7 +402,7 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	Metadata: "atomone/multisig/v1/tx.proto",
 }
 
-func (m *MsgCreateMultisig) Marshal() (dAtA []byte, err error) {
+func (m *MsgCreateAccount) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -411,12 +412,12 @@ func (m *MsgCreateMultisig) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgCreateMultisig) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCreateAccount) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgCreateMultisig) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCreateAccount) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -450,7 +451,7 @@ func (m *MsgCreateMultisig) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgCreateMultisigResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgCreateAccountResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -460,12 +461,12 @@ func (m *MsgCreateMultisigResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgCreateMultisigResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCreateAccountResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgCreateMultisigResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCreateAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -554,7 +555,7 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgCreateMultisig) Size() (n int) {
+func (m *MsgCreateAccount) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -576,7 +577,7 @@ func (m *MsgCreateMultisig) Size() (n int) {
 	return n
 }
 
-func (m *MsgCreateMultisigResponse) Size() (n int) {
+func (m *MsgCreateAccountResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -619,7 +620,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgCreateMultisig) Unmarshal(dAtA []byte) error {
+func (m *MsgCreateAccount) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -642,10 +643,10 @@ func (m *MsgCreateMultisig) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgCreateMultisig: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreateAccount: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgCreateMultisig: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreateAccount: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -754,7 +755,7 @@ func (m *MsgCreateMultisig) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgCreateMultisigResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgCreateAccountResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -777,10 +778,10 @@ func (m *MsgCreateMultisigResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgCreateMultisigResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreateAccountResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgCreateMultisigResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreateAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
