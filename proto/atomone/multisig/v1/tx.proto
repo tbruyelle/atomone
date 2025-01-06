@@ -16,6 +16,9 @@ service Msg {
   // CreateAccount defines a method to create new multisig account.
   rpc CreateAccount(MsgCreateAccount) returns (MsgCreateAccountResponse);
 
+  // CreateProposal defines a method to create new multisig proposal.
+  rpc CreateProposal(MsgCreateProposal) returns (MsgCreateProposalResponse);
+
   // UpdateParams defines a governance operation for updating the x/multisig
   // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
@@ -26,7 +29,7 @@ message MsgCreateAccount {
   option (amino.name) = "atomone/multisig/v1/MsgCreateAccount";
 
   // sender is the address of the sender of this message.
-  string sender = 1;
+  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // members are the members of the multisig account.
   repeated Member members = 2;
   // threshold is the minimum weight required for a proposal to pass.
@@ -37,6 +40,24 @@ message MsgCreateAccount {
 // creation.
 message MsgCreateAccountResponse {
   string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgCreateProposal is used to create a multisig proposal.
+message MsgCreateProposal {
+  option (amino.name) = "atomone/multisig/v1/MsgCreateProposal";
+
+  // sender is the address of the sender of this message.
+  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // address is the multisig address
+  string address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // proposal holds the multisig proposal.
+  Proposal proposal = 3;
+}
+
+// MsgCreateProposalResponse is the response returned after multisig proposal
+// creation.
+message MsgCreateProposalResponse {
+  uint64 proposal_id = 1;
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
