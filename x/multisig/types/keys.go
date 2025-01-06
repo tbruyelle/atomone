@@ -14,7 +14,7 @@ const (
 )
 
 var (
-	KeyParams        = []byte{0x00} // TODO migrate to collections
+	KeyParams        = collections.NewPrefix(0)
 	KeyAccounts      = collections.NewPrefix(1)
 	KeyAccountNumber = collections.NewPrefix(2)
 )

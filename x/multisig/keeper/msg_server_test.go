@@ -42,16 +42,18 @@ func TestMsgServerUpdateParams(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ms, k, _, ctx := testutil.SetupMsgServer(t)
 			params := types.DefaultParams()
-			k.SetParams(ctx, params)
+			err := k.Params.Set(ctx, params)
+			require.NoError(t, err)
 
-			_, err := ms.UpdateParams(ctx, tt.msg)
+			_, err = ms.UpdateParams(ctx, tt.msg)
 
 			if tt.expectedErr != "" {
 				require.EqualError(t, err, tt.expectedErr)
 				return
 			}
 			require.NoError(t, err)
-			got := k.GetParams(ctx)
+			got, err := k.Params.Get(ctx)
+			require.NoError(t, err)
 			require.Equal(t, got, tt.msg.Params)
 		})
 	}
