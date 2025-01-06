@@ -20,12 +20,12 @@ type Keeper struct {
 	cdc      codec.BinaryCodec
 	storeKey storetypes.StoreKey
 
-	schema        collections.Schema
-	Params        collections.Item[types.Params]
-	accounts      collections.Map[[]byte, types.Account]
-	accountNumber collections.Sequence
-
 	authority string
+
+	Schema        collections.Schema
+	Params        collections.Item[types.Params]
+	Accounts      collections.Map[[]byte, types.Account]
+	AccountNumber collections.Sequence
 }
 
 func NewKeeper(
@@ -42,18 +42,18 @@ func NewKeeper(
 		Params: collections.NewItem(
 			sb, types.KeyParams, "params", collcodec.CollValue[types.Params](cdc),
 		),
-		accounts: collections.NewMap(
+		Accounts: collections.NewMap(
 			sb, types.KeyAccounts, "accounts", collections.BytesKey,
 			collcodec.CollValue[types.Account](cdc),
 		),
-		accountNumber: collections.NewSequence(sb, types.KeyAccountNumber, "accounts_number"),
+		AccountNumber: collections.NewSequence(sb, types.KeyAccountNumber, "accounts_number"),
 		authority:     authority,
 	}
 	schema, err := sb.Build()
 	if err != nil {
 		panic(err)
 	}
-	k.schema = schema
+	k.Schema = schema
 	return k
 }
 

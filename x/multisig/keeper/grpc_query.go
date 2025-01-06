@@ -45,7 +45,7 @@ func (k queryServer) Account(goCtx context.Context, req *types.QueryAccountReque
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid address %s: %v", req.Address, err)
 	}
-	acc, err := k.accounts.Get(goCtx, addrBz)
+	acc, err := k.Accounts.Get(goCtx, addrBz)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, "multisig %s doesn't exist", req.Address)
