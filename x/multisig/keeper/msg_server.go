@@ -71,6 +71,10 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 	}, nil
 }
 
+func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreateProposal) (*types.MsgCreateProposalResponse, error) {
+	return nil, nil
+}
+
 func safeAdd(nums ...uint64) (uint64, error) {
 	var sum uint64
 	for _, num := range nums {
