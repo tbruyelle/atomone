@@ -38,7 +38,7 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 		return nil, types.ErrTotalWeightGreaterThanThreshold
 	}
 	// get the next account number
-	num, err := k.accountNumber.Next(goCtx)
+	num, err := k.AccountNumber.Next(goCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -48,16 +48,19 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 	if err != nil {
 		return nil, err
 	}
-	if err := k.accounts.Set(goCtx, accountAddr, types.Account{
+	// store account
+	prefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
+	accountAddrStr := sdk.MustBech32ifyAddressBytes(prefix, accountAddr)
+	err = k.Accounts.Set(goCtx, accountAddr, types.Account{
+		Address:   accountAddrStr,
 		Creator:   msg.Sender,
 		Members:   msg.Members,
 		Threshold: msg.Threshold,
-	}); err != nil {
+	})
+	if err != nil {
 		return nil, err
 	}
 
-	prefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
-	accountAddrStr := sdk.MustBech32ifyAddressBytes(prefix, accountAddr)
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(types.EventTypeAccountCreation,
 			sdk.NewAttribute(types.AttributeKeyAddress, accountAddrStr),
