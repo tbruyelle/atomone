@@ -20,9 +20,9 @@ type Keeper struct {
 	cdc      codec.BinaryCodec
 	storeKey storetypes.StoreKey
 
-	schema         collections.Schema
-	multisigs      collections.Map[[]byte, types.Multisig]
-	multisigNumber collections.Sequence
+	schema        collections.Schema
+	accounts      collections.Map[[]byte, types.Account]
+	accountNumber collections.Sequence
 
 	authority string
 }
@@ -38,15 +38,15 @@ func NewKeeper(
 	k := &Keeper{
 		cdc:      cdc,
 		storeKey: storeKey,
-		multisigs: collections.NewMap(
+		accounts: collections.NewMap(
 			sb,
-			types.KeyMultisigs,
-			"multisigs",
+			types.KeyAccounts,
+			"accounts",
 			collections.BytesKey,
-			collcodec.CollValue[types.Multisig](cdc),
+			collcodec.CollValue[types.Account](cdc),
 		),
-		multisigNumber: collections.NewSequence(sb, types.KeyMultisigNumbger, "multisig_number"),
-		authority:      authority,
+		accountNumber: collections.NewSequence(sb, types.KeyAccountNumber, "accounts_number"),
+		authority:     authority,
 	}
 	schema, err := sb.Build()
 	if err != nil {

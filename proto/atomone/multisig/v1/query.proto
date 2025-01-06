@@ -15,8 +15,8 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/atomone/multisig/v1/params";
   }
-  rpc Multisig(QueryMultisigRequest) returns (QueryMultisigResponse) {
-    option (google.api.http).get = "/atomone/multisig/v1/multisig";
+  rpc Account(QueryAccountRequest) returns (QueryAccountResponse) {
+    option (google.api.http).get = "/atomone/multisig/v1/account";
   }
 }
 
@@ -29,8 +29,8 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryMultisigRequest {
+message QueryAccountRequest {
   string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-message QueryMultisigResponse { Multisig multisig = 1; }
+message QueryAccountResponse { Account account = 1; }

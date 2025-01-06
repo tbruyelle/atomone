@@ -12,9 +12,19 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-var _ types.QueryServer = Keeper{}
+type queryServer struct {
+	Keeper
+}
 
-func (k Keeper) Params(goCtx context.Context, req *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
+// NewQueryServer returns an implementation of the QueryServer interface
+// for the provided Keeper.
+func NewQueryServer(keeper Keeper) types.QueryServer {
+	return &queryServer{Keeper: keeper}
+}
+
+var _ types.QueryServer = queryServer{}
+
+func (k queryServer) Params(goCtx context.Context, req *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -23,7 +33,7 @@ func (k Keeper) Params(goCtx context.Context, req *types.QueryParamsRequest) (*t
 	return &types.QueryParamsResponse{Params: k.GetParams(ctx)}, nil
 }
 
-func (k Keeper) Multisig(goCtx context.Context, req *types.QueryMultisigRequest) (*types.QueryMultisigResponse, error) {
+func (k queryServer) Account(goCtx context.Context, req *types.QueryAccountRequest) (*types.QueryAccountResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -31,12 +41,12 @@ func (k Keeper) Multisig(goCtx context.Context, req *types.QueryMultisigRequest)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid address %s: %v", req.Address, err)
 	}
-	m, err := k.multisigs.Get(goCtx, addrBz)
+	acc, err := k.accounts.Get(goCtx, addrBz)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, "multisig %s doesn't exist", req.Address)
 		}
 		return nil, err
 	}
-	return &types.QueryMultisigResponse{Multisig: &m}, nil
+	return &types.QueryAccountResponse{Account: &acc}, nil
 }
