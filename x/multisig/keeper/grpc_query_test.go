@@ -15,7 +15,7 @@ func TestParamsQuery(t *testing.T) {
 	k, _, ctx := testutil.SetupMultisigKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	params := types.DefaultParams()
-	k.SetParams(ctx, params)
+	k.Params.Set(ctx, params)
 	queryServer := keeper.NewQueryServer(*k)
 
 	response, err := queryServer.Params(wctx, &types.QueryParamsRequest{})

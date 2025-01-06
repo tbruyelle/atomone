@@ -21,6 +21,7 @@ type Keeper struct {
 	storeKey storetypes.StoreKey
 
 	schema        collections.Schema
+	Params        collections.Item[types.Params]
 	accounts      collections.Map[[]byte, types.Account]
 	accountNumber collections.Sequence
 
@@ -38,11 +39,11 @@ func NewKeeper(
 	k := &Keeper{
 		cdc:      cdc,
 		storeKey: storeKey,
+		Params: collections.NewItem(
+			sb, types.KeyParams, "params", collcodec.CollValue[types.Params](cdc),
+		),
 		accounts: collections.NewMap(
-			sb,
-			types.KeyAccounts,
-			"accounts",
-			collections.BytesKey,
+			sb, types.KeyAccounts, "accounts", collections.BytesKey,
 			collcodec.CollValue[types.Account](cdc),
 		),
 		accountNumber: collections.NewSequence(sb, types.KeyAccountNumber, "accounts_number"),

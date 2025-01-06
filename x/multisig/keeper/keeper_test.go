@@ -9,11 +9,14 @@ import (
 	"github.com/atomone-hub/atomone/x/multisig/types"
 )
 
-func TestGetParams(t *testing.T) {
+func TestParams(t *testing.T) {
 	k, _, ctx := testutil.SetupMultisigKeeper(t)
 	params := types.DefaultParams()
 
-	k.SetParams(ctx, params)
+	err := k.Params.Set(ctx, params)
+	require.NoError(t, err)
 
-	require.EqualValues(t, params, k.GetParams(ctx))
+	params2, err := k.Params.Get(ctx)
+	require.NoError(t, err)
+	require.EqualValues(t, params, params2)
 }
