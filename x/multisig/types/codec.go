@@ -8,14 +8,28 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	consensustypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
+	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
+	distributiontypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
+	govtypes "github.com/atomone-hub/atomone/x/gov/types/v1"
 )
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgCreateAccount{}, &MsgCreateProposal{}, &MsgUpdateParams{},
+	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	legacy.RegisterAminoMsg(cdc, &MsgCreateAccount{}, "atomone/multisig/v1/MsgCreateAccount")
+	legacy.RegisterAminoMsg(cdc, &MsgCreateProposal{}, "atomone/multisig/v1/MsgCreateProposal")
 	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "atomone/x/multisig/v1/MsgUpdateParams")
 	cdc.RegisterConcrete(&Params{}, "atomone/multisig/v1/Params", nil)
 }
@@ -34,4 +48,12 @@ func init() {
 	// because of the MsgCreateProposal which can embed any other messages.
 	banktypes.RegisterLegacyAminoCodec(amino)
 	govtypes.RegisterLegacyAminoCodec(amino)
+	consensustypes.RegisterLegacyAminoCodec(amino)
+	crisistypes.RegisterLegacyAminoCodec(amino)
+	distributiontypes.RegisterLegacyAminoCodec(amino)
+	evidencetypes.RegisterLegacyAminoCodec(amino)
+	minttypes.RegisterLegacyAminoCodec(amino)
+	slashingtypes.RegisterLegacyAminoCodec(amino)
+	stakingtypes.RegisterLegacyAminoCodec(amino)
+	upgradetypes.RegisterLegacyAminoCodec(amino)
 }

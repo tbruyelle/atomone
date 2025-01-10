@@ -1,6 +1,7 @@
 package types
 
 import (
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	sdktx "github.com/cosmos/cosmos-sdk/types/tx"
@@ -131,4 +132,10 @@ func (m MsgCreateProposal) GetSignBytes() []byte {
 func (m MsgCreateProposal) GetSigners() []sdk.AccAddress {
 	authority, _ := sdk.AccAddressFromBech32(m.Sender)
 	return []sdk.AccAddress{authority}
+}
+
+// UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
+// NOTE: required because MsgCreateProposal embeds types.Anys.
+func (m MsgCreateProposal) UnpackInterfaces(unpacker codectypes.AnyUnpacker) error {
+	return sdktx.UnpackInterfaces(unpacker, m.Proposal.Messages)
 }
