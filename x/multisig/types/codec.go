@@ -7,10 +7,9 @@ import (
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 )
-
-func RegisterCodec(cdc *codec.LegacyAmino) {
-}
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
@@ -23,11 +22,16 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 
 var (
 	amino     = codec.NewLegacyAmino()
-	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())
+	ModuleCdc = codec.NewAminoCodec(amino)
 )
 
 func init() {
 	RegisterLegacyAminoCodec(amino)
 	cryptocodec.RegisterCrypto(amino)
 	sdk.RegisterLegacyAminoCodec(amino)
+
+	// Need to add registration in the atomone multisig amino for all modules
+	// because of the MsgCreateProposal which can embed any other messages.
+	banktypes.RegisterLegacyAminoCodec(amino)
+	govtypes.RegisterLegacyAminoCodec(amino)
 }

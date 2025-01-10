@@ -72,6 +72,12 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 }
 
 func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreateProposal) (*types.MsgCreateProposalResponse, error) {
+	// Fetch account
+	addrBz, err := sdk.AccAddressFromBech32(msg.Address)
+	if err != nil {
+		return nil, err
+	}
+	k.Accounts.Get(goCtx, addrBz)
 	return nil, nil
 }
 
