@@ -31,14 +31,14 @@ func TestMsgSubmitProposal_GetSignBytes(t *testing.T) {
 			msgs:              []sdk.Msg{v1.NewMsgVote(addrs[0], 1, v1.OptionYes, "")},
 			title:             "gov/MsgVote",
 			summary:           "Proposal for a governance vote msg",
-			expectedSignBytes: `{"type":"atomone/multisig/v1/MsgCreateProposal","value":{"sender":"","address":"","proposal":{"title":"gov/MsgVote","summary":"Proposal for a governance vote msg","messages":[{"type":"atomone/v1/MsgVote","value":{"option":1,"proposal_id":"1","voter":"cosmos1w3jhxap3gempvr"}}]}}}`,
+			expectedSignBytes: `{"type":"atomone/multisig/v1/MsgCreateProposal","value":{"proposal":{"messages":[{"type":"atomone/v1/MsgVote","value":{"option":1,"proposal_id":"1","voter":"cosmos1w3jhxap3gempvr"}}],"summary":"Proposal for a governance vote msg","title":"gov/MsgVote"}}}`,
 		},
 		{
 			name:              "MsgSend",
 			msgs:              []sdk.Msg{banktypes.NewMsgSend(addrs[0], addrs[0], sdk.NewCoins())},
 			title:             "bank/MsgSend",
 			summary:           "Proposal for a bank msg send",
-			expectedSignBytes: fmt.Sprintf(`{"type":"atomone/multisig/v1/MsgCreateProposal","value":{"initial_deposit":[],"messages":[{"type":"cosmos-sdk/MsgSend","value":{"amount":[],"from_address":"%s","to_address":"%s"}}],"summary":"Proposal for a bank msg send","title":"bank/MsgSend"}}`, addrs[0], addrs[0]),
+			expectedSignBytes: fmt.Sprintf(`{"type":"atomone/multisig/v1/MsgCreateProposal","value":{"proposal":{"messages":[{"type":"cosmos-sdk/MsgSend","value":{"amount":[],"from_address":"%s","to_address":"%s"}}],"summary":"Proposal for a bank msg send","title":"bank/MsgSend"}}}`, addrs[0], addrs[0]),
 		},
 	}
 
