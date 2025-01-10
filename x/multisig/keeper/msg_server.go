@@ -77,7 +77,16 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 	if err != nil {
 		return nil, err
 	}
-	k.Accounts.Get(goCtx, addrBz)
+	acc, err := k.GetAccount(goCtx, addrBz)
+	if err != nil {
+		return nil, err
+	}
+	_ = acc
+	// Ensure msg.Sender is a member's account
+	// Test proposal msgs with a cached context
+	// Store proposal
+	// Return proposal id
+
 	return nil, nil
 }
 

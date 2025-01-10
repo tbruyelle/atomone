@@ -2,9 +2,7 @@ package keeper
 
 import (
 	"context"
-	"errors"
 
-	"github.com/atomone-hub/atomone/collections"
 	"github.com/atomone-hub/atomone/x/multisig/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -37,7 +35,7 @@ func (k queryServer) Params(goCtx context.Context, req *types.QueryParamsRequest
 	return &types.QueryParamsResponse{Params: params}, nil
 }
 
-func (k queryServer) Account(goCtx context.Context, req *types.QueryAccountRequest) (*types.QueryAccountResponse, error) {
+func (k queryServer) Account(ctx context.Context, req *types.QueryAccountRequest) (*types.QueryAccountResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -45,11 +43,8 @@ func (k queryServer) Account(goCtx context.Context, req *types.QueryAccountReque
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid address %s: %v", req.Address, err)
 	}
-	acc, err := k.Accounts.Get(goCtx, addrBz)
+	acc, err := k.GetAccount(ctx, addrBz)
 	if err != nil {
-		if errors.Is(err, collections.ErrNotFound) {
-			return nil, status.Errorf(codes.NotFound, "multisig %s doesn't exist", req.Address)
-		}
 		return nil, err
 	}
 	return &types.QueryAccountResponse{Account: &acc}, nil

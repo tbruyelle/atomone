@@ -4,7 +4,11 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/binary"
+	"errors"
 	"fmt"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -59,6 +63,14 @@ func NewKeeper(
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+func (k Keeper) GetAccount(ctx context.Context, addr sdk.AccAddress) (types.Account, error) {
+	acc, err := k.Accounts.Get(ctx, addr)
+	if errors.Is(err, collections.ErrNotFound) {
+		return types.Account{}, status.Errorf(codes.NotFound, "multisig %s doesn't exist", addr.String())
+	}
+	return acc, err
 }
 
 // NOTE copied from x/accounts
