@@ -18,7 +18,9 @@ import (
 	"github.com/atomone-hub/atomone/x/multisig/types"
 )
 
-type Mocks struct{}
+type Mocks struct {
+	Router *MockRouter
+}
 
 func SetupMsgServer(t *testing.T) (types.MsgServer, *keeper.Keeper, Mocks, sdk.Context) {
 	t.Helper()
@@ -33,8 +35,9 @@ func SetupMultisigKeeper(t *testing.T) (
 ) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
-	_ = ctrl
-	m := Mocks{}
+	m := Mocks{
+		Router: NewMockRouter(ctrl),
+	}
 
 	key := sdk.NewKVStoreKey(types.StoreKey)
 	testCtx := testutil.DefaultContextWithDB(t, key, sdk.NewTransientStoreKey("transient_test"))
@@ -43,5 +46,5 @@ func SetupMultisigKeeper(t *testing.T) (
 	types.RegisterInterfaces(encCfg.InterfaceRegistry)
 	// banktypes.RegisterInterfaces(encCfg.InterfaceRegistry)
 	authority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
-	return keeper.NewKeeper(encCfg.Codec, key, authority), m, ctx
+	return keeper.NewKeeper(encCfg.Codec, key, m.Router, authority), m, ctx
 }

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/atomone-hub/atomone/x/multisig/keeper"
-	"github.com/atomone-hub/atomone/x/multisig/keeper/testutil"
+	"github.com/atomone-hub/atomone/x/multisig/testutil"
 	"github.com/atomone-hub/atomone/x/multisig/types"
 	"github.com/stretchr/testify/require"
 

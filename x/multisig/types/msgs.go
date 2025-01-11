@@ -7,7 +7,10 @@ import (
 	sdktx "github.com/cosmos/cosmos-sdk/types/tx"
 )
 
-var _, _, _ sdk.Msg = &MsgUpdateParams{}, &MsgCreateAccount{}, &MsgCreateProposal{}
+var (
+	_, _, _ sdk.Msg                            = &MsgUpdateParams{}, &MsgCreateAccount{}, &MsgCreateProposal{}
+	_       codectypes.UnpackInterfacesMessage = &MsgCreateProposal{}
+)
 
 // ValidateBasic implements the sdk.Msg interface.
 func (m MsgUpdateParams) ValidateBasic() error {
@@ -74,7 +77,7 @@ func (m MsgCreateAccount) GetSigners() []sdk.AccAddress {
 
 // GetMsgs unpacks m.Messages Any's into sdk.Msg's
 func (m *MsgCreateProposal) GetMsgs() ([]sdk.Msg, error) {
-	return sdktx.GetMsgs(m.Proposal.Messages, "sdk.MsgProposal")
+	return sdktx.GetMsgs(m.Messages, "sdk.MsgProposal")
 }
 
 // SetMsgs packs sdk.Msg's into m.Messages Any's
@@ -85,7 +88,7 @@ func (m *MsgCreateProposal) SetMsgs(msgs []sdk.Msg) error {
 		return err
 	}
 
-	m.Proposal.Messages = anys
+	m.Messages = anys
 	return nil
 }
 
@@ -97,18 +100,15 @@ func (m MsgCreateProposal) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(m.Address); err != nil {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid multisig account address: %s", err)
 	}
-	if m.Proposal == nil {
-		return sdkerrors.ErrInvalidRequest.Wrap("Proposal must be non-nil") //nolint:staticcheck
-	}
 	// TODO assert max length
-	if m.Proposal.Title == "" {
+	if m.Title == "" {
 		return sdkerrors.ErrInvalidRequest.Wrap("proposal title cannot be empty") //nolint:staticcheck
 	}
 	// TODO assert max length
-	if m.Proposal.Summary == "" {
+	if m.Summary == "" {
 		return sdkerrors.ErrInvalidRequest.Wrap("proposal summary cannot be empty") //nolint:staticcheck
 	}
-	if len(m.Proposal.Messages) == 0 {
+	if len(m.Messages) == 0 {
 		return sdkerrors.ErrInvalidRequest.Wrap("Proposal.Messages length must be non-nil") //nolint:staticcheck
 	}
 	msgs, err := m.GetMsgs()
@@ -136,7 +136,6 @@ func (m MsgCreateProposal) GetSigners() []sdk.AccAddress {
 }
 
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
-// NOTE: required because MsgCreateProposal embeds types.Anys.
 func (m MsgCreateProposal) UnpackInterfaces(unpacker codectypes.AnyUnpacker) error {
-	return sdktx.UnpackInterfaces(unpacker, m.Proposal.Messages)
+	return sdktx.UnpackInterfaces(unpacker, m.Messages)
 }

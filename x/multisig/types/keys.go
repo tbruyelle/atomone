@@ -14,7 +14,9 @@ const (
 )
 
 var (
-	KeyParams        = collections.NewPrefix(0)
-	KeyAccounts      = collections.NewPrefix(1)
-	KeyAccountNumber = collections.NewPrefix(2)
+	KeyParams         = collections.NewPrefix(0)
+	KeyAccounts       = collections.NewPrefix(1)
+	KeyAccountNumber  = collections.NewPrefix(2)
+	KeyProposals      = collections.NewPrefix(3)
+	KeyProposalNumber = collections.NewPrefix(4)
 )

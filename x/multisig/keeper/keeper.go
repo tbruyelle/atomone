@@ -27,10 +27,12 @@ type Keeper struct {
 
 	authority string
 
-	Schema        collections.Schema
-	Params        collections.Item[types.Params]
-	Accounts      collections.Map[[]byte, types.Account]
-	AccountNumber collections.Sequence
+	Schema         collections.Schema
+	Params         collections.Item[types.Params]
+	Accounts       collections.Map[[]byte, types.Account]
+	AccountNumber  collections.Sequence
+	Proposals      collections.Map[uint64, types.Proposal]
+	ProposalNumber collections.Sequence
 }
 
 func NewKeeper(
@@ -54,7 +56,12 @@ func NewKeeper(
 			collcodec.CollValue[types.Account](cdc),
 		),
 		AccountNumber: collections.NewSequence(sb, types.KeyAccountNumber, "accounts_number"),
-		authority:     authority,
+		Proposals: collections.NewMap(
+			sb, types.KeyProposals, "proposals", collections.Uint64Key,
+			collcodec.CollValue[types.Proposal](cdc),
+		),
+		ProposalNumber: collections.NewSequence(sb, types.KeyProposalNumber, "proposal_number"),
+		authority:      authority,
 	}
 	schema, err := sb.Build()
 	if err != nil {
