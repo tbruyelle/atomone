@@ -14,4 +14,7 @@ var (
 	ErrZeroThreshold                   = sdkerrors.Register(ModuleName, 4, "threshold must be greater than 0")        //nolint:staticcheck
 	ErrTotalWeightGreaterThanThreshold = sdkerrors.Register(ModuleName, 5, "threshold must be less than or equal to the total weight")
 	ErrWeightsOverflow                 = sdkerrors.Register(ModuleName, 6, "sum of heights overflow")
+	ErrNotAMember                      = sdkerrors.Register(ModuleName, 7, "not a member of account")
+	ErrInvalidSigner                   = sdkerrors.Register(ModuleName, 8, "expected multisig account as only signer for proposal message") //nolint:staticcheck
+	ErrUnroutableProposalMsg           = sdkerrors.Register(ModuleName, 9, "proposal message not recognized by router")                     //nolint:staticcheck
 )

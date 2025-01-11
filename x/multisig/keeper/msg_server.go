@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"errors"
+	"slices"
 
 	govtypes "github.com/atomone-hub/atomone/x/gov/types"
 	"github.com/atomone-hub/atomone/x/multisig/types"
@@ -81,9 +82,35 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 	if err != nil {
 		return nil, err
 	}
-	_ = acc
 	// Ensure msg.Sender is a member's account
-	// Test proposal msgs with a cached context
+	isMember := slices.ContainsFunc(acc.Members, func(m *types.Member) bool {
+		return m.Address == msg.Sender
+	})
+	if !isMember {
+		return nil, types.ErrNotAMember
+	}
+	// Check proposal messages
+	msgs, err := msg.GetMsgs()
+	if err != nil {
+		return nil, err
+	}
+	for _, msg := range msgs {
+		// assert that the multisig account is the only signer of the message
+		signers := msg.GetSigners()
+		if len(signers) != 1 {
+			return nil, types.ErrInvalidSigner
+		}
+		if !signers[0].Equals(addrBz) {
+			return nil, types.ErrInvalidSigner
+		}
+		// use the msg service router to see that there is a valid route for that
+		// message.
+		if k.router.Handler(msg) == nil {
+			return nil, sdkerrors.Wrap(types.ErrUnroutableProposalMsg, sdk.MsgTypeURL(msg))
+		}
+
+	}
+
 	// Store proposal
 	// Return proposal id
 
