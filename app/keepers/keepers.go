@@ -153,6 +153,7 @@ func NewAppKeeper(
 
 	appKeepers.MultisigKeeper = *multisigkeeper.NewKeeper(appCodec,
 		appKeepers.keys[multisigtypes.StoreKey],
+		bApp.MsgServiceRouter(),
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 

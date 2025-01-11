@@ -100,9 +100,11 @@ func (m MsgCreateProposal) ValidateBasic() error {
 	if m.Proposal == nil {
 		return sdkerrors.ErrInvalidRequest.Wrap("Proposal must be non-nil") //nolint:staticcheck
 	}
+	// TODO assert max length
 	if m.Proposal.Title == "" {
 		return sdkerrors.ErrInvalidRequest.Wrap("proposal title cannot be empty") //nolint:staticcheck
 	}
+	// TODO assert max length
 	if m.Proposal.Summary == "" {
 		return sdkerrors.ErrInvalidRequest.Wrap("proposal summary cannot be empty") //nolint:staticcheck
 	}
@@ -115,8 +117,7 @@ func (m MsgCreateProposal) ValidateBasic() error {
 	}
 	for i, msg := range msgs {
 		if err := msg.ValidateBasic(); err != nil {
-			return sdkerrors.ErrInvalidRequest.
-				Wrapf("validation fail for proposal message %d: %v", i, err) //nolint:staticcheck
+			return sdkerrors.ErrInvalidRequest.Wrapf("validation fail for proposal message %d: %v", i, err) //nolint:staticcheck
 		}
 	}
 	return nil

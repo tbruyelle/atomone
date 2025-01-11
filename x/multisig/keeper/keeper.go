@@ -23,6 +23,7 @@ import (
 type Keeper struct {
 	cdc      codec.BinaryCodec
 	storeKey storetypes.StoreKey
+	router   types.Router
 
 	authority string
 
@@ -35,6 +36,7 @@ type Keeper struct {
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey storetypes.StoreKey,
+	router types.Router,
 	authority string,
 ) *Keeper {
 	sb := collections.NewSchemaBuilderFromAccessor(func(ctx context.Context) storetypes.KVStore {
@@ -43,6 +45,7 @@ func NewKeeper(
 	k := &Keeper{
 		cdc:      cdc,
 		storeKey: storeKey,
+		router:   router,
 		Params: collections.NewItem(
 			sb, types.KeyParams, "params", collcodec.CollValue[types.Params](cdc),
 		),
