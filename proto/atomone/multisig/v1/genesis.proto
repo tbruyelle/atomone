@@ -11,4 +11,7 @@ option go_package = "github.com/atomone-hub/atomone/x/multisig/types";
 message GenesisState {
   Params params = 1
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+  // TODO add genesis account
+  // TODO add genesis proposals ? (require tge genesisState to implement 
+  // unpackInterface)
 }

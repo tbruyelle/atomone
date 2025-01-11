@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"errors"
+	"fmt"
 	"slices"
 
 	govtypes "github.com/atomone-hub/atomone/x/gov/types"
@@ -64,7 +65,7 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(types.EventTypeAccountCreation,
-			sdk.NewAttribute(types.AttributeKeyAddress, accountAddrStr),
+			sdk.NewAttribute(types.AttributeKeyAccountAddress, accountAddrStr),
 		),
 	)
 	return &types.MsgCreateAccountResponse{
@@ -73,12 +74,13 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 }
 
 func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreateProposal) (*types.MsgCreateProposalResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Fetch account
 	addrBz, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return nil, err
 	}
-	acc, err := k.GetAccount(goCtx, addrBz)
+	acc, err := k.GetAccount(ctx, addrBz)
 	if err != nil {
 		return nil, err
 	}
@@ -108,13 +110,31 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 		if k.router.Handler(msg) == nil {
 			return nil, sdkerrors.Wrap(types.ErrUnroutableProposalMsg, sdk.MsgTypeURL(msg))
 		}
-
 	}
 
 	// Store proposal
-	// Return proposal id
+	id, err := k.AccountNumber.Next(ctx)
+	if err != nil {
+		return nil, err
+	}
+	submitTime := ctx.BlockTime()
+	prop, err := types.NewProposal(id, submitTime, msg.Sender, msg.Title, msg.Summary, msgs)
+	if err != nil {
+		return nil, err
+	}
+	err = k.Proposals.Set(ctx, id, prop)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(types.EventTypeAccountCreation,
+			sdk.NewAttribute(types.AttributeKeyAccountAddress, msg.Address),
+			sdk.NewAttribute(types.AttributeKeyProposalID, fmt.Sprint(id)),
+		),
+	)
+	// Return proposal id
+	return &types.MsgCreateProposalResponse{ProposalId: id}, nil
 }
 
 func safeAdd(nums ...uint64) (uint64, error) {
@@ -134,11 +154,8 @@ func (k msgServer) UpdateParams(goCtx context.Context, msg *types.MsgUpdateParam
 	if k.authority != msg.Authority {
 		return nil, sdkerrors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
-
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	if err := k.Params.Set(ctx, msg.Params); err != nil {
+	if err := k.Params.Set(goCtx, msg.Params); err != nil {
 		return nil, err
 	}
-
 	return &types.MsgUpdateParamsResponse{}, nil
 }

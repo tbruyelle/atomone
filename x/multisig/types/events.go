@@ -2,7 +2,9 @@ package types
 
 // Multisig module event types
 const (
-	EventTypeAccountCreation = "account_creation"
+	EventTypeAccountCreation  = "account_creation"
+	EventTypeProposalCreation = "proposal_creation"
 
-	AttributeKeyAddress = "address"
+	AttributeKeyAccountAddress = "account_address"
+	AttributeKeyProposalID     = "proposal_id"
 )
