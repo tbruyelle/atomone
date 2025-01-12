@@ -33,6 +33,7 @@ type Keeper struct {
 	AccountNumber  collections.Sequence
 	Proposals      collections.Map[uint64, types.Proposal]
 	ProposalNumber collections.Sequence
+	Votes          collections.Map[collections.Pair[uint64, []byte], int32]
 }
 
 func NewKeeper(
@@ -61,7 +62,12 @@ func NewKeeper(
 			collcodec.CollValue[types.Proposal](cdc),
 		),
 		ProposalNumber: collections.NewSequence(sb, types.KeyProposalNumber, "proposal_number"),
-		authority:      authority,
+		Votes: collections.NewMap(
+			sb, types.KeyVotes, "votes",
+			collections.PairKeyCodec(collections.Uint64Key, collections.BytesKey),
+			collections.Int32Value,
+		),
+		authority: authority,
 	}
 	schema, err := sb.Build()
 	if err != nil {
@@ -78,9 +84,17 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 func (k Keeper) GetAccount(ctx context.Context, addr sdk.AccAddress) (types.Account, error) {
 	acc, err := k.Accounts.Get(ctx, addr)
 	if errors.Is(err, collections.ErrNotFound) {
-		return types.Account{}, status.Errorf(codes.NotFound, "multisig %s doesn't exist", addr.String())
+		return types.Account{}, status.Errorf(codes.NotFound, "multisig account %s doesn't exist", addr.String())
 	}
 	return acc, err
+}
+
+func (k Keeper) GetProposal(ctx context.Context, id uint64) (types.Proposal, error) {
+	prop, err := k.Proposals.Get(ctx, id)
+	if errors.Is(err, collections.ErrNotFound) {
+		return types.Proposal{}, status.Errorf(codes.NotFound, "multisig proposal %d doesn't exist", id)
+	}
+	return prop, err
 }
 
 // NOTE copied from x/accounts

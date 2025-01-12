@@ -17,4 +17,5 @@ var (
 	ErrNotAMember                      = sdkerrors.Register(ModuleName, 7, "not a member of account")
 	ErrInvalidSigner                   = sdkerrors.Register(ModuleName, 8, "expected multisig account as only signer for proposal message") //nolint:staticcheck
 	ErrUnroutableProposalMsg           = sdkerrors.Register(ModuleName, 9, "proposal message not recognized by router")                     //nolint:staticcheck
+	ErrInvalidVote                     = sdkerrors.Register(ModuleName, 10, "invalid vote option")
 )

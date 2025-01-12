@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	_, _, _ sdk.Msg                            = &MsgUpdateParams{}, &MsgCreateAccount{}, &MsgCreateProposal{}
-	_       codectypes.UnpackInterfacesMessage = &MsgCreateProposal{}
+	_, _, _, _ sdk.Msg = &MsgUpdateParams{}, &MsgCreateAccount{}, &MsgCreateProposal{}, &MsgVote{}
+
+	_ codectypes.UnpackInterfacesMessage = &MsgCreateProposal{}
 )
 
 // ValidateBasic implements the sdk.Msg interface.
@@ -97,7 +98,7 @@ func (m MsgCreateProposal) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(m.Sender); err != nil {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid sender address: %s", err)
 	}
-	if _, err := sdk.AccAddressFromBech32(m.Address); err != nil {
+	if _, err := sdk.AccAddressFromBech32(m.AccountAddress); err != nil {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid multisig account address: %s", err)
 	}
 	// TODO assert max length
@@ -138,4 +139,27 @@ func (m MsgCreateProposal) GetSigners() []sdk.AccAddress {
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
 func (m MsgCreateProposal) UnpackInterfaces(unpacker codectypes.AnyUnpacker) error {
 	return sdktx.UnpackInterfaces(unpacker, m.Messages)
+}
+
+// ValidateBasic implements the sdk.Msg interface.
+func (m MsgVote) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(m.Voter); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid voter address: %s", err)
+	}
+	if m.Vote == VoteOption_VOTE_OPTION_UNSPECIFIED {
+		return ErrInvalidVote
+	}
+	return nil
+}
+
+// GetSignBytes returns the message bytes to sign over.
+func (m MsgVote) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&m)
+	return sdk.MustSortJSON(bz)
+}
+
+// GetSigners returns the expected signers for a MsgUpdateParams.
+func (m MsgVote) GetSigners() []sdk.AccAddress {
+	authority, _ := sdk.AccAddressFromBech32(m.Voter)
+	return []sdk.AccAddress{authority}
 }
