@@ -11,18 +11,19 @@ import (
 var _ codectypes.UnpackInterfacesMessage = &Proposal{}
 
 // NewProposal creates a new Proposal instance
-func NewProposal(id uint64, submitTime time.Time, proposer, title, summary string, messages []sdk.Msg) (Proposal, error) {
+func NewProposal(id uint64, accountAddr string, submitTime time.Time, proposer, title, summary string, messages []sdk.Msg) (Proposal, error) {
 	msgs, err := sdktx.SetMsgs(messages)
 	if err != nil {
 		return Proposal{}, err
 	}
 	p := Proposal{
-		Id:         id,
-		Messages:   msgs,
-		SubmitTime: &submitTime,
-		Proposer:   proposer,
-		Title:      title,
-		Summary:    summary,
+		Id:             id,
+		AccountAddress: accountAddr,
+		Messages:       msgs,
+		SubmitTime:     &submitTime,
+		Proposer:       proposer,
+		Title:          title,
+		Summary:        summary,
 	}
 	return p, nil
 }

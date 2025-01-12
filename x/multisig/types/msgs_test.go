@@ -45,10 +45,10 @@ func TestMsgSubmitProposal_GetSignBytes(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			msg := types.MsgCreateProposal{
-				Sender:  sdk.AccAddress{}.String(),
-				Address: sdk.AccAddress{}.String(),
-				Title:   tt.title,
-				Summary: tt.summary,
+				Sender:         sdk.AccAddress{}.String(),
+				AccountAddress: sdk.AccAddress{}.String(),
+				Title:          tt.title,
+				Summary:        tt.summary,
 			}
 			err := msg.SetMsgs(tt.msgs)
 			require.NoError(t, err)

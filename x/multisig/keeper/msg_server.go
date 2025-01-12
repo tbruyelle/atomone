@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"slices"
 
+	"github.com/atomone-hub/atomone/collections"
 	govtypes "github.com/atomone-hub/atomone/x/gov/types"
 	"github.com/atomone-hub/atomone/x/multisig/types"
 
@@ -76,19 +76,16 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreateProposal) (*types.MsgCreateProposalResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Fetch account
-	addrBz, err := sdk.AccAddressFromBech32(msg.Address)
+	accountAddr, err := sdk.AccAddressFromBech32(msg.AccountAddress)
 	if err != nil {
 		return nil, err
 	}
-	acc, err := k.GetAccount(ctx, addrBz)
+	acc, err := k.GetAccount(ctx, accountAddr)
 	if err != nil {
 		return nil, err
 	}
 	// Ensure msg.Sender is a member's account
-	isMember := slices.ContainsFunc(acc.Members, func(m *types.Member) bool {
-		return m.Address == msg.Sender
-	})
-	if !isMember {
+	if !acc.HasMember(msg.Sender) {
 		return nil, types.ErrNotAMember
 	}
 	// Check proposal messages
@@ -102,7 +99,7 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 		if len(signers) != 1 {
 			return nil, types.ErrInvalidSigner
 		}
-		if !signers[0].Equals(addrBz) {
+		if !signers[0].Equals(accountAddr) {
 			return nil, types.ErrInvalidSigner
 		}
 		// use the msg service router to see that there is a valid route for that
@@ -113,28 +110,53 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 	}
 
 	// Store proposal
-	id, err := k.AccountNumber.Next(ctx)
+	proposalID, err := k.AccountNumber.Next(ctx)
 	if err != nil {
 		return nil, err
 	}
 	submitTime := ctx.BlockTime()
-	prop, err := types.NewProposal(id, submitTime, msg.Sender, msg.Title, msg.Summary, msgs)
+	prop, err := types.NewProposal(proposalID, msg.AccountAddress, submitTime, msg.Sender, msg.Title, msg.Summary, msgs)
 	if err != nil {
 		return nil, err
 	}
-	err = k.Proposals.Set(ctx, id, prop)
+	err = k.Proposals.Set(ctx, proposalID, prop)
 	if err != nil {
 		return nil, err
 	}
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(types.EventTypeAccountCreation,
-			sdk.NewAttribute(types.AttributeKeyAccountAddress, msg.Address),
-			sdk.NewAttribute(types.AttributeKeyProposalID, fmt.Sprint(id)),
+			sdk.NewAttribute(types.AttributeKeyAccountAddress, msg.AccountAddress),
+			sdk.NewAttribute(types.AttributeKeyProposalID, fmt.Sprint(proposalID)),
 		),
 	)
 	// Return proposal id
-	return &types.MsgCreateProposalResponse{ProposalId: id}, nil
+	return &types.MsgCreateProposalResponse{ProposalId: proposalID}, nil
+}
+
+func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVoteResponse, error) {
+	// find proposal
+	prop, err := k.GetProposal(goCtx, msg.ProposalId)
+	if err != nil {
+		return nil, err
+	}
+	// find account
+	accountAddr, err := sdk.AccAddressFromBech32(prop.AccountAddress)
+	acc, err := k.GetAccount(goCtx, accountAddr)
+	if err != nil {
+		return nil, err
+	}
+	// check voter is part of account's members
+	if !acc.HasMember(msg.Voter) {
+		return nil, types.ErrNotAMember
+	}
+	// Store (or replace) vote
+	voterAddr := sdk.MustAccAddressFromBech32(msg.Voter).Bytes()
+	err = k.Votes.Set(goCtx, collections.Join(msg.ProposalId, voterAddr), int32(msg.Vote))
+	if err != nil {
+		return nil, err
+	}
+	return &types.MsgVoteResponse{}, nil
 }
 
 func safeAdd(nums ...uint64) (uint64, error) {

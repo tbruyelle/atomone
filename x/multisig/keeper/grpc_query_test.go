@@ -69,7 +69,7 @@ func TestAccountQuery(t *testing.T) {
 		{
 			name:        "address not found",
 			address:     addr,
-			expectedErr: fmt.Sprintf("rpc error: code = NotFound desc = multisig %s doesn't exist", addr),
+			expectedErr: fmt.Sprintf("rpc error: code = NotFound desc = multisig account %s doesn't exist", addr),
 		},
 		{
 			name:    "ok",
