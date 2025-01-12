@@ -15,12 +15,15 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/atomone/multisig/v1/params";
   }
+  // Account queries a multisig account.
   rpc Account(QueryAccountRequest) returns (QueryAccountResponse) {
     option (google.api.http).get = "/atomone/multisig/v1/account";
   }
+  // Proposals queries all the multisig account's proposals.
   rpc Proposals(QueryProposalsRequest) returns (QueryProposalsResponse) {
     option (google.api.http).get = "/atomone/multisig/v1/proposals";
   }
+  // Proposals queries a single multisig account's proposal.
   rpc Proposal(QueryProposalRequest) returns (QueryProposalResponse) {
     option (google.api.http).get = "/atomone/multisig/v1/proposal";
   }
