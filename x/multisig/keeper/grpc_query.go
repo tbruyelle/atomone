@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"github.com/atomone-hub/atomone/collections"
 	"github.com/atomone-hub/atomone/x/multisig/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -48,4 +49,45 @@ func (k queryServer) Account(ctx context.Context, req *types.QueryAccountRequest
 		return nil, err
 	}
 	return &types.QueryAccountResponse{Account: &acc}, nil
+}
+
+func (k queryServer) Proposals(ctx context.Context, req *types.QueryProposalsRequest) (*types.QueryProposalsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	accountAddr, err := sdk.AccAddressFromBech32(req.AccountAddress)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid address %s: %v", req.AccountAddress, err)
+	}
+	if _, err := k.GetAccount(ctx, accountAddr); err != nil {
+		return nil, err
+	}
+	rng := collections.NewPrefixUntilPairRange[[]byte, uint64](accountAddr.Bytes())
+	it, err := k.Keeper.Proposals.Iterate(ctx, rng)
+	if err != nil {
+		return nil, err
+	}
+	props, err := it.Values()
+	if err != nil {
+		return nil, err
+	}
+	return &types.QueryProposalsResponse{Proposals: props}, nil
+}
+
+func (k queryServer) Proposal(ctx context.Context, req *types.QueryProposalRequest) (*types.QueryProposalResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	accountAddr, err := sdk.AccAddressFromBech32(req.AccountAddress)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid address %s: %v", req.AccountAddress, err)
+	}
+	if _, err := k.GetAccount(ctx, accountAddr); err != nil {
+		return nil, err
+	}
+	prop, err := k.Keeper.GetProposal(ctx, accountAddr, req.ProposalId)
+	if err != nil {
+		return nil, err
+	}
+	return &types.QueryProposalResponse{Proposal: prop}, nil
 }
