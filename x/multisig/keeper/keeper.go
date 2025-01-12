@@ -31,9 +31,9 @@ type Keeper struct {
 	Params         collections.Item[types.Params]
 	Accounts       collections.Map[[]byte, types.Account]
 	AccountNumber  collections.Sequence
-	Proposals      collections.Map[uint64, types.Proposal]
+	Proposals      collections.Map[collections.Pair[[]byte, uint64], types.Proposal]
 	ProposalNumber collections.Sequence
-	Votes          collections.Map[collections.Pair[uint64, []byte], int32]
+	// Votes          collections.Map[collections.Pair[uint64, []byte], int32]
 }
 
 func NewKeeper(
@@ -58,15 +58,16 @@ func NewKeeper(
 		),
 		AccountNumber: collections.NewSequence(sb, types.KeyAccountNumber, "accounts_number"),
 		Proposals: collections.NewMap(
-			sb, types.KeyProposals, "proposals", collections.Uint64Key,
+			sb, types.KeyProposals, "proposals",
+			collections.PairKeyCodec(collections.BytesKey, collections.Uint64Key),
 			collcodec.CollValue[types.Proposal](cdc),
 		),
 		ProposalNumber: collections.NewSequence(sb, types.KeyProposalNumber, "proposal_number"),
-		Votes: collections.NewMap(
-			sb, types.KeyVotes, "votes",
-			collections.PairKeyCodec(collections.Uint64Key, collections.BytesKey),
-			collections.Int32Value,
-		),
+		// Votes: collections.NewMap(
+		// sb, types.KeyVotes, "votes",
+		// collections.PairKeyCodec(collections.Uint64Key, collections.BytesKey),
+		// collections.Int32Value,
+		// ),
 		authority: authority,
 	}
 	schema, err := sb.Build()
@@ -89,12 +90,16 @@ func (k Keeper) GetAccount(ctx context.Context, addr sdk.AccAddress) (types.Acco
 	return acc, err
 }
 
-func (k Keeper) GetProposal(ctx context.Context, id uint64) (types.Proposal, error) {
-	prop, err := k.Proposals.Get(ctx, id)
+func (k Keeper) GetProposal(ctx context.Context, addr sdk.AccAddress, id uint64) (types.Proposal, error) {
+	prop, err := k.Proposals.Get(ctx, collections.Join(addr.Bytes(), id))
 	if errors.Is(err, collections.ErrNotFound) {
 		return types.Proposal{}, status.Errorf(codes.NotFound, "multisig proposal %d doesn't exist", id)
 	}
 	return prop, err
+}
+
+func (k Keeper) SetProposal(ctx context.Context, addr sdk.AccAddress, id uint64, prop types.Proposal) error {
+	return k.Proposals.Set(ctx, collections.Join(addr.Bytes(), id), prop)
 }
 
 // NOTE copied from x/accounts

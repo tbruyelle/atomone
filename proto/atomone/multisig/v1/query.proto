@@ -18,6 +18,12 @@ service Query {
   rpc Account(QueryAccountRequest) returns (QueryAccountResponse) {
     option (google.api.http).get = "/atomone/multisig/v1/account";
   }
+  rpc Proposals(QueryProposalsRequest) returns (QueryProposalsResponse) {
+    option (google.api.http).get = "/atomone/multisig/v1/proposals";
+  }
+  rpc Proposal(QueryProposalRequest) returns (QueryProposalResponse) {
+    option (google.api.http).get = "/atomone/multisig/v1/proposal";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -34,3 +40,20 @@ message QueryAccountRequest {
 }
 
 message QueryAccountResponse { Account account = 1; }
+
+message QueryProposalsRequest {
+  string account_address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message QueryProposalsResponse {
+  repeated Proposal proposals = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryProposalRequest {
+  string account_address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  uint64 proposal_id = 2;
+}
+
+message QueryProposalResponse {
+  Proposal proposal = 1 [(gogoproto.nullable) = false];
+}

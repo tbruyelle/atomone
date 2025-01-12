@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/atomone-hub/atomone/collections"
 	govtypes "github.com/atomone-hub/atomone/x/gov/types"
 	"github.com/atomone-hub/atomone/x/multisig/types"
 
@@ -119,7 +118,7 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 	if err != nil {
 		return nil, err
 	}
-	err = k.Proposals.Set(ctx, proposalID, prop)
+	err = k.SetProposal(ctx, accountAddr, proposalID, prop)
 	if err != nil {
 		return nil, err
 	}
@@ -136,12 +135,12 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 
 func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVoteResponse, error) {
 	// find proposal
-	prop, err := k.GetProposal(goCtx, msg.ProposalId)
+	accountAddr := sdk.MustAccAddressFromBech32(msg.AccountAddress)
+	prop, err := k.GetProposal(goCtx, accountAddr, msg.ProposalId)
 	if err != nil {
 		return nil, err
 	}
 	// find account
-	accountAddr, err := sdk.AccAddressFromBech32(prop.AccountAddress)
 	acc, err := k.GetAccount(goCtx, accountAddr)
 	if err != nil {
 		return nil, err
@@ -151,8 +150,10 @@ func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVo
 		return nil, types.ErrNotAMember
 	}
 	// Store (or replace) vote
-	voterAddr := sdk.MustAccAddressFromBech32(msg.Voter).Bytes()
-	err = k.Votes.Set(goCtx, collections.Join(msg.ProposalId, voterAddr), int32(msg.Vote))
+	prop.Votes[msg.Voter] = msg.Vote
+
+	// err = k.Votes.Set(goCtx, collections.Join(msg.ProposalId, voterAddr), int32(msg.Vote))
+	err = k.SetProposal(goCtx, accountAddr, msg.ProposalId, prop)
 	if err != nil {
 		return nil, err
 	}

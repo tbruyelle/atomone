@@ -74,10 +74,12 @@ message MsgVote {
  
   // voter is the voter account address.
   string voter = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // account_address is the multisig account address
+  string account_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // proposal_id is the multisig proposal id.
-  uint64 proposal_id = 2;
+  uint64 proposal_id = 3;
   // vote is the vote to cast to the multisig proposal.
-  VoteOption vote = 3;
+  VoteOption vote = 4;
 }
 
 // MsgVoteResponse is the response returned after multisig proposal vote.
