@@ -34,6 +34,12 @@
       },
       "accounts": []
     },
+    "photon": {
+      "params": {
+        "mint_disabled": false,
+        "tx_fee_exceptions": [ "/atomone.photon.v1.MsgMintPhoton" ]
+      }
+    },
     "authz": {
       "authorization": []
     },

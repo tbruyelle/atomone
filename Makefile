@@ -269,7 +269,6 @@ start-localnet-ci:
 	$(MAKE) build MIN_VOTING_PERIOD=5m
 	rm -rf ~/.atomoned-liveness
 	./build/atomoned init liveness --default-denom uatone --chain-id liveness --home ~/.atomoned-liveness
-	./build/atomoned init liveness --default-denom uatone --chain-id liveness --home ~/.atomoned-liveness
 	cp contrib/genesis.json ~/.atomoned-liveness/config/
 	./build/atomoned config chain-id liveness --home ~/.atomoned-liveness
 	./build/atomoned config keyring-backend test --home ~/.atomoned-liveness
