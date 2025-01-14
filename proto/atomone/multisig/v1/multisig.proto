@@ -45,8 +45,6 @@ message Proposal {
   string summary = 6;
   // messages are the messages that will be executed.
   repeated google.protobuf.Any messages = 7;
-  // votes contains the list of votes per member.
-  map<string, VoteOption> votes = 8;
 }
 
 // VoteOption enumerates the valid vote options for a given proposal.

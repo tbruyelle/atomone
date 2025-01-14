@@ -274,7 +274,7 @@ func (m *MsgCreateProposalResponse) GetProposalId() uint64 {
 type MsgVote struct {
 	// voter is the voter account address.
 	Voter string `protobuf:"bytes,1,opt,name=voter,proto3" json:"voter,omitempty"`
-	// account_address is the multisig account address
+	// account_address is the multisig account address.
 	AccountAddress string `protobuf:"bytes,2,opt,name=account_address,json=accountAddress,proto3" json:"account_address,omitempty"`
 	// proposal_id is the multisig proposal id.
 	ProposalId uint64 `protobuf:"varint,3,opt,name=proposal_id,json=proposalId,proto3" json:"proposal_id,omitempty"`

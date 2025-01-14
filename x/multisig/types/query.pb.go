@@ -453,8 +453,11 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	// Account queries a multisig account.
 	Account(ctx context.Context, in *QueryAccountRequest, opts ...grpc.CallOption) (*QueryAccountResponse, error)
+	// Proposals queries all the multisig account's proposals.
 	Proposals(ctx context.Context, in *QueryProposalsRequest, opts ...grpc.CallOption) (*QueryProposalsResponse, error)
+	// Proposals queries a single multisig account's proposal.
 	Proposal(ctx context.Context, in *QueryProposalRequest, opts ...grpc.CallOption) (*QueryProposalResponse, error)
 }
 
@@ -506,8 +509,11 @@ func (c *queryClient) Proposal(ctx context.Context, in *QueryProposalRequest, op
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
+	// Account queries a multisig account.
 	Account(context.Context, *QueryAccountRequest) (*QueryAccountResponse, error)
+	// Proposals queries all the multisig account's proposals.
 	Proposals(context.Context, *QueryProposalsRequest) (*QueryProposalsResponse, error)
+	// Proposals queries a single multisig account's proposal.
 	Proposal(context.Context, *QueryProposalRequest) (*QueryProposalResponse, error)
 }
 
