@@ -19,5 +19,5 @@ var (
 	KeyAccountNumber  = collections.NewPrefix(2)
 	KeyProposals      = collections.NewPrefix(3)
 	KeyProposalNumber = collections.NewPrefix(4)
-	// KeyVotes          = collections.NewPrefix(5)
+	KeyVotes          = collections.NewPrefix(5)
 )

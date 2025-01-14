@@ -33,7 +33,7 @@ type Keeper struct {
 	AccountNumber  collections.Sequence
 	Proposals      collections.Map[collections.Pair[[]byte, uint64], types.Proposal]
 	ProposalNumber collections.Sequence
-	// Votes          collections.Map[collections.Pair[uint64, []byte], int32]
+	Votes          collections.Map[collections.Pair[uint64, []byte], int32]
 }
 
 func NewKeeper(
@@ -63,11 +63,11 @@ func NewKeeper(
 			collcodec.CollValue[types.Proposal](cdc),
 		),
 		ProposalNumber: collections.NewSequence(sb, types.KeyProposalNumber, "proposal_number"),
-		// Votes: collections.NewMap(
-		// sb, types.KeyVotes, "votes",
-		// collections.PairKeyCodec(collections.Uint64Key, collections.BytesKey),
-		// collections.Int32Value,
-		// ),
+		Votes: collections.NewMap(
+			sb, types.KeyVotes, "votes",
+			collections.PairKeyCodec(collections.Uint64Key, collections.BytesKey),
+			collections.Int32Value,
+		),
 		authority: authority,
 	}
 	schema, err := sb.Build()
