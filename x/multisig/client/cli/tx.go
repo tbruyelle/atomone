@@ -56,14 +56,14 @@ func NewCreateAccountCmd() *cobra.Command {
 			from := clientCtx.GetFromAddress()
 
 			// Parse multisig members
-			var members []*types.Member
+			var members []types.Member
 			for _, arg := range args {
 				parts := strings.Split(arg, ",")
 				weight, err := strconv.ParseUint(parts[1], 10, 64)
 				if err != nil {
 					return fmt.Errorf("parse weight %s: %v", parts[1], err)
 				}
-				members = append(members, &types.Member{
+				members = append(members, types.Member{
 					Address: parts[0],
 					Weight:  weight,
 				})

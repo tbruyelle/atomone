@@ -59,4 +59,5 @@ message QueryProposalRequest {
 
 message QueryProposalResponse {
   Proposal proposal = 1 [(gogoproto.nullable) = false];
+  repeated Vote votes = 2 [ (gogoproto.nullable) = false ];
 }

@@ -27,13 +27,15 @@ type Keeper struct {
 
 	authority string
 
-	Schema         collections.Schema
-	Params         collections.Item[types.Params]
-	Accounts       collections.Map[[]byte, types.Account]
-	AccountNumber  collections.Sequence
+	Schema        collections.Schema
+	Params        collections.Item[types.Params]
+	Accounts      collections.Map[[]byte, types.Account]
+	AccountNumber collections.Sequence
+	// Proposals key: account_address+proposal_id
 	Proposals      collections.Map[collections.Pair[[]byte, uint64], types.Proposal]
 	ProposalNumber collections.Sequence
-	Votes          collections.Map[collections.Pair[uint64, []byte], int32]
+	// Votes key: account_address+proposal_id+voter_address
+	Votes collections.Map[collections.Triple[[]byte, uint64, []byte], types.Vote]
 }
 
 func NewKeeper(
@@ -65,8 +67,8 @@ func NewKeeper(
 		ProposalNumber: collections.NewSequence(sb, types.KeyProposalNumber, "proposal_number"),
 		Votes: collections.NewMap(
 			sb, types.KeyVotes, "votes",
-			collections.PairKeyCodec(collections.Uint64Key, collections.BytesKey),
-			collections.Int32Value,
+			collections.TripleKeyCodec(collections.BytesKey, collections.Uint64Key, collections.BytesKey),
+			collcodec.CollValue[types.Vote](cdc),
 		),
 		authority: authority,
 	}

@@ -62,7 +62,7 @@ func (k queryServer) Proposals(ctx context.Context, req *types.QueryProposalsReq
 	if _, err := k.GetAccount(ctx, accountAddr); err != nil {
 		return nil, err
 	}
-	rng := collections.NewPrefixUntilPairRange[[]byte, uint64](accountAddr.Bytes())
+	rng := collections.NewPrefixedPairRange[[]byte, uint64](accountAddr.Bytes())
 	it, err := k.Keeper.Proposals.Iterate(ctx, rng)
 	if err != nil {
 		return nil, err
@@ -89,5 +89,17 @@ func (k queryServer) Proposal(ctx context.Context, req *types.QueryProposalReque
 	if err != nil {
 		return nil, err
 	}
-	return &types.QueryProposalResponse{Proposal: prop}, nil
+	rng := collections.NewSuperPrefixedTripleRange[[]byte, uint64, []byte](accountAddr.Bytes(), req.ProposalId)
+	it, err := k.Keeper.Votes.Iterate(ctx, rng)
+	if err != nil {
+		return nil, err
+	}
+	votes, err := it.Values()
+	if err != nil {
+		return nil, err
+	}
+	return &types.QueryProposalResponse{
+		Proposal: prop,
+		Votes:    votes,
+	}, nil
 }

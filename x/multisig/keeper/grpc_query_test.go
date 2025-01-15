@@ -33,7 +33,7 @@ func TestAccountQuery(t *testing.T) {
 			Address:   addr,
 			Creator:   addr,
 			Threshold: 2,
-			Members: []*types.Member{
+			Members: []types.Member{
 				{
 					Address: "1",
 					Weight:  1,
