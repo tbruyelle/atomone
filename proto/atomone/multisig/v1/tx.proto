@@ -35,7 +35,7 @@ message MsgCreateAccount {
   // sender is the address of the sender of this message.
   string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // members are the members of the multisig account.
-  repeated Member members = 2;
+  repeated Member members = 2 [ (gogoproto.nullable) = false ];
   // threshold is the minimum weight required for a proposal to pass.
   int64 threshold = 3;
 }

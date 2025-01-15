@@ -151,8 +151,13 @@ func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVo
 		return nil, types.ErrNotAMember
 	}
 	// Store (or replace) vote
-	voterAddr := sdk.MustAccAddressFromBech32(msg.Voter).Bytes()
-	err = k.Votes.Set(goCtx, collections.Join(msg.ProposalId, voterAddr), int32(msg.Vote))
+	voterAddr := sdk.MustAccAddressFromBech32(msg.Voter)
+	err = k.Votes.Set(goCtx,
+		collections.Join3(accountAddr.Bytes(), msg.ProposalId, voterAddr.Bytes()),
+		types.Vote{
+			VoterAddress: msg.Voter,
+			Vote:         msg.Vote,
+		})
 	if err != nil {
 		return nil, err
 	}
