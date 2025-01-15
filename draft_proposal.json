@@ -1,0 +1,14 @@
+{
+ "title": "mint phoyon",
+ "summary": "xxx",
+ "messages": [
+  {
+   "@type": "/atomone.photon.v1.MsgMintPhoton",
+   "to_address": "atone1ajrlunqmej8dc024q0acsav6rzvtrcdg5f6u3j9tnu3vtvtugwdsa8dqsu",
+   "amount": {
+    "denom": "uatone",
+    "amount": "1000000"
+   }
+  }
+ ]
+}

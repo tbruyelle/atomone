@@ -94,20 +94,24 @@ func NewCreateAccountCmd() *cobra.Command {
 // NewCreateProposalCmd implements creating a new multisig account proposal command.
 func NewCreateProposalCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-proposal <account_address>",
-		Args:  cobra.MinimumNArgs(1),
+		Use:   "create-proposal <account_address> <path/to/proposal.json>",
+		Args:  cobra.ExactArgs(2),
 		Short: "Create a new multisig account proposal",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
-			// Get voting address
 			from := clientCtx.GetFromAddress()
-			_ = from
-			return nil
+			// Build message and broadcast
+			msg := &types.MsgCreateProposal{
+				Sender:         from.String(),
+				AccountAddress: os.Args[0],
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
+	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
 
@@ -128,6 +132,7 @@ func NewVoteCmd() *cobra.Command {
 			return nil
 		},
 	}
+	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
 
@@ -208,7 +213,6 @@ func NewDraftProposalCmd() *cobra.Command {
 			return nil
 		},
 	}
-
 	return cmd
 }
 

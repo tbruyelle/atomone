@@ -272,13 +272,23 @@ start-localnet-ci: build
 	./build/atomoned config chain-id liveness --home ~/.atomoned-liveness
 	./build/atomoned config keyring-backend test --home ~/.atomoned-liveness
 	./build/atomoned keys add val --home ~/.atomoned-liveness
-	./build/atomoned genesis add-genesis-account val 1000000000000uatone --home ~/.atomoned-liveness --keyring-backend test
+	./build/atomoned genesis add-genesis-account val 1000000000000uatone,10000000uphoton --home ~/.atomoned-liveness --keyring-backend test
 	./build/atomoned keys add user --home ~/.atomoned-liveness
-	./build/atomoned genesis add-genesis-account user 1000000000uatone --home ~/.atomoned-liveness --keyring-backend test
+	./build/atomoned genesis add-genesis-account user 1000000000uatone,10000000uphoton --home ~/.atomoned-liveness --keyring-backend test
 	./build/atomoned genesis gentx val 1000000000uatone --home ~/.atomoned-liveness --chain-id liveness
 	./build/atomoned genesis collect-gentxs --home ~/.atomoned-liveness
-	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-liveness/config/app.toml
+	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-liveness/config/app.toml*
+	./build/atomoned --home ~/.atomoned-liveness keys add user2
+	./build/atomoned --home ~/.atomoned-liveness keys add user3
 	./build/atomoned start --home ~/.atomoned-liveness --x-crisis-skip-assert-invariants
+
+
+create-multisig:
+	./build/atomoned --home ~/.atomoned-liveness/ tx multisig create-account --threshold 3 $(./build/atomoned --home ~/.atomoned-liveness/ keys show user -a),2 $(./build/atomoned --home ~/.atomoned-liveness/ keys show user2 -a),1 $(./build/atomoned --home ~/.atomoned-liveness/ keys show user3 -a),1 --from user --fees 300uphoton -y --output json | jq -r '.txhash' > /tmp/txhash
+	./build/atomoned --home ~/.atomoned-liveness/ q tx $(cat /tmp/txhash) --output json | jq -r '.events[] | select (.type == "account_creation") | .attributes[] | select(.key=="account_address") | .value'
+	# XXX no way to find a multisig account if the address is forgotten.
+
+
 
 .PHONY: start-localnet-ci
 
