@@ -265,8 +265,7 @@ update-swagger-docs: proto-swagger-gen
 ###                                Localnet                                 ###
 ###############################################################################
 
-start-localnet-ci:
-	$(MAKE) build MIN_VOTING_PERIOD=5m
+start-localnet-ci: build
 	rm -rf ~/.atomoned-liveness
 	./build/atomoned init liveness --default-denom uatone --chain-id liveness --home ~/.atomoned-liveness
 	cp contrib/genesis.json ~/.atomoned-liveness/config/
@@ -280,6 +279,8 @@ start-localnet-ci:
 	./build/atomoned genesis collect-gentxs --home ~/.atomoned-liveness
 	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-liveness/config/app.toml
 	sed -i -z 's/# Enable defines if the API server should be enabled.\nenable = false/enable = true/' ~/.atomoned-liveness/config/app.toml
+	jq '.app_state.gov.params.voting_period = "300s"' ~/.atomoned-liveness/config/genesis.json > /tmp/gen
+	mv /tmp/gen ~/.atomoned-liveness/config/genesis.json
 	./build/atomoned start --home ~/.atomoned-liveness --x-crisis-skip-assert-invariants
 
 setup-upgrade-proposal:
