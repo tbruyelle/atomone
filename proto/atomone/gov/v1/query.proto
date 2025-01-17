@@ -61,6 +61,10 @@ service Query {
     option (google.api.http).get =
         "/atomone/gov/v1/proposals/{proposal_id}/tally";
   }
+  rpc TallyResultOld(QueryTallyResultRequest) returns (QueryTallyResultResponse) {
+    option (google.api.http).get =
+        "/atomone/gov/v1/proposals/{proposal_id}/tally_old";
+  }
 
   // Governor queries governor information based on governor address.
   rpc Governor(QueryGovernorRequest) returns (QueryGovernorResponse) {
