@@ -279,6 +279,24 @@ start-localnet-ci: build
 	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-liveness/config/app.toml
 	./build/atomoned start --home ~/.atomoned-liveness --x-crisis-skip-assert-invariants
 
+atomoned=./build/atomoned --home ~/.atomoned-benchtally/
+bench-tally:
+	rm -rf ~/.atomoned-benchtally
+	$(atomoned) init liveness --default-denom uatone --chain-id benchtally
+	$(atomoned) config chain-id benchtally
+	$(atomoned) config keyring-backend test
+	$(atomoned) keys add val
+	#$(atomoned) genesis add-genesis-account val 1000000000000uatone --keyring-backend test
+	#$(atomoned) genesis gentx val 1000000000uatone --chain-id benchtally --keyring-backend test
+	#$(atomoned) genesis collect-gentxs
+	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-benchtally/config/app.toml
+	#govbox tally-genesis -numVals=50 -numDels=1000 -numGovs=20 ~/.atomoned-benchtally/config/genesis.json > /tmp/genesis.json
+	govbox tally-genesis -numVals=2 -numDels=10 -numGovs=0\
+		-nodePubkey=`$(atomoned) tendermint show-validator`\
+		~/.atomoned-benchtally/config/genesis.json > /tmp/genesis.json
+	cp /tmp/genesis.json ~/.atomoned-benchtally/config/genesis.json
+	$(atomoned) start --x-crisis-skip-assert-invariants
+
 .PHONY: start-localnet-ci
 
 ###############################################################################
