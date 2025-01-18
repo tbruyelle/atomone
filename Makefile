@@ -293,13 +293,13 @@ bench-tally: build
 	# enable REST API
 	sed -i -z 's/# Enable defines if the API server should be enabled.\nenable = false/enable = true/' ~/.atomoned-benchtally/config/app.toml
 	# generate the genesis
-	govbox tally-genesis -numVals=100 -numDels=200000 -numGovs=20\
+	govbox tally-genesis -numVals=100 -numDels=200000 -numGovs=0\
 		-nodeConsPubkey=`$(atomoned) tendermint show-validator`\
 		-nodeAddr=`$(atomoned) keys show val -a`\
 		~/.atomoned-benchtally/config/genesis.json > /tmp/genesis.json
 	cp /tmp/genesis.json ~/.atomoned-benchtally/config/genesis.json
 	# run the chain
-	$(atomoned) start --x-crisis-skip-assert-invariants
+$(atomoned) start --x-crisis-skip-assert-invariants --log_level debug
 
 .PHONY: start-localnet-ci
 
