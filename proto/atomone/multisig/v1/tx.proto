@@ -30,6 +30,7 @@ service Msg {
 
 // MsgCreateAccount is used to create a multisig account.
 message MsgCreateAccount {
+  option (cosmos.msg.v1.signer) = "sender";
   option (amino.name) = "atomone/multisig/v1/MsgCreateAccount";
 
   // sender is the address of the sender of this message.
@@ -48,6 +49,7 @@ message MsgCreateAccountResponse {
 
 // MsgCreateProposal is used to create a multisig proposal.
 message MsgCreateProposal {
+  option (cosmos.msg.v1.signer) = "sender";
   option (amino.name) = "atomone/multisig/v1/MsgCreateProposal";
 
   // sender is the address of the sender of this message.
@@ -70,6 +72,7 @@ message MsgCreateProposalResponse {
 
 // MsgVote is used to vote on a multisig proposal.
 message MsgVote {
+  option (cosmos.msg.v1.signer) = "voter";
   option (amino.name) = "atomone/multisig/v1/MsgVote";
  
   // voter is the voter account address.
