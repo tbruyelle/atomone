@@ -299,7 +299,12 @@ bench-tally: build
 		~/.atomoned-benchtally/config/genesis.json > /tmp/genesis.json
 	cp /tmp/genesis.json ~/.atomoned-benchtally/config/genesis.json
 	# run the chain
-$(atomoned) start --x-crisis-skip-assert-invariants --log_level debug
+	$(atomoned) start --x-crisis-skip-assert-invariants --log_level debug
+
+bench-tally-restart: build
+	$(atomoned) tendermint unsafe-reset-all
+	$(atomoned) start --x-crisis-skip-assert-invariants --log_level debug
+
 
 .PHONY: start-localnet-ci
 

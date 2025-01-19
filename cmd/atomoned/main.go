@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "net/http/pprof"
 	"os"
 
 	"github.com/cosmos/cosmos-sdk/server"
