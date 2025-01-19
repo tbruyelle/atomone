@@ -17,10 +17,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/msgservice"
-
-	cosmosproto "github.com/cosmos/gogoproto/proto"
-	"github.com/cosmos/gogoproto/protoc-gen-gogo/descriptor"
 
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	msgv1 "cosmossdk.io/api/cosmos/msg/v1"
@@ -110,10 +106,14 @@ func NewCreateProposalCmd() *cobra.Command {
 				return err
 			}
 			from := clientCtx.GetFromAddress()
+			accountAddr, err := sdk.AccAddressFromBech32(args[0])
+			if err != nil {
+				return err
+			}
 			// Build message and broadcast
 			msg := &types.MsgCreateProposal{
 				Sender:         from.String(),
-				AccountAddress: os.Args[0],
+				AccountAddress: accountAddr.String(),
 			}
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
@@ -149,54 +149,15 @@ func NewDraftProposalCmd() *cobra.Command {
 		Use:   "draft-proposal <account_address>",
 		Args:  cobra.ExactArgs(1),
 		Short: "Generate a draft proposal json file. The generated proposal json contains only one message (skeleton).",
-		RunE: func(cmd *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
-			mm, err := sdk.GetMsgFromTypeURL(clientCtx.Codec, "/atomone.multisig.v1.MsgCreateProposal")
-			if err != nil {
-				// should never happen
-				panic(err)
-			}
-			// find signer field using "cosmos.msg.v1.signer" proto extension
-			protoDesc := protodesc.ToDescriptorProto(proto.MessageReflect(mm).Descriptor())
-			protoExts, err := proto.GetExtension(protoDesc.Options, msgv1.E_Signer)
+			accountAddr, err := sdk.AccAddressFromBech32(args[0])
 			if err != nil {
 				return err
 			}
-			signerFields := protoExts.([]string)
-
-			for _, fieldName := range signerFields {
-				fmt.Println("SIGNER", fieldName)
-			}
-
-			os.Exit(0)
-
-			_, md := descriptor.ForMessage(mm.(descriptor.Message))
-			// fmt.Println("FD", fd)
-			fmt.Println("MD", md.Options)
-			// spew.Config.DisableMethods = true
-			// spew.Dump(md.Options)
-
-			// fmt.Println("REGIS", cosmosproto.RegisteredExtensions(md.Options))
-			// extdesc, err := cosmosproto.ExtensionDescs(md.Options)
-			// fmt.Println("EXT DESC", spew.Sdump(extdesc[0]), err)
-			// fmt.Println("EXT DESC", spew.Sdump(extdesc[1]), err)
-			{
-				ext, err := cosmosproto.GetExtension(md.Options, msgservice.E_Signer)
-				fmt.Println("EXT", ext, err)
-				if err != nil {
-					return nil
-				}
-			}
-
-			// m, err := anypb.UnmarshalNew(mm, proto.UnmarshalOptions{})
-			// if err != nil {
-			// panic(err)
-			// }
-
-			// ext := gogoproto.GetExtension(m.ProtoReflect().Descriptor().Options(), msg.E_Signer)
 
 			msgPrompt := promptui.Select{
 				Label: "Select proposal message type:",
@@ -235,7 +196,16 @@ func NewDraftProposalCmd() *cobra.Command {
 			}
 
 			// set messages field
-			msgFilled, err := Prompt(msg, "msg")
+			signerFieldName, err := getSignerFieldName(msg)
+			if err != nil {
+				fmt.Printf("cannot determine msg %s signer field name: %v", msgType, err)
+			}
+			defaultValues := make(map[string]string)
+			if signerFieldName != "" {
+				defaultValues[signerFieldName] = accountAddr.String()
+			}
+			fmt.Println("DEFAAULT", defaultValues)
+			msgFilled, err := Prompt(msg, "msg", defaultValues)
 			if err != nil {
 				return fmt.Errorf("failed to set proposal message fields: %w", err)
 			}
@@ -279,4 +249,14 @@ func writeFile(fileName string, input any) error {
 	}
 
 	return nil
+}
+
+func getSignerFieldName(msg sdk.Msg) (string, error) {
+	// find signer field using "cosmos.msg.v1.signer" proto extension
+	protoDesc := protodesc.ToDescriptorProto(proto.MessageReflect(msg).Descriptor())
+	protoExts, err := proto.GetExtension(protoDesc.Options, msgv1.E_Signer)
+	if err != nil {
+		return "", err
+	}
+	return protoExts.([]string)[0], nil
 }

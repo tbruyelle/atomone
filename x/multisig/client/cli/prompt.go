@@ -18,7 +18,7 @@ const (
 // Prompt prompts the user for all values of the given type.
 // data is the struct to be filled
 // namePrefix is the name to be displayed as "Enter <namePrefix> <field>"
-func Prompt[T any](data T, namePrefix string) (T, error) {
+func Prompt[T any](data T, namePrefix string, defaultValues map[string]string) (T, error) {
 	v := reflect.ValueOf(&data).Elem()
 	if v.Kind() == reflect.Interface {
 		v = reflect.ValueOf(data)
@@ -41,11 +41,12 @@ func Prompt[T any](data T, namePrefix string) (T, error) {
 
 		// create prompts
 		prompt := promptui.Prompt{
-			Label:    fmt.Sprintf("Enter %s %s", namePrefix, strings.ToLower(client.CamelCaseToString(v.Type().Field(i).Name))),
+			Label:    fmt.Sprintf("Enter %s %q", namePrefix, strings.ToLower(client.CamelCaseToString(v.Type().Field(i).Name))),
 			Validate: client.ValidatePromptNotEmpty,
 		}
 
 		fieldName := strings.ToLower(v.Type().Field(i).Name)
+		fmt.Println("FIELDNAME", fieldName, v.Type().Field(i).Name)
 
 		// TODO(@julienrbrt) use scalar annotation instead of dumb string name matching
 		if strings.Contains(fieldName, "addr") ||
@@ -57,6 +58,7 @@ func Prompt[T any](data T, namePrefix string) (T, error) {
 			strings.Contains(fieldName, "recipient") {
 			prompt.Validate = client.ValidatePromptAddress
 		}
+		prompt.Default = defaultValues[fieldName]
 
 		result, err := prompt.Run()
 		if err != nil {
