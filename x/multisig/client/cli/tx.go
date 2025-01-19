@@ -8,15 +8,22 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
+	"google.golang.org/protobuf/reflect/protodesc"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/msgservice"
+
+	cosmosproto "github.com/cosmos/gogoproto/proto"
+	"github.com/cosmos/gogoproto/protoc-gen-gogo/descriptor"
 
 	// "github.com/cosmos/cosmos-sdk/client/flags"
+	msgv1 "cosmossdk.io/api/cosmos/msg/v1"
 
 	"github.com/atomone-hub/atomone/x/multisig/types"
 )
@@ -139,14 +146,57 @@ func NewVoteCmd() *cobra.Command {
 // NewDraftProposalCmd let a user generate a draft proposal.
 func NewDraftProposalCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:          "draft-proposal <account_address>",
-		Short:        "Generate a draft proposal json file. The generated proposal json contains only one message (skeleton).",
-		SilenceUsage: true,
+		Use:   "draft-proposal <account_address>",
+		Args:  cobra.ExactArgs(1),
+		Short: "Generate a draft proposal json file. The generated proposal json contains only one message (skeleton).",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
+			mm, err := sdk.GetMsgFromTypeURL(clientCtx.Codec, "/atomone.multisig.v1.MsgCreateProposal")
+			if err != nil {
+				// should never happen
+				panic(err)
+			}
+			// find signer field using "cosmos.msg.v1.signer" proto extension
+			protoDesc := protodesc.ToDescriptorProto(proto.MessageReflect(mm).Descriptor())
+			protoExts, err := proto.GetExtension(protoDesc.Options, msgv1.E_Signer)
+			if err != nil {
+				return err
+			}
+			signerFields := protoExts.([]string)
+
+			for _, fieldName := range signerFields {
+				fmt.Println("SIGNER", fieldName)
+			}
+
+			os.Exit(0)
+
+			_, md := descriptor.ForMessage(mm.(descriptor.Message))
+			// fmt.Println("FD", fd)
+			fmt.Println("MD", md.Options)
+			// spew.Config.DisableMethods = true
+			// spew.Dump(md.Options)
+
+			// fmt.Println("REGIS", cosmosproto.RegisteredExtensions(md.Options))
+			// extdesc, err := cosmosproto.ExtensionDescs(md.Options)
+			// fmt.Println("EXT DESC", spew.Sdump(extdesc[0]), err)
+			// fmt.Println("EXT DESC", spew.Sdump(extdesc[1]), err)
+			{
+				ext, err := cosmosproto.GetExtension(md.Options, msgservice.E_Signer)
+				fmt.Println("EXT", ext, err)
+				if err != nil {
+					return nil
+				}
+			}
+
+			// m, err := anypb.UnmarshalNew(mm, proto.UnmarshalOptions{})
+			// if err != nil {
+			// panic(err)
+			// }
+
+			// ext := gogoproto.GetExtension(m.ProtoReflect().Descriptor().Options(), msg.E_Signer)
 
 			msgPrompt := promptui.Select{
 				Label: "Select proposal message type:",
@@ -165,6 +215,7 @@ func NewDraftProposalCmd() *cobra.Command {
 				// should never happen
 				panic(err)
 			}
+
 			// prompt for title and summary
 			titlePrompt := promptui.Prompt{
 				Label:    "Enter proposal title",

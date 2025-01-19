@@ -9,9 +9,6 @@ import (
 	"github.com/manifoldco/promptui"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-
-	"github.com/atomone-hub/atomone/x/gov/types"
 )
 
 const (
@@ -49,12 +46,6 @@ func Prompt[T any](data T, namePrefix string) (T, error) {
 		}
 
 		fieldName := strings.ToLower(v.Type().Field(i).Name)
-
-		if strings.EqualFold(fieldName, "authority") {
-			// pre-fill with gov address
-			prompt.Default = authtypes.NewModuleAddress(types.ModuleName).String()
-			prompt.Validate = client.ValidatePromptAddress
-		}
 
 		// TODO(@julienrbrt) use scalar annotation instead of dumb string name matching
 		if strings.Contains(fieldName, "addr") ||
