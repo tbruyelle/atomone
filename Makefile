@@ -286,14 +286,11 @@ bench-tally: build
 	$(atomoned) config chain-id benchtally
 	$(atomoned) config keyring-backend test
 	$(atomoned) keys add val
-	#$(atomoned) genesis add-genesis-account val 1000000000000uatone --keyring-backend test
-	#$(atomoned) genesis gentx val 1000000000uatone --chain-id benchtally --keyring-backend test
-	#$(atomoned) genesis collect-gentxs
 	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-benchtally/config/app.toml
 	# enable REST API
 	sed -i -z 's/# Enable defines if the API server should be enabled.\nenable = false/enable = true/' ~/.atomoned-benchtally/config/app.toml
 	# generate the genesis
-	govbox tally-genesis -numVals=100 -numDels=200000 -numGovs=0\
+	govbox tally-genesis -numVals=100 -numDels=200000 -numGovs=20\
 		-nodeConsPubkey=`$(atomoned) tendermint show-validator`\
 		-nodeAddr=`$(atomoned) keys show val -a`\
 		~/.atomoned-benchtally/config/genesis.json > /tmp/genesis.json
