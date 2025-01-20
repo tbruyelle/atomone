@@ -11,14 +11,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 )
 
-const (
-	draftProposalFileName = "draft_proposal.json"
-)
-
-// Prompt prompts the user for all values of the given type.
+// promptMsgFields prompts the user for all values of the given type.
 // data is the struct to be filled
 // namePrefix is the name to be displayed as "Enter <namePrefix> <field>"
-func Prompt[T any](data T, namePrefix string, defaultValues map[string]string) (T, error) {
+func promptMsgFields[T any](data T, namePrefix string, defaultValues map[string]string) (T, error) {
 	v := reflect.ValueOf(&data).Elem()
 	if v.Kind() == reflect.Interface {
 		v = reflect.ValueOf(data)
@@ -46,7 +42,6 @@ func Prompt[T any](data T, namePrefix string, defaultValues map[string]string) (
 		}
 
 		fieldName := strings.ToLower(v.Type().Field(i).Name)
-		fmt.Println("FIELDNAME", fieldName, v.Type().Field(i).Name)
 
 		// TODO(@julienrbrt) use scalar annotation instead of dumb string name matching
 		if strings.Contains(fieldName, "addr") ||
@@ -58,7 +53,7 @@ func Prompt[T any](data T, namePrefix string, defaultValues map[string]string) (
 			strings.Contains(fieldName, "recipient") {
 			prompt.Validate = client.ValidatePromptAddress
 		}
-		prompt.Default = defaultValues[fieldName]
+		prompt.Default = defaultValues[v.Type().Field(i).Name]
 
 		result, err := prompt.Run()
 		if err != nil {

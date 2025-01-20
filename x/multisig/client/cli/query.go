@@ -2,11 +2,13 @@ package cli
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/atomone-hub/atomone/x/multisig/types"
 )
@@ -41,8 +43,12 @@ func CmdQueryAccount() *cobra.Command {
 				return err
 			}
 			queryClient := types.NewQueryClient(clientCtx)
+			accountAddr, err := sdk.AccAddressFromBech32(args[0])
+			if err != nil {
+				return err
+			}
 			res, err := queryClient.Account(cmd.Context(),
-				&types.QueryAccountRequest{Address: args[0]})
+				&types.QueryAccountRequest{Address: accountAddr.String()})
 			if err != nil {
 				return err
 			}
@@ -64,8 +70,12 @@ func CmdQueryProposals() *cobra.Command {
 				return err
 			}
 			queryClient := types.NewQueryClient(clientCtx)
+			accountAddr, err := sdk.AccAddressFromBech32(args[0])
+			if err != nil {
+				return err
+			}
 			res, err := queryClient.Proposals(cmd.Context(),
-				&types.QueryProposalsRequest{AccountAddress: args[0]})
+				&types.QueryProposalsRequest{AccountAddress: accountAddr.String()})
 			if err != nil {
 				return err
 			}
@@ -80,15 +90,26 @@ func CmdQueryProposal() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "proposal <account_address> <proposal_id>",
 		Short: "shows a single multisig account's proposal",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
 				return err
 			}
 			queryClient := types.NewQueryClient(clientCtx)
+			accountAddr, err := sdk.AccAddressFromBech32(args[0])
+			if err != nil {
+				return err
+			}
+			proposalID, err := strconv.ParseUint(args[1], 10, 64)
+			if err != nil {
+				return err
+			}
 			res, err := queryClient.Proposal(cmd.Context(),
-				&types.QueryProposalRequest{AccountAddress: args[0]})
+				&types.QueryProposalRequest{
+					AccountAddress: accountAddr.String(),
+					ProposalId:     proposalID,
+				})
 			if err != nil {
 				return err
 			}
