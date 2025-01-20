@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/iancoleman/strcase"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/reflect/protodesc"
@@ -17,6 +18,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdktx "github.com/cosmos/cosmos-sdk/types/tx"
 
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	msgv1 "cosmossdk.io/api/cosmos/msg/v1"
@@ -55,9 +57,7 @@ func NewCreateAccountCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			// Get voting address
 			from := clientCtx.GetFromAddress()
-
 			// Parse multisig members
 			var members []types.Member
 			for _, arg := range args {
@@ -110,11 +110,36 @@ func NewCreateProposalCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			bz, err := os.ReadFile(args[1])
+			if err != nil {
+				return err
+			}
+			var p proposal
+			if err := json.Unmarshal(bz, &p); err != nil {
+				return err
+			}
+			msgs := make([]sdk.Msg, len(p.Messages))
+			for i, anyJSON := range p.Messages {
+				var msg sdk.Msg
+				err := clientCtx.Codec.UnmarshalInterfaceJSON(anyJSON, &msg)
+				if err != nil {
+					return err
+				}
+				msgs[i] = msg
+			}
+
 			// Build message and broadcast
 			msg := &types.MsgCreateProposal{
 				Sender:         from.String(),
 				AccountAddress: accountAddr.String(),
+				Title:          p.Title,
+				Summary:        p.Summary,
 			}
+			anys, err := sdktx.SetMsgs(msgs)
+			if err != nil {
+				return err
+			}
+			msg.Messages = anys
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
@@ -133,14 +158,38 @@ func NewVoteCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			// Get voting address
 			from := clientCtx.GetFromAddress()
-			_ = from
-			return nil
+			accountAddr, err := sdk.AccAddressFromBech32(args[0])
+			if err != nil {
+				return err
+			}
+			proposalID, err := strconv.ParseUint(args[1], 10, 64)
+			if err != nil {
+				return err
+			}
+			voteOpt := types.VoteOptionFromString(args[2])
+			msg := &types.MsgVote{
+				Voter:          from.String(),
+				AccountAddress: accountAddr.String(),
+				ProposalId:     proposalID,
+				Vote:           voteOpt,
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
+}
+
+const (
+	draftProposalFileName = "draft_proposal.json"
+)
+
+type proposal struct {
+	Title   string `json:"title"`
+	Summary string `json:"summary"`
+	// Msgs defines an array of sdk.Msgs proto-JSON-encoded as Anys.
+	Messages []json.RawMessage `json:"messages,omitempty"`
 }
 
 // NewDraftProposalCmd let a user generate a draft proposal.
@@ -204,8 +253,7 @@ func NewDraftProposalCmd() *cobra.Command {
 			if signerFieldName != "" {
 				defaultValues[signerFieldName] = accountAddr.String()
 			}
-			fmt.Println("DEFAAULT", defaultValues)
-			msgFilled, err := Prompt(msg, "msg", defaultValues)
+			msgFilled, err := promptMsgFields(msg, "msg", defaultValues)
 			if err != nil {
 				return fmt.Errorf("failed to set proposal message fields: %w", err)
 			}
@@ -214,23 +262,15 @@ func NewDraftProposalCmd() *cobra.Command {
 				return fmt.Errorf("failed to marshal proposal message: %w", err)
 			}
 
-			proposal := struct {
-				Title   string `json:"title"`
-				Summary string `json:"summary"`
-				// Msgs defines an array of sdk.Msgs proto-JSON-encoded as Anys.
-				Messages []json.RawMessage `json:"messages,omitempty"`
-			}{
-				Title:   title,
-				Summary: summary,
+			p := proposal{
+				Title:    title,
+				Summary:  summary,
+				Messages: []json.RawMessage{message},
 			}
-			proposal.Messages = append(proposal.Messages, message)
-
-			if err := writeFile(draftProposalFileName, proposal); err != nil {
+			if err := writeFile(draftProposalFileName, p); err != nil {
 				return err
 			}
-
-			cmd.Println("The draft proposal has successfully been generated.\nProposals should contain off-chain metadata, please upload the metadata JSON to IPFS.\nThen, replace the generated metadata field with the IPFS CID.")
-
+			cmd.Printf("%s file has successfully been generated.\n", draftProposalFileName)
 			return nil
 		},
 	}
@@ -239,16 +279,11 @@ func NewDraftProposalCmd() *cobra.Command {
 
 // writeFile writes the input to the file
 func writeFile(fileName string, input any) error {
-	raw, err := json.MarshalIndent(input, "", " ")
+	bz, err := json.MarshalIndent(input, "", " ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal proposal: %w", err)
 	}
-
-	if err := os.WriteFile(fileName, raw, 0o600); err != nil {
-		return err
-	}
-
-	return nil
+	return os.WriteFile(fileName, bz, 0o600)
 }
 
 func getSignerFieldName(msg sdk.Msg) (string, error) {
@@ -258,5 +293,6 @@ func getSignerFieldName(msg sdk.Msg) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return protoExts.([]string)[0], nil
+	fieldName := protoExts.([]string)[0]
+	return strcase.ToCamel(fieldName), nil
 }

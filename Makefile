@@ -283,9 +283,17 @@ start-localnet-ci: build
 	./build/atomoned start --home ~/.atomoned-liveness --x-crisis-skip-assert-invariants
 
 
+atomoned=./build/atomoned --home ~/.atomoned-liveness/
 create-multisig:
-	./build/atomoned --home ~/.atomoned-liveness/ tx multisig create-account --threshold 3 $(./build/atomoned --home ~/.atomoned-liveness/ keys show user -a),2 $(./build/atomoned --home ~/.atomoned-liveness/ keys show user2 -a),1 $(./build/atomoned --home ~/.atomoned-liveness/ keys show user3 -a),1 --from user --fees 300uphoton -y --output json | jq -r '.txhash' > /tmp/txhash
-	./build/atomoned --home ~/.atomoned-liveness/ q tx $(cat /tmp/txhash) --output json | jq -r '.events[] | select (.type == "account_creation") | .attributes[] | select(.key=="account_address") | .value'
+	$(atomoned) tx multisig create-account --threshold 3\
+		`$(atomoned) keys show user -a`,2\
+		`$(atomoned) keys show user2 -a`,1\
+		`$(atomoned) keys show user3 -a`,1\
+		--from user --fees 300uphoton -y --output json\
+		| jq -r '.txhash' > /tmp/txhash
+	sleep 5
+	$(atomoned) q tx `cat /tmp/txhash` --output json\
+		| jq -r '.events[] | select (.type == "account_creation") | .attributes[] | select(.key=="account_address") | .value'
 	# XXX no way to find a multisig account if the address is forgotten.
 
 

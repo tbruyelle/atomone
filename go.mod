@@ -25,6 +25,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/hexops/gotextdiff v1.0.3
+	github.com/iancoleman/strcase v0.3.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/rakyll/statik v0.1.7

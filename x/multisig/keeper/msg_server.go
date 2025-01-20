@@ -125,7 +125,7 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 	}
 
 	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(types.EventTypeAccountCreation,
+		sdk.NewEvent(types.EventTypeProposalCreation,
 			sdk.NewAttribute(types.AttributeKeyAccountAddress, msg.AccountAddress),
 			sdk.NewAttribute(types.AttributeKeyProposalID, fmt.Sprint(proposalID)),
 		),
