@@ -131,7 +131,7 @@ func (keeper Keeper) tallyVotes(
 
 		// iterate over all delegations from voter
 		keeper.sk.IterateDelegations(ctx, voter, func(index int64, delegation stakingtypes.DelegationI) (stop bool) {
-			valAddrStr := delegation.GetValidatorAddr().String()
+			valAddrStr := delegation.(stakingtypes.Delegation).ValidatorAddress
 			votingPower := math.LegacyZeroDec()
 
 			if val, ok := currValidators[valAddrStr]; ok {
