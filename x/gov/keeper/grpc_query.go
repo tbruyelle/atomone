@@ -323,6 +323,39 @@ func (q Keeper) TallyResultOld(c context.Context, req *v1.QueryTallyResultReques
 	return &v1.QueryTallyResultResponse{Tally: &tallyResult}, nil
 }
 
+func (q Keeper) TallyResultLegacy(c context.Context, req *v1.QueryTallyResultRequest) (*v1.QueryTallyResultResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	if req.ProposalId == 0 {
+		return nil, status.Error(codes.InvalidArgument, "proposal id can not be 0")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+
+	proposal, ok := q.GetProposal(ctx, req.ProposalId)
+	if !ok {
+		return nil, status.Errorf(codes.NotFound, "proposal %d doesn't exist", req.ProposalId)
+	}
+
+	var tallyResult v1.TallyResult
+
+	switch {
+	case proposal.Status == v1.StatusDepositPeriod:
+		tallyResult = v1.EmptyTallyResult()
+
+	case proposal.Status == v1.StatusPassed || proposal.Status == v1.StatusRejected || proposal.Status == v1.StatusFailed:
+		tallyResult = *proposal.FinalTallyResult
+
+	default:
+		// proposal is in voting period
+		_, _, tallyResult = q.TallyLegacy(ctx, proposal)
+	}
+
+	return &v1.QueryTallyResultResponse{Tally: &tallyResult}, nil
+}
+
 // Governor queries governor information based on governor address.
 func (q Keeper) Governor(c context.Context, req *v1.QueryGovernorRequest) (*v1.QueryGovernorResponse, error) {
 	if req == nil {
