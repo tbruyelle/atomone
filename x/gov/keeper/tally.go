@@ -116,7 +116,7 @@ func (keeper Keeper) tallyVotes(
 				gov, _ := keeper.GetGovernor(ctx, govAddr)
 				governor = v1.NewGovernorGovInfo(
 					govAddr,
-					keeper.GetAllGovernorValShares(ctx, types.MustGovernorAddressFromBech32(gd.GovernorAddress)),
+					keeper.GetAllGovernorValShares(ctx, govAddr),
 					v1.WeightedVoteOptions{},
 					gov.IsActive(),
 				)
