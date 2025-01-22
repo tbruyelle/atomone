@@ -113,12 +113,10 @@ func (keeper Keeper) tallyVotes(
 				governor = gi
 			} else {
 				govAddr := types.MustGovernorAddressFromBech32(gd.GovernorAddress)
-				gov, _ := keeper.GetGovernor(ctx, govAddr)
 				governor = v1.NewGovernorGovInfo(
 					govAddr,
 					keeper.GetAllGovernorValShares(ctx, govAddr),
 					v1.WeightedVoteOptions{},
-					gov.IsActive(),
 				)
 			}
 			if gd.GovernorAddress == types.GovernorAddress(voter).String() {
