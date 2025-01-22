@@ -145,8 +145,7 @@ func (keeper Keeper) tallyVotes(
 			totalVotingPower = totalVotingPower.Add(votingPower)
 			if isFinal {
 				for _, option := range vote.Options {
-					weight, _ := math.LegacyNewDecFromStr(option.Weight)
-					subPower := votingPower.Mul(weight)
+					subPower := option.Power(votingPower)
 					results[option.Option] = results[option.Option].Add(subPower)
 				}
 			}
@@ -172,8 +171,7 @@ func (keeper Keeper) tallyVotes(
 
 		if isFinal {
 			for _, option := range gov.Vote {
-				weight, _ := sdk.NewDecFromStr(option.Weight)
-				subPower := votingPower.Mul(weight)
+				subPower := option.Power(votingPower)
 				results[option.Option] = results[option.Option].Add(subPower)
 			}
 		}
