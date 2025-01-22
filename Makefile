@@ -279,22 +279,23 @@ start-localnet-ci: build
 	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-liveness/config/app.toml
 	./build/atomoned start --home ~/.atomoned-liveness --x-crisis-skip-assert-invariants
 
-atomoned=./build/atomoned --home ~/.atomoned-benchtally/
+home=~/.atomoned-benchtally
+atomoned=./build/atomoned --home $(home)
 bench-tally: build
-	rm -rf ~/.atomoned-benchtally
+	rm -rf $(home)
 	$(atomoned) init liveness --default-denom uatone --chain-id benchtally
 	$(atomoned) config chain-id benchtally
 	$(atomoned) config keyring-backend test
 	$(atomoned) keys add val
-	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-benchtally/config/app.toml
+	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' $(home)/config/app.toml
 	# enable REST API
-	sed -i -z 's/# Enable defines if the API server should be enabled.\nenable = false/enable = true/' ~/.atomoned-benchtally/config/app.toml
+	sed -i -z 's/# Enable defines if the API server should be enabled.\nenable = false/enable = true/' $(home)/config/app.toml
 	# generate the genesis
-	govbox tally-genesis -numVals=100 -numDels=200000 -numGovs=20\
+	time govbox tally-genesis -numVals=100 -numDels=300000 -numGovs=1000\
 		-nodeConsPubkey=`$(atomoned) tendermint show-validator`\
 		-nodeAddr=`$(atomoned) keys show val -a`\
-		~/.atomoned-benchtally/config/genesis.json > /tmp/genesis.json
-	cp /tmp/genesis.json ~/.atomoned-benchtally/config/genesis.json
+		$(home)/config/genesis.json > /tmp/genesis.json
+	cp /tmp/genesis.json $(home)/config/genesis.json
 	# run the chain
 	$(atomoned) start --x-crisis-skip-assert-invariants --log_level debug
 

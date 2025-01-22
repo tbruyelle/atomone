@@ -46,7 +46,7 @@ func (keeper Keeper) TallyLegacy(ctx sdk.Context, proposal v1.Proposal) (passes 
 
 		// iterate over all delegations from voter, deduct from any delegated-to validators
 		keeper.sk.IterateDelegations(ctx, voter, func(index int64, delegation stakingtypes.DelegationI) (stop bool) {
-			valAddrStr := delegation.GetValidatorAddr().String()
+			valAddrStr := delegation.(stakingtypes.Delegation).ValidatorAddress
 
 			if val, ok := currValidators[valAddrStr]; ok {
 				// There is no need to handle the special case that validator address equal to voter address.
