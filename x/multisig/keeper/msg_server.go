@@ -25,8 +25,9 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 
 var _ types.MsgServer = msgServer{}
 
-// TODO: require a Deposit to avoid spam accounts
+// CreateAccount implements the MsgServer.CreateAccount method.
 func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAccount) (*types.MsgCreateAccountResponse, error) {
+	// TODO: require a Deposit to avoid spam accounts?
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	totalWeight := uint64(0)
 	for i := range msg.Members {
@@ -74,8 +75,9 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 	}, nil
 }
 
-// TODO: require a Deposit to avoid spam proposal
+// CreateProposal implements the MsgServer.CreateProposal method.
 func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreateProposal) (*types.MsgCreateProposalResponse, error) {
+	// TODO: require a Deposit to avoid spam proposal?
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Fetch account
 	accountAddr, err := sdk.AccAddressFromBech32(msg.AccountAddress)
@@ -136,6 +138,7 @@ func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreatePro
 	return &types.MsgCreateProposalResponse{ProposalId: proposalID}, nil
 }
 
+// Vote implements the MsgServer.Vote method.
 func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVoteResponse, error) {
 	// find proposal
 	accountAddr := sdk.MustAccAddressFromBech32(msg.AccountAddress)
@@ -166,6 +169,7 @@ func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVo
 	return &types.MsgVoteResponse{}, nil
 }
 
+// Execute implements the MsgServer.Execute method.
 func (k msgServer) Execute(goCtx context.Context, msg *types.MsgExecute) (*types.MsgExecuteResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// find proposal
