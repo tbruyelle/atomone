@@ -12,6 +12,7 @@ import (
 
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -104,6 +105,15 @@ func (k Keeper) SetProposal(ctx context.Context, addr sdk.AccAddress, id uint64,
 	return k.Proposals.Set(ctx, collections.Join(addr.Bytes(), id), prop)
 }
 
+func (k Keeper) GetProposalVotes(ctx context.Context, accountAddr sdk.AccAddress, proposalID uint64) ([]types.Vote, error) {
+	rng := collections.NewSuperPrefixedTripleRange[[]byte, uint64, []byte](accountAddr, proposalID)
+	it, err := k.Votes.Iterate(ctx, rng)
+	if err != nil {
+		return nil, err
+	}
+	return it.Values()
+}
+
 // NOTE copied from x/accounts
 // makeAddress creates an address for the given account.
 // It uses the creator address to ensure address squatting cannot happen, for example
@@ -126,4 +136,44 @@ func (k Keeper) makeAddress(creator []byte, accNum uint64, addressSeed []byte) (
 	addr := sha256.Sum256(moduleAndSeed)
 
 	return addr[:], nil
+}
+
+func (k Keeper) executeMsgs(ctx sdk.Context, msgs []sdk.Msg) ([]*codectypes.Any, error) {
+	var (
+		events    sdk.Events
+		responses []*codectypes.Any
+	)
+	// attempt to execute all messages within the passed proposal
+	// Messages may mutate state thus we use a cached context. If one of
+	// the handlers fails, no state mutation is written and the error
+	// message is logged.
+	cacheCtx, writeCache := ctx.CacheContext()
+	for i, msg := range msgs {
+		handler := k.router.Handler(msg)
+		var res *sdk.Result
+		res, err := safeExecuteHandler(cacheCtx, msg, handler)
+		if err != nil {
+			return nil, fmt.Errorf("execute of msg %d %s fails: %v", i, sdk.MsgTypeURL(msg), err)
+		}
+		events = append(events, res.GetEvents()...)
+		responses = append(responses, res.MsgResponses...)
+	}
+	// write state to the underlying multi-store
+	writeCache()
+	// propagate the msg events to the current context
+	ctx.EventManager().EmitEvents(events)
+	return responses, nil
+}
+
+// executes handle(msg) and recovers from panic.
+func safeExecuteHandler(ctx sdk.Context, msg sdk.Msg,
+	handler func(ctx sdk.Context, req sdk.Msg) (*sdk.Result, error),
+) (res *sdk.Result, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("handling x/gov proposal msg [%s] PANICKED: %v", msg, r)
+		}
+	}()
+	res, err = handler(ctx, msg)
+	return
 }

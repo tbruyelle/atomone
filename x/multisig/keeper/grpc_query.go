@@ -89,12 +89,7 @@ func (k queryServer) Proposal(ctx context.Context, req *types.QueryProposalReque
 	if err != nil {
 		return nil, err
 	}
-	rng := collections.NewSuperPrefixedTripleRange[[]byte, uint64, []byte](accountAddr.Bytes(), req.ProposalId)
-	it, err := k.Keeper.Votes.Iterate(ctx, rng)
-	if err != nil {
-		return nil, err
-	}
-	votes, err := it.Values()
+	votes, err := k.Keeper.GetProposalVotes(ctx, accountAddr, req.ProposalId)
 	if err != nil {
 		return nil, err
 	}
