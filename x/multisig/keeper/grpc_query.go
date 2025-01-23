@@ -23,6 +23,7 @@ func NewQueryServer(keeper Keeper) types.QueryServer {
 
 var _ types.QueryServer = queryServer{}
 
+// Params implements the Query/Params gRPC method.
 func (k queryServer) Params(goCtx context.Context, req *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
@@ -36,6 +37,7 @@ func (k queryServer) Params(goCtx context.Context, req *types.QueryParamsRequest
 	return &types.QueryParamsResponse{Params: params}, nil
 }
 
+// Account implements the Query/Account gRPC method.
 func (k queryServer) Account(ctx context.Context, req *types.QueryAccountRequest) (*types.QueryAccountResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
@@ -51,6 +53,7 @@ func (k queryServer) Account(ctx context.Context, req *types.QueryAccountRequest
 	return &types.QueryAccountResponse{Account: &acc}, nil
 }
 
+// Proposals implements the Query/Proposals gRPC method.
 func (k queryServer) Proposals(ctx context.Context, req *types.QueryProposalsRequest) (*types.QueryProposalsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
@@ -74,6 +77,7 @@ func (k queryServer) Proposals(ctx context.Context, req *types.QueryProposalsReq
 	return &types.QueryProposalsResponse{Proposals: props}, nil
 }
 
+// Proposal implements the Query/Proposal gRPC method.
 func (k queryServer) Proposal(ctx context.Context, req *types.QueryProposalRequest) (*types.QueryProposalResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
