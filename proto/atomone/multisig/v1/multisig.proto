@@ -20,7 +20,7 @@ message Account {
   // members are the members of the multisig account.
   repeated Member members = 3 [ (gogoproto.nullable) = false ];
   // threshold is the minimum weight required for a proposal to pass.
-  int64 threshold = 4;
+  uint64 threshold = 4;
 }
 
 // Member defines the member of the multisig account.

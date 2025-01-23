@@ -25,6 +25,7 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 
 var _ types.MsgServer = msgServer{}
 
+// TODO: require a Deposit to avoid spam accounts
 func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAccount) (*types.MsgCreateAccountResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	totalWeight := uint64(0)
@@ -73,6 +74,7 @@ func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAcco
 	}, nil
 }
 
+// TODO: require a Deposit to avoid spam proposal
 func (k msgServer) CreateProposal(goCtx context.Context, msg *types.MsgCreateProposal) (*types.MsgCreateProposalResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// Fetch account
@@ -162,6 +164,61 @@ func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVo
 		return nil, err
 	}
 	return &types.MsgVoteResponse{}, nil
+}
+
+func (k msgServer) Execute(goCtx context.Context, msg *types.MsgExecute) (*types.MsgExecuteResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	// find proposal
+	accountAddr := sdk.MustAccAddressFromBech32(msg.AccountAddress)
+	proposal, err := k.GetProposal(ctx, accountAddr, msg.ProposalId)
+	if err != nil {
+		return nil, err
+	}
+	// find account
+	acc, err := k.GetAccount(ctx, accountAddr)
+	if err != nil {
+		return nil, err
+	}
+	// check voter is part of account's members
+	if !acc.HasMember(msg.Executor) {
+		return nil, types.ErrNotAMember
+	}
+	// tally votes and check threshold
+	membersWeights := make(map[string]uint64)
+	for _, m := range acc.Members {
+		membersWeights[m.Address] = m.Weight
+	}
+	votes, err := k.Keeper.GetProposalVotes(ctx, accountAddr, msg.ProposalId)
+	if err != nil {
+		return nil, err
+	}
+	var yesWeight uint64
+	for _, v := range votes {
+		if v.Vote == types.VoteOption_VOTE_OPTION_YES {
+			weight, ok := membersWeights[v.VoterAddress]
+			if !ok {
+				panic("should not happen, voter is not part of account members")
+			}
+			yesWeight += weight
+		}
+	}
+	if yesWeight < acc.Threshold {
+		return nil, sdkerrors.Wrapf(types.ErrExecuteWoThreshold, "account threshold: %d, current proposal yes vote weight: %d", acc.Threshold, yesWeight)
+	}
+	// Execute proposal
+	msgs, err := proposal.GetMsgs()
+	if err != nil {
+		return nil, err
+	}
+	resp, err := k.executeMsgs(ctx, msgs)
+	if err != nil {
+		return nil, err
+	}
+	// Update proposal status
+	// TODO
+	// Delete votes
+	// TODO
+	return &types.MsgExecuteResponse{Responses: resp}, nil
 }
 
 func safeAdd(nums ...uint64) (uint64, error) {

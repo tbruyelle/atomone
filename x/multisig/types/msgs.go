@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	_, _, _, _ sdk.Msg = &MsgUpdateParams{}, &MsgCreateAccount{}, &MsgCreateProposal{}, &MsgVote{}
+	_, _, _, _, _ sdk.Msg = &MsgUpdateParams{}, &MsgCreateAccount{}, &MsgCreateProposal{}, &MsgVote{}, &MsgExecute{}
 
 	_ codectypes.UnpackInterfacesMessage = &MsgCreateProposal{}
 )
@@ -70,7 +70,7 @@ func (m MsgCreateAccount) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-// GetSigners returns the expected signers for a MsgUpdateParams.
+// GetSigners returns the expected signers for a MsgCreateAccount.
 func (m MsgCreateAccount) GetSigners() []sdk.AccAddress {
 	authority, _ := sdk.AccAddressFromBech32(m.Sender)
 	return []sdk.AccAddress{authority}
@@ -130,7 +130,7 @@ func (m MsgCreateProposal) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-// GetSigners returns the expected signers for a MsgUpdateParams.
+// GetSigners returns the expected signers for a MsgCreateProposal.
 func (m MsgCreateProposal) GetSigners() []sdk.AccAddress {
 	authority, _ := sdk.AccAddressFromBech32(m.Sender)
 	return []sdk.AccAddress{authority}
@@ -158,8 +158,28 @@ func (m MsgVote) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-// GetSigners returns the expected signers for a MsgUpdateParams.
+// GetSigners returns the expected signers for a MsgVote.
 func (m MsgVote) GetSigners() []sdk.AccAddress {
 	authority, _ := sdk.AccAddressFromBech32(m.Voter)
+	return []sdk.AccAddress{authority}
+}
+
+// ValidateBasic implements the sdk.Msg interface.
+func (m MsgExecute) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(m.Executor); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid executor address: %s", err)
+	}
+	return nil
+}
+
+// GetSignBytes returns the message bytes to sign over.
+func (m MsgExecute) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&m)
+	return sdk.MustSortJSON(bz)
+}
+
+// GetSigners returns the expected signers for a MsgExecute.
+func (m MsgExecute) GetSigners() []sdk.AccAddress {
+	authority, _ := sdk.AccAddressFromBech32(m.Executor)
 	return []sdk.AccAddress{authority}
 }

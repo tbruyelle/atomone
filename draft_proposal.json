@@ -4,7 +4,7 @@
  "messages": [
   {
    "@type": "/atomone.photon.v1.MsgMintPhoton",
-   "to_address": "atone1za37leg64qgyy60z7uj73q5dcwtwtsagl7wt822td7vqns5ahanshf48x4",
+   "to_address": "atone1wkplrvuvm3c0sn35wqmf60mxzpsqcrpt0fdl5g0tl7z7jurm4ffszyspr3",
    "amount": {
     "denom": "uatone",
     "amount": "1000000"

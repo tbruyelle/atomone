@@ -40,6 +40,7 @@ func GetTxCmd() *cobra.Command {
 		NewDraftProposalCmd(),
 		NewCreateProposalCmd(),
 		NewVoteCmd(),
+		NewExecuteCmd(),
 	)
 	return cmd
 }
@@ -71,7 +72,7 @@ func NewCreateAccountCmd() *cobra.Command {
 					Weight:  weight,
 				})
 			}
-			threshold, err := cmd.Flags().GetInt64(FlagThreshold)
+			threshold, err := cmd.Flags().GetUint64(FlagThreshold)
 			if err != nil {
 				return err
 			}
@@ -87,7 +88,7 @@ func NewCreateAccountCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().Int64(FlagThreshold, 0, "Specify the threshold required to pass proposal within the multisig account.")
+	cmd.Flags().Uint64(FlagThreshold, 0, "Specify the threshold required to pass proposal within the multisig account.")
 	cmd.MarkFlagRequired(FlagThreshold)
 	flags.AddTxFlagsToCmd(cmd)
 
@@ -151,7 +152,7 @@ func NewCreateProposalCmd() *cobra.Command {
 func NewVoteCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vote <account_address> <proposal_id> <vote>",
-		Args:  cobra.MinimumNArgs(1),
+		Args:  cobra.ExactArgs(3),
 		Short: "Vote on an account's proposal",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -173,6 +174,38 @@ func NewVoteCmd() *cobra.Command {
 				AccountAddress: accountAddr.String(),
 				ProposalId:     proposalID,
 				Vote:           voteOpt,
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
+
+// NewExecuteCmd implements executing a proposal command.
+func NewExecuteCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "execute <account_address> <proposal_id>",
+		Args:  cobra.ExactArgs(2),
+		Short: "Execute a proposal.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			from := clientCtx.GetFromAddress()
+			accountAddr, err := sdk.AccAddressFromBech32(args[0])
+			if err != nil {
+				return err
+			}
+			proposalID, err := strconv.ParseUint(args[1], 10, 64)
+			if err != nil {
+				return err
+			}
+			msg := &types.MsgExecute{
+				Executor:       from.String(),
+				AccountAddress: accountAddr.String(),
+				ProposalId:     proposalID,
 			}
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
