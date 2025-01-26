@@ -27,6 +27,7 @@ var _ types.MsgServer = msgServer{}
 
 // CreateAccount implements the MsgServer.CreateAccount method.
 func (k msgServer) CreateAccount(goCtx context.Context, msg *types.MsgCreateAccount) (*types.MsgCreateAccountResponse, error) {
+	// TODO: accept arbitray account address from msg if signer is the gov module
 	// TODO: require a Deposit to avoid spam accounts?
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	totalWeight := uint64(0)

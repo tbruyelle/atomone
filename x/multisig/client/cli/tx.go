@@ -8,11 +8,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/golang/protobuf/proto"
-	"github.com/iancoleman/strcase"
+	"github.com/golang/protobuf/proto" //nolint:staticcheck
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
+	googleproto "google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
+
+	gogoproto "github.com/cosmos/gogoproto/proto"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -23,6 +25,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	msgv1 "cosmossdk.io/api/cosmos/msg/v1"
 
+	"github.com/atomone-hub/atomone/client/prompt"
 	"github.com/atomone-hub/atomone/x/multisig/types"
 )
 
@@ -255,8 +258,7 @@ func NewDraftProposalCmd() *cobra.Command {
 			}
 			msg, err := sdk.GetMsgFromTypeURL(clientCtx.Codec, msgType)
 			if err != nil {
-				// should never happen
-				panic(err)
+				return err
 			}
 
 			// prompt for title and summary
@@ -278,22 +280,41 @@ func NewDraftProposalCmd() *cobra.Command {
 			}
 
 			// set messages field
-			signerFieldName, err := getSignerFieldName(msg)
-			if err != nil {
-				fmt.Printf("cannot determine msg %s signer field name: %v", msgType, err)
-			}
+			signerFieldName := getSignerFieldName(msg)
 			defaultValues := make(map[string]string)
 			if signerFieldName != "" {
 				defaultValues[signerFieldName] = accountAddr.String()
 			}
-			msgFilled, err := promptMsgFields(msg, "msg", defaultValues)
+			// newMsg := msg.New()
+			newMsg := proto.MessageReflect(msg)
+			result, err := prompt.PromptMessage("msg", newMsg, defaultValues)
 			if err != nil {
-				return fmt.Errorf("failed to set proposal message fields: %w", err)
+				return fmt.Errorf("failed to set proposal message: %w", err)
 			}
-			message, err := clientCtx.Codec.MarshalInterfaceJSON(msgFilled)
+
+			// message must be converted to gogoproto so @type is not lost
+			resultBytes, err := googleproto.Marshal(result.Interface())
 			if err != nil {
 				return fmt.Errorf("failed to marshal proposal message: %w", err)
 			}
+			var sdkMsg sdk.Msg
+			err = gogoproto.Unmarshal(resultBytes, sdkMsg)
+			if err != nil {
+				return fmt.Errorf("failed to unmarshal proposal message: %w", err)
+			}
+			message, err := clientCtx.Codec.MarshalInterfaceJSON(sdkMsg)
+			if err != nil {
+				return fmt.Errorf("failed to marshal proposal message: %w", err)
+			}
+
+			// msgFilled, err := promptMsgFields(msg, "msg", defaultValues)
+			// if err != nil {
+			// return fmt.Errorf("failed to set proposal message fields: %w", err)
+			// }
+			// message, err := clientCtx.Codec.MarshalInterfaceJSON(msgFilled)
+			// if err != nil {
+			// return fmt.Errorf("failed to marshal proposal message: %w", err)
+			// }
 
 			p := proposal{
 				Title:    title,
@@ -319,13 +340,17 @@ func writeFile(fileName string, input any) error {
 	return os.WriteFile(fileName, bz, 0o600)
 }
 
-func getSignerFieldName(msg sdk.Msg) (string, error) {
-	// find signer field using "cosmos.msg.v1.signer" proto extension
+// getSignerFieldName returns the signer field using "cosmos.msg.v1.signer"
+// proto extension
+func getSignerFieldName(msg sdk.Msg) string {
 	protoDesc := protodesc.ToDescriptorProto(proto.MessageReflect(msg).Descriptor())
-	protoExts, err := proto.GetExtension(protoDesc.Options, msgv1.E_Signer)
-	if err != nil {
-		return "", err
+	protoExts, _ := proto.GetExtension(protoDesc.Options, msgv1.E_Signer)
+	fieldNames, ok := protoExts.([]string)
+	if !ok {
+		return ""
 	}
-	fieldName := protoExts.([]string)[0]
-	return strcase.ToCamel(fieldName), nil
+	if len(fieldNames) == 0 {
+		return ""
+	}
+	return fieldNames[0]
 }
