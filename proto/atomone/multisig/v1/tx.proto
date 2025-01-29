@@ -23,8 +23,8 @@ service Msg {
   // Vote defines a method to vote on a multisig proposal.
   rpc Vote(MsgVote) returns (MsgVoteResponse);
 
-  // Execute defines a method to execute a multisig proposal.
-  rpc Execute(MsgExecute) returns (MsgExecuteResponse);
+  // ExecuteProposal defines a method to execute a multisig proposal.
+  rpc ExecuteProposal(MsgExecuteProposal) returns (MsgExecuteProposalResponse);
 
   // UpdateParams defines a governance operation for updating the x/multisig
   // module parameters. The authority is defined in the keeper.
@@ -69,17 +69,15 @@ message MsgCreateProposal {
 
 // MsgCreateProposalResponse is the response returned after multisig proposal
 // creation.
-message MsgCreateProposalResponse {
-  uint64 proposal_id = 1;
-}
+message MsgCreateProposalResponse { uint64 proposal_id = 1; }
 
 // MsgVote is used to vote on a multisig proposal.
 message MsgVote {
   option (cosmos.msg.v1.signer) = "voter";
   option (amino.name) = "atomone/multisig/v1/MsgVote";
- 
+
   // voter is the voter account address.
-  string voter = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string voter = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // account_address is the multisig account address.
   string account_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // proposal_id is the multisig proposal id.
@@ -91,22 +89,27 @@ message MsgVote {
 // MsgVoteResponse is the response returned after multisig proposal vote.
 message MsgVoteResponse {}
 
-// MsgExecute is used to execute a multisig proposal.
-message MsgExecute {
+// MsgExecuteProposal is used to execute a multisig proposal.
+message MsgExecuteProposal {
   option (cosmos.msg.v1.signer) = "executor";
   option (amino.name) = "atomone/multisig/v1/MsgExecute";
- 
+
   // executor is the executor account address.
-  string executor = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string executor = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // account_address is the multisig account address.
   string account_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // proposal_id is the multisig proposal id.
   uint64 proposal_id = 3;
 }
 
-// MsgExecuteResponse is the response returned after multisig proposal execute.
-message MsgExecuteResponse {
+// MsgExecuteProposalResponse is the response returned after multisig proposal
+// execute.
+message MsgExecuteProposalResponse {
+  // responses contains the responses of executed proposal's messages.
   repeated google.protobuf.Any responses = 1;
+  // error contains any error related to the execution of the proposal's
+  // messages.
+  string error = 2;
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.

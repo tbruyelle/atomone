@@ -169,8 +169,8 @@ func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVo
 	return &types.MsgVoteResponse{}, nil
 }
 
-// Execute implements the MsgServer.Execute method.
-func (k msgServer) Execute(goCtx context.Context, msg *types.MsgExecute) (*types.MsgExecuteResponse, error) {
+// ExecuteProposal implements the MsgServer.ExecuteProposal method.
+func (k msgServer) ExecuteProposal(goCtx context.Context, msg *types.MsgExecuteProposal) (*types.MsgExecuteProposalResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	// find proposal
 	accountAddr := sdk.MustAccAddressFromBech32(msg.AccountAddress)
@@ -187,6 +187,7 @@ func (k msgServer) Execute(goCtx context.Context, msg *types.MsgExecute) (*types
 	if !acc.HasMember(msg.Executor) {
 		return nil, types.ErrNotAMember
 	}
+
 	// tally votes and check threshold
 	membersWeights := make(map[string]uint64)
 	for _, m := range acc.Members {
@@ -209,20 +210,39 @@ func (k msgServer) Execute(goCtx context.Context, msg *types.MsgExecute) (*types
 	if yesWeight < acc.Threshold {
 		return nil, sdkerrors.Wrapf(types.ErrExecuteWoThreshold, "account threshold: %d, current proposal yes vote weight: %d", acc.Threshold, yesWeight)
 	}
+
 	// Execute proposal
+	execTime := ctx.BlockTime()
+	proposal.ExecTime = &execTime
 	msgs, err := proposal.GetMsgs()
 	if err != nil {
 		return nil, err
 	}
-	resp, err := k.executeMsgs(ctx, msgs)
+	var (
+		logMsg string
+		resp   types.MsgExecuteProposalResponse
+	)
+	resp.Responses, err = k.executeMsgs(ctx, msgs)
 	if err != nil {
+		// Error during messages execution, update proposal and report
+		logMsg = fmt.Sprintf("execution failed: %v", err)
+		proposal.Status = types.StatusFailed
+		resp.Error = err.Error()
+	} else {
+		// Messages execution success, update proposal status
+		logMsg = "execution success"
+		proposal.Status = types.StatusPassed
+		// Delete votes
+		// NOTE(tb): we might want to keep trace of the votes for DAO traceability
+		// if err := k.RemoveProposalVotes(ctx, accountAddr, msg.ProposalId); err != nil {
+		// return nil, err
+		// }
+	}
+	if err := k.SetProposal(ctx, accountAddr, proposal.Id, proposal); err != nil {
 		return nil, err
 	}
-	// Update proposal status
-	// TODO
-	// Delete votes
-	// TODO
-	return &types.MsgExecuteResponse{Responses: resp}, nil
+	ctx.Logger().Info("proposal executed", "proposalId", proposal.Id, "results", logMsg)
+	return &resp, nil
 }
 
 func safeAdd(nums ...uint64) (uint64, error) {

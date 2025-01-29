@@ -40,7 +40,7 @@ func GetTxCmd() *cobra.Command {
 		NewDraftProposalCmd(),
 		NewCreateProposalCmd(),
 		NewVoteCmd(),
-		NewExecuteCmd(),
+		NewExecuteProposalCmd(),
 	)
 	return cmd
 }
@@ -182,10 +182,10 @@ func NewVoteCmd() *cobra.Command {
 	return cmd
 }
 
-// NewExecuteCmd implements executing a proposal command.
-func NewExecuteCmd() *cobra.Command {
+// NewExecuteProposalCmd implements executing a proposal command.
+func NewExecuteProposalCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "execute <account_address> <proposal_id>",
+		Use:   "execute-proposal <account_address> <proposal_id>",
 		Args:  cobra.ExactArgs(2),
 		Short: "Execute a proposal.",
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -202,7 +202,7 @@ func NewExecuteCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			msg := &types.MsgExecute{
+			msg := &types.MsgExecuteProposal{
 				Executor:       from.String(),
 				AccountAddress: accountAddr.String(),
 				ProposalId:     proposalID,

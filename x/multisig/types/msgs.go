@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	_, _, _, _, _ sdk.Msg = &MsgUpdateParams{}, &MsgCreateAccount{}, &MsgCreateProposal{}, &MsgVote{}, &MsgExecute{}
+	_, _, _, _, _ sdk.Msg = &MsgUpdateParams{}, &MsgCreateAccount{}, &MsgCreateProposal{}, &MsgVote{}, &MsgExecuteProposal{}
 
 	_ codectypes.UnpackInterfacesMessage = &MsgCreateProposal{}
 )
@@ -165,7 +165,7 @@ func (m MsgVote) GetSigners() []sdk.AccAddress {
 }
 
 // ValidateBasic implements the sdk.Msg interface.
-func (m MsgExecute) ValidateBasic() error {
+func (m MsgExecuteProposal) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(m.Executor); err != nil {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid executor address: %s", err)
 	}
@@ -173,13 +173,13 @@ func (m MsgExecute) ValidateBasic() error {
 }
 
 // GetSignBytes returns the message bytes to sign over.
-func (m MsgExecute) GetSignBytes() []byte {
+func (m MsgExecuteProposal) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(&m)
 	return sdk.MustSortJSON(bz)
 }
 
-// GetSigners returns the expected signers for a MsgExecute.
-func (m MsgExecute) GetSigners() []sdk.AccAddress {
+// GetSigners returns the expected signers for a MsgExecuteProposal.
+func (m MsgExecuteProposal) GetSigners() []sdk.AccAddress {
 	authority, _ := sdk.AccAddressFromBech32(m.Executor)
 	return []sdk.AccAddress{authority}
 }

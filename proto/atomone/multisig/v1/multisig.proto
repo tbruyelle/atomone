@@ -35,16 +35,32 @@ message Proposal {
   uint64 id = 1;
   // account_address holds the bech32 address of the account.
   string account_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // status defines the proposal status.
+  ProposalStatus status = 3;
   // submit_time is the time of proposal submission.
-  google.protobuf.Timestamp submit_time = 3 [(gogoproto.stdtime) = true];
+  google.protobuf.Timestamp submit_time = 4 [ (gogoproto.stdtime) = true ];
+  // exec_time is the time of the execution of the proposal.
+  google.protobuf.Timestamp exec_time = 5 [ (gogoproto.stdtime) = true ];
   // Proposer is the address of the proposal sumbitter
-  string proposer = 4 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string proposer = 6 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // title is the title of the proposal.
-  string title = 5;
+  string title = 7;
   // summary is the summary of the proposal.
-  string summary = 6;
+  string summary = 8;
   // messages are the messages that will be executed.
-  repeated google.protobuf.Any messages = 7;
+  repeated google.protobuf.Any messages = 9;
+}
+
+// ProposalStatus enumerates the valid status for a given proposal.
+enum ProposalStatus {
+  // PROPOSAL_STATUS_VOTING_PERIOD defines a proposal status during the voting
+  // period.
+  PROPOSAL_STATUS_VOTING_PERIOD = 0;
+  // PROPOSAL_STATUS_PASSED defines a proposal status of a proposal that has
+  PROPOSAL_STATUS_PASSED = 1;
+  // PROPOSAL_STATUS_FAILED defines a proposal status of a proposal that has
+  // failed.
+  PROPOSAL_STATUS_FAILED = 2;
 }
 
 message Vote {

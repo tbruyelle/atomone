@@ -114,6 +114,11 @@ func (k Keeper) GetProposalVotes(ctx context.Context, accountAddr sdk.AccAddress
 	return it.Values()
 }
 
+func (k Keeper) RemoveProposalVotes(ctx context.Context, accountAddr sdk.AccAddress, proposalID uint64) error {
+	rng := collections.NewSuperPrefixedTripleRange[[]byte, uint64, []byte](accountAddr, proposalID)
+	return k.Votes.Clear(ctx, rng)
+}
+
 // NOTE copied from x/accounts
 // makeAddress creates an address for the given account.
 // It uses the creator address to ensure address squatting cannot happen, for example

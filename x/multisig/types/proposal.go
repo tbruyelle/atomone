@@ -10,6 +10,12 @@ import (
 
 var _ codectypes.UnpackInterfacesMessage = &Proposal{}
 
+const (
+	StatusVotingPeriod = ProposalStatus_PROPOSAL_STATUS_VOTING_PERIOD
+	StatusPassed       = ProposalStatus_PROPOSAL_STATUS_PASSED
+	StatusFailed       = ProposalStatus_PROPOSAL_STATUS_FAILED
+)
+
 // NewProposal creates a new Proposal instance
 func NewProposal(id uint64, accountAddr string, submitTime time.Time, proposer, title, summary string, messages []sdk.Msg) (Proposal, error) {
 	msgs, err := sdktx.SetMsgs(messages)
@@ -18,6 +24,7 @@ func NewProposal(id uint64, accountAddr string, submitTime time.Time, proposer, 
 	}
 	p := Proposal{
 		Id:             id,
+		Status:         StatusVotingPeriod,
 		AccountAddress: accountAddr,
 		Messages:       msgs,
 		SubmitTime:     &submitTime,
