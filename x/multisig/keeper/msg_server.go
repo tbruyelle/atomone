@@ -233,10 +233,12 @@ func (k msgServer) ExecuteProposal(goCtx context.Context, msg *types.MsgExecuteP
 		logMsg = "execution success"
 		proposal.Status = types.StatusPassed
 		// Delete votes
-		// NOTE(tb): we might want to keep trace of the votes for DAO traceability
-		// if err := k.RemoveProposalVotes(ctx, accountAddr, msg.ProposalId); err != nil {
-		// return nil, err
-		// }
+		// NOTE(tb): we might want to keep the votes for DAO traceability.
+		// Maybe the best scenario is to keep the votes and the proposal only if
+		// the account is identified as a DAO.
+		if err := k.RemoveProposalVotes(ctx, accountAddr, msg.ProposalId); err != nil {
+			return nil, err
+		}
 	}
 	if err := k.SetProposal(ctx, accountAddr, proposal.Id, proposal); err != nil {
 		return nil, err

@@ -21,6 +21,7 @@ import (
 	"github.com/atomone-hub/atomone/x/multisig/types"
 )
 
+// Keeper defines the keeper of the multisig module.
 type Keeper struct {
 	cdc      codec.BinaryCodec
 	storeKey storetypes.StoreKey
@@ -39,6 +40,7 @@ type Keeper struct {
 	Votes collections.Map[collections.Triple[[]byte, uint64, []byte], types.Vote]
 }
 
+// NewKeeper creates a new keeper instance.
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey storetypes.StoreKey,
@@ -85,6 +87,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
+// GetAccount returns the multisig account for a given address.
 func (k Keeper) GetAccount(ctx context.Context, addr sdk.AccAddress) (types.Account, error) {
 	acc, err := k.Accounts.Get(ctx, addr)
 	if errors.Is(err, collections.ErrNotFound) {
@@ -93,6 +96,7 @@ func (k Keeper) GetAccount(ctx context.Context, addr sdk.AccAddress) (types.Acco
 	return acc, err
 }
 
+// GetProposal returns the proposal for a given address and id.
 func (k Keeper) GetProposal(ctx context.Context, addr sdk.AccAddress, id uint64) (types.Proposal, error) {
 	prop, err := k.Proposals.Get(ctx, collections.Join(addr.Bytes(), id))
 	if errors.Is(err, collections.ErrNotFound) {
@@ -101,10 +105,13 @@ func (k Keeper) GetProposal(ctx context.Context, addr sdk.AccAddress, id uint64)
 	return prop, err
 }
 
+// SetProposal stores a proposal for a given address and id.
 func (k Keeper) SetProposal(ctx context.Context, addr sdk.AccAddress, id uint64, prop types.Proposal) error {
 	return k.Proposals.Set(ctx, collections.Join(addr.Bytes(), id), prop)
 }
 
+// GetProposalVotes returns all votes for a given account address and proposal
+// id.
 func (k Keeper) GetProposalVotes(ctx context.Context, accountAddr sdk.AccAddress, proposalID uint64) ([]types.Vote, error) {
 	rng := collections.NewSuperPrefixedTripleRange[[]byte, uint64, []byte](accountAddr, proposalID)
 	it, err := k.Votes.Iterate(ctx, rng)
@@ -114,6 +121,7 @@ func (k Keeper) GetProposalVotes(ctx context.Context, accountAddr sdk.AccAddress
 	return it.Values()
 }
 
+// RemoveProposalVotes removes all votes for a given account address and proposal id.
 func (k Keeper) RemoveProposalVotes(ctx context.Context, accountAddr sdk.AccAddress, proposalID uint64) error {
 	rng := collections.NewSuperPrefixedTripleRange[[]byte, uint64, []byte](accountAddr, proposalID)
 	return k.Votes.Clear(ctx, rng)
@@ -143,6 +151,7 @@ func (k Keeper) makeAddress(creator []byte, accNum uint64, addressSeed []byte) (
 	return addr[:], nil
 }
 
+// executeMsgs executes a list of messages within the passed proposal.
 func (k Keeper) executeMsgs(ctx sdk.Context, msgs []sdk.Msg) ([]*codectypes.Any, error) {
 	var (
 		events    sdk.Events
@@ -170,7 +179,7 @@ func (k Keeper) executeMsgs(ctx sdk.Context, msgs []sdk.Msg) ([]*codectypes.Any,
 	return responses, nil
 }
 
-// executes handle(msg) and recovers from panic.
+// safeExecuteHandler executes handle(msg) and recovers from panic.
 func safeExecuteHandler(ctx sdk.Context, msg sdk.Msg,
 	handler func(ctx sdk.Context, req sdk.Msg) (*sdk.Result, error),
 ) (res *sdk.Result, err error) {
