@@ -83,6 +83,7 @@ func NewKeeper(
 	return k
 }
 
+// Logger returns the logger for this keeper.
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
@@ -119,6 +120,17 @@ func (k Keeper) GetProposalVotes(ctx context.Context, accountAddr sdk.AccAddress
 		return nil, err
 	}
 	return it.Values()
+}
+
+// SetProposalVote stores a vote for a given account address, proposal id and
+// voter address.
+func (k Keeper) SetProposalVote(ctx context.Context, accountAddr sdk.AccAddress,
+	proposalID uint64, voterAddr sdk.AccAddress, vote types.Vote,
+) error {
+	return k.Votes.Set(ctx,
+		collections.Join3(accountAddr.Bytes(), proposalID, voterAddr.Bytes()),
+		vote,
+	)
 }
 
 // RemoveProposalVotes removes all votes for a given account address and proposal id.
