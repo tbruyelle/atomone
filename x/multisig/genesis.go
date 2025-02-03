@@ -10,22 +10,34 @@ import (
 
 // InitGenesis initializes the module's state from a provided genesis state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
-	k.Params.Set(ctx, genState.Params)
+	err := k.Params.Set(ctx, genState.Params)
+	if err != nil {
+		panic(err)
+	}
 
 	for _, account := range genState.Accounts {
 		addrBz := sdk.MustAccAddressFromBech32(account.Address)
-		k.Accounts.Set(ctx, addrBz, *account)
+		err := k.Accounts.Set(ctx, addrBz, *account)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	for _, proposal := range genState.Proposals {
 		addrBz := sdk.MustAccAddressFromBech32(proposal.AccountAddress)
-		k.SetProposal(ctx, addrBz, proposal.Id, *proposal)
+		err := k.SetProposal(ctx, addrBz, proposal.Id, *proposal)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	for _, vote := range genState.Votes {
 		accountAddrBz := sdk.MustAccAddressFromBech32(vote.AccountAddress)
 		voterAddrBz := sdk.MustAccAddressFromBech32(vote.VoterAddress)
-		k.SetProposalVote(ctx, accountAddrBz, vote.ProposalId, voterAddrBz, *vote)
+		err := k.SetProposalVote(ctx, accountAddrBz, vote.ProposalId, voterAddrBz, *vote)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
