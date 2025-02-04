@@ -14,9 +14,9 @@ message Params {}
 // Account defines a multisig account.
 message Account {
   // address hold the bech32 address of the account
-  string address = 1 [ (cosmos_proto.scalar) = "cosmos.addressstring" ];
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // creator holds the address of the creator of the multisig account.
-  string creator = 2 [ (cosmos_proto.scalar) = "cosmos.addressstring" ];
+  string creator = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // members are the members of the multisig account.
   repeated Member members = 3 [ (gogoproto.nullable) = false ];
   // threshold is the minimum weight required for a proposal to pass.
