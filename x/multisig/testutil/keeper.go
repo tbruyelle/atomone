@@ -12,6 +12,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
 	govtypes "github.com/atomone-hub/atomone/x/gov/types"
 	"github.com/atomone-hub/atomone/x/multisig/keeper"
@@ -44,7 +45,7 @@ func SetupMultisigKeeper(t *testing.T) (
 	ctx := testCtx.Ctx.WithBlockHeader(tmproto.Header{Time: tmtime.Now()})
 	encCfg := moduletestutil.MakeTestEncodingConfig()
 	types.RegisterInterfaces(encCfg.InterfaceRegistry)
-	// banktypes.RegisterInterfaces(encCfg.InterfaceRegistry)
+	banktypes.RegisterInterfaces(encCfg.InterfaceRegistry)
 	authority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
 	return keeper.NewKeeper(encCfg.Codec, key, m.Router, authority), m, ctx
 }

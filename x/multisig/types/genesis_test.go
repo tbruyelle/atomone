@@ -236,6 +236,11 @@ func TestGenesisState_Validate(t *testing.T) {
 						ProposalId:     42,
 						VoterAddress:   "member2",
 					},
+					{
+						AccountAddress: "acc1",
+						ProposalId:     42,
+						VoterAddress:   "member1",
+					},
 				},
 			},
 		},

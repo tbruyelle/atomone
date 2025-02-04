@@ -110,6 +110,7 @@ func (m MsgCreateProposal) ValidateBasic() error {
 		return sdkerrors.ErrInvalidRequest.Wrap("proposal summary cannot be empty") //nolint:staticcheck
 	}
 	if len(m.Messages) == 0 {
+		// TODO allow no messages for text proposals?
 		return sdkerrors.ErrInvalidRequest.Wrap("Proposal.Messages length must be non-nil") //nolint:staticcheck
 	}
 	msgs, err := m.GetMsgs()
