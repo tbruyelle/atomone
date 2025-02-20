@@ -15,7 +15,7 @@ DOCKER := $(shell which docker)
 BUILDDIR ?= $(CURDIR)/build
 TEST_DOCKER_REPO=cosmos/contrib-atomonetest
 
-GO_SYSTEM_VERSION = $(shell go env GOVERSION | cut -c 3-)
+GO_MAJOR_VERSION = $(shell go env GOVERSION | cut -d'.' -f2)
 GO_REQUIRED_VERSION = $(shell go list -f {{.GoVersion}} -m)
 
 # command to run dependency utilities
@@ -98,14 +98,10 @@ print_tm_version:
 	@echo $(TM_VERSION)
 
 check_go_version:
-ifneq ($(GO_SYSTEM_VERSION), $(GO_REQUIRED_VERSION))
-	@echo 'ERROR: Go version $(GO_REQUIRED_VERSION) is required for building AtomOne'
-	@echo '--> You can install it using:'
-	@echo 'go install golang.org/dl/go$(GO_REQUIRED_VERSION)@latest && go$(GO_REQUIRED_VERSION) download'
-	@echo '--> Then prefix your make command with:'
-	@echo 'GOROOT=$$(go$(GO_REQUIRED_VERSION) env GOROOT) PATH=$$GOROOT/bin:$$PATH'
-	exit 1
-endif
+	@if [ $(GO_MAJOR_VERSION) -lt 21 ]; then \
+		echo 'ERROR: Go version 1.21 or higher is required for building AtomOne'; \
+		exit 1; \
+	fi
 
 check_ledger:
 ifeq ($(LEDGER_ENABLED),false)
@@ -117,7 +113,7 @@ BUILD_TARGETS := build install
 build: BUILD_ARGS=-o $(BUILDDIR)/
 
 $(BUILD_TARGETS): check_go_version check_ledger go.sum $(BUILDDIR)/
-	go $@ -mod=readonly $(BUILD_FLAGS) $(BUILD_ARGS) ./...
+	GOTOOLCHAIN=go$(GO_REQUIRED_VERSION) go $@ -mod=readonly $(BUILD_FLAGS) $(BUILD_ARGS) ./...
 
 build-ledger: # Kept for convenience
 	$(MAKE) build LEDGER_ENABLED=true
