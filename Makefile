@@ -305,11 +305,16 @@ start-localnet-ci: build
 	./build/atomoned genesis collect-gentxs --home ~/.atomoned-liveness
 	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-liveness/config/app.toml
 	sed -i -z 's/# Enable defines if the API server should be enabled.\nenable = false/enable = true/' ~/.atomoned-liveness/config/app.toml
-	jq '.app_state.gov.params.voting_period = "300s"' ~/.atomoned-liveness/config/genesis.json > /tmp/gen
+	jq '.app_state.gov.params.voting_period = "100s"' ~/.atomoned-liveness/config/genesis.json > /tmp/gen
 	mv /tmp/gen ~/.atomoned-liveness/config/genesis.json
 	./build/atomoned start --home ~/.atomoned-liveness --x-crisis-skip-assert-invariants
 
 .PHONY: start-localnet-ci
+
+setup-upgrade-proposal:
+	./build/atomoned tx gov submit-proposal --from user contrib/draft_proposal.json  --home ~/.atomoned-liveness/ -y --gas-prices 0.001uatone
+	sleep 5
+	./build/atomoned  --home ~/.atomoned-liveness/ tx gov vote 1 yes --from val -y --gas-prices 0.001uatone
 
 ###############################################################################
 ###                                Docker                                   ###
