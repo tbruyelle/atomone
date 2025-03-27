@@ -298,9 +298,9 @@ start-localnet-ci: build
 	./build/atomoned config chain-id liveness --home ~/.atomoned-liveness
 	./build/atomoned config keyring-backend test --home ~/.atomoned-liveness
 	./build/atomoned keys add val --home ~/.atomoned-liveness
-	./build/atomoned genesis add-genesis-account val 1000000000000uatone --home ~/.atomoned-liveness --keyring-backend test
+	./build/atomoned genesis add-genesis-account val 1000000000000uatone,10000000uphoton --home ~/.atomoned-liveness --keyring-backend test
 	./build/atomoned keys add user --home ~/.atomoned-liveness
-	./build/atomoned genesis add-genesis-account user 1000000000uatone --home ~/.atomoned-liveness --keyring-backend test
+	./build/atomoned genesis add-genesis-account user 1000000000uatone,10000000uphoton --home ~/.atomoned-liveness --keyring-backend test
 	./build/atomoned genesis gentx val 1000000000uatone --home ~/.atomoned-liveness --chain-id liveness
 	./build/atomoned genesis collect-gentxs --home ~/.atomoned-liveness
 	sed -i.bak 's#^minimum-gas-prices = .*#minimum-gas-prices = "0.001uatone,0.001uphoton"#g' ~/.atomoned-liveness/config/app.toml
