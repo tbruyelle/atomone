@@ -20,6 +20,22 @@
 - Move oversightDAO update bundling prevention from the ante to a coredaos gov hook [#354](https://github.com/atomone-hub/atomone/pull/354)
 - Reject proposals that delegate `x/coredaos` `MsgUpdateParams` via authz [358](https://github.com/atomone-hub/atomone/pull/358)
 
+## v4.1.0
+
+*Jul 27th, 2026*
+
+### BUG FIXES
+
+- Update AtomOne SDK to v0.500.2 [#360](https://github.com/atomone-hub/atomone/pull/360)
+
+## v4.0.1
+
+*Jul 22nd, 2026*
+
+### BUG FIXES
+
+- Register legacy IBC gov proposal content types in atomone gov fork [#356](https://github.com/atomone-hub/atomone/pull/356)
+
 ## v4.0.0
 
 *Jun 23nd, 2026*
@@ -140,7 +156,7 @@
 - Remove `x/crisis` [#93](https://github.com/atomone-hub/atomone/pull/93)
 - Upgrade ibc-go to v7.10.0 to fix ASA-2025-004 and ISA-2025-001 [#84](https://github.com/atomone-hub/atomone/pull/84) [#85](https://github.com/atomone-hub/atomone/pull/85) [#98](https://github.com/atomone-hub/atomone/pull/98)
 - Upgrade Cosmos SDK to v0.47.17 [#98](https://github.com/atomone-hub/atomone/pull/98)
-  
+
 ### IMPROVEMENTS
 
 - (x/gov): override MinVotingPeriod with ldflags [#63](https://github.com/atomone-hub/atomone/pull/63)
